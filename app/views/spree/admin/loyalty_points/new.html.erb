@@ -1,0 +1,59 @@
+<% content_for :page_title do %>
+  <%= Spree.t(:loyalty_points) %>
+<% end %>
+
+<% content_for :page_actions do %>
+  <li><%= button_link_to Spree.t(:back_to_users_list), admin_users_path, :icon => 'icon-arrow-left' %></li>
+<% end %>
+
+<%= render :partial => 'spree/shared/error_messages', :locals => { :target => @loyalty_points_transaction } %>
+
+<%= form_for @loyalty_points_transaction, url: admin_user_loyalty_points_path(@user) do |f| %>
+  <fieldset data-hook="update_loyalty_points">
+
+    <legend align="center"><%= Spree.t(:update_loyalty_points) %></legend>
+
+    <div data-hook="update_loyalty_points_attrs" class="row">
+
+      <div class="four columns">
+        <%= f.field_container :loyalty_points do %>
+          <%= f.label :loyalty_points, Spree.t(:loyalty_points) %> <span class="required">*</span><br />
+          <%= f.text_field :loyalty_points, :class => 'fullwidth title' %>
+          <%= f.error_message_on :loyalty_points %>
+        <% end %>
+      </div>
+
+      <div class="field four columns">
+          <%= f.label :transaction_type, Spree.t(:transaction_type) %> <span class="required">*</span><br />
+          <%= f.select :transaction_type, options_for_select(Spree::LoyaltyPointsTransaction::TRANSACTION_TYPES), {}, :class => 'select2 fullwidth' %>
+          <%= f.error_message_on :transaction_type %>
+      </div>
+
+        <div class="field four columns">
+          <%= label_tag nil, Spree.t(:order) %>
+          <%= f.select :source_id, @user.orders.collect {|o| [o.number, o.id]}, {:include_blank => true}, :class => 'select2 fullwidth' %>
+          <%= f.hidden_field :source_type, { :value => 'Spree::Order' } %>
+        </div>
+
+    </div>
+
+    <div data-hook="comment_row" class="row">
+
+      <div class="four columns">
+        <%= f.field_container :comment do %>
+          <%= f.label :comment, Spree.t(:comment) %> <span class="required">*</span><br />
+          <%= f.text_area :comment, :class => 'fullwidth' %>
+          <%= f.error_message_on :comment %>
+        <% end %>
+      </div>
+
+    </div>
+
+    <div class="form-buttons filter-actions actions" data-hook="buttons">
+      <%= button Spree.t('actions.update'), 'icon-ok' %>
+      <span class="or"><%= Spree.t(:or) %></span>
+      <%= link_to_with_icon 'icon-remove', Spree.t('actions.cancel'), admin_users_path, :class => 'button' %>
+    </div>
+
+  </fieldset>
+<% end %>

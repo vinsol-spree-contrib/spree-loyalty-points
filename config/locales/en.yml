@@ -1,0 +1,17 @@
+# Sample localization file for English. Add more files in this directory for other locales.
+# See https://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
+
+en:
+  spree:
+    loyalty_points_balance: Loyalty Points Balance
+    loyalty_points: Loyalty Points
+    loyalty_points_debit: Loyalty Points Debit Amount
+    loyalty_points_credit: Loyalty Points Credit Amount
+    details: Details
+    loyalty_points_unit_amount: Unit Amount Spent for Receiving Loyalty Points
+    loyalty_points_awarding_unit: Number of Loyalty Points Recieved for Each Unit Amount Spent
+    loyalty_points_redeeming_balance: Minimum Loyalty Points Balance Required for Redeeming
+    loyalty_points_conversion_rate: Dollar Value of 1 Loyalty Point during Payment
+    loyalty_points_award_period: Time(in days) after payment to award loyalty points
+    back_to_user_profile: Back to User Profile
+    update_loyalty_points: Update Loyalty Points

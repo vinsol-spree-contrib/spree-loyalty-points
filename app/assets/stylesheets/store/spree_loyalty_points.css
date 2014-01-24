@@ -1,0 +1,13 @@
+/*
+ *= require store/spree_frontend
+*/
+
+#loyalty-points-info {
+  border: 1px solid #D9D9DB;
+  margin-bottom: 15px;
+  padding: 10px;
+}
+
+#loyalty-points-info dd {
+    margin-left: 0;
+}

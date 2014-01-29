@@ -2,6 +2,7 @@
 require 'simplecov'
 SimpleCov.start do
   add_filter 'spec/dummy'
+  add_filter 'vendor/'
   add_group 'Controllers', 'app/controllers'
   add_group 'Helpers', 'app/helpers'
   add_group 'Mailers', 'app/mailers'
@@ -60,6 +61,7 @@ RSpec.configure do |config|
   # to cleanup after each test instead.  Without transactional fixtures set to false the records created
   # to setup a test will be unavailable to the browser, which runs under a seperate server instance.
   config.use_transactional_fixtures = false
+  config.include Spree::Core::Engine.routes.url_helpers
 
   # Ensure Suite is set to use transactions for speed.
   config.before :suite do

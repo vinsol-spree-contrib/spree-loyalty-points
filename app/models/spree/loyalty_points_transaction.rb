@@ -7,9 +7,11 @@ module Spree
     validates :loyalty_points, :numericality => { :only_integer => true, :message => Spree.t('validation.must_be_int'), :greater_than => 0 }
     validates :transaction_type, inclusion: { in: TRANSACTION_TYPES }
     validates :updated_balance, presence: true
-    validate :source_comment_presence
+    validate :source_or_comment_present
 
-    def source_comment_presence
+    scope :for_order, ->(order) { where(source: order) }
+
+    def source_or_comment_present
       unless source.present? || comment.present?
         errors.add :base, 'Source or Comment should be present'
       end

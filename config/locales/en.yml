@@ -5,13 +5,14 @@ en:
   spree:
     loyalty_points_balance: Loyalty Points Balance
     loyalty_points: Loyalty Points
-    loyalty_points_debit: Loyalty Points Debit Amount
-    loyalty_points_credit: Loyalty Points Credit Amount
+    loyalty_points_debit: Loyalty Points To Be Deducted Against this Return
+    loyalty_points_credit: Loyalty Points To Be Awarded Against this Return
     details: Details
-    loyalty_points_unit_amount: Unit Amount Spent for Receiving Loyalty Points
-    loyalty_points_awarding_unit: Number of Loyalty Points Recieved for Each Unit Amount Spent
+    min_amount_required_to_get_loyalty_points: "Minimum amount to be spent per order(item total, excluding shipping and any other charges) to award loyalty points."
+    loyalty_points_awarding_unit: "Number of Loyalty Points to be awarded per Unit Amount Spent"
     loyalty_points_redeeming_balance: Minimum Loyalty Points Balance Required for Redeeming
-    loyalty_points_conversion_rate: Dollar Value of 1 Loyalty Point during Payment
-    loyalty_points_award_period: Time(in days) after payment to award loyalty points
+    loyalty_points_conversion_rate: "Loyalty point to amount conversion rate"
+    loyalty_points_award_period: Time(in hours) after payment to award loyalty points
     back_to_user_profile: Back to User Profile
     update_loyalty_points: Update Loyalty Points
+    loyalty_points_earnable: "%{quantity} Loyalty Points Will Be Awarded for this Order"

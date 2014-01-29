@@ -20,11 +20,28 @@ class Spree::Admin::LoyaltyPointsController < Spree::Admin::BaseController
     end
   end
 
+  def order_transactions
+    order = Spree::Order.find_by(id: params[:order_id])
+    @loyalty_points = @user.loyalty_points_transactions.for_order(order).includes(:source).order('updated_at DESC')
+    respond_to do |format|
+      format.json do
+        render json: @loyalty_points.to_json(
+          :include => {
+            :source => {
+              :only => [:id, :number]
+            }
+          },
+          :only => [:transaction_type, :source_type, :comment, :updated_at, :loyalty_points, :updated_balance]
+        )
+      end
+    end
+  end
+
   private
 
     def set_user
       unless @user = Spree::User.find_by(id: params[:user_id])
-        redirect_to admin_root_path, notice: 'User not found'
+        redirect_to admin_users_path, notice: 'User not found'
       end
     end
 

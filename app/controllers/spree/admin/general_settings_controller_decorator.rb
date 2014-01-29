@@ -1,12 +1,17 @@
 Spree::Admin::GeneralSettingsController.class_eval do
 
-  def edit
-    @preferences_general = [:site_name, :default_seo_title, :default_meta_keywords,
-                    :default_meta_description, :site_url, :loyalty_points_unit_amount, :loyalty_points_awarding_unit, :loyalty_points_redeeming_balance, :loyalty_points_conversion_rate, :loyalty_points_award_period]
-    @preferences_security = [:allow_ssl_in_production,
-                    :allow_ssl_in_staging, :allow_ssl_in_development_and_test,
-                    :check_for_spree_alerts]
-    @preferences_currency = [:display_currency, :hide_cents]
-  end
+  before_action :set_loyalty_points_settings, only: [:edit]
+
+  private
+
+    def set_loyalty_points_settings
+      @preferences_loyalty_points = {
+        :min_amount_required_to_get_loyalty_points => [""],
+        :loyalty_points_awarding_unit => ["For example: Set this as 10 if we wish to award 10 points for $1 spent on the site."],
+        :loyalty_points_redeeming_balance => [""],
+        :loyalty_points_conversion_rate => ["For example: Set this value to 5 if we wish 1 loyalty point is equivalent to $5"],
+        :loyalty_points_award_period => [""]
+      }
+    end
 
 end

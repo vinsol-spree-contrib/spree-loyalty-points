@@ -8,6 +8,8 @@
 
 <%= render :partial => 'spree/shared/error_messages', :locals => { :target => @loyalty_points_transaction } %>
 
+<div id='loyalty-points-order-transactions'></div>
+
 <%= form_for @loyalty_points_transaction, url: admin_user_loyalty_points_path(@user) do |f| %>
   <fieldset data-hook="update_loyalty_points">
 
@@ -31,7 +33,7 @@
 
         <div class="field four columns">
           <%= label_tag nil, Spree.t(:order) %>
-          <%= f.select :source_id, @user.orders.collect {|o| [o.number, o.id]}, {:include_blank => true}, :class => 'select2 fullwidth' %>
+          <%= f.select :source_id, @user.orders.collect {|o| [o.number, o.id]}, {:include_blank => true}, :class => 'select2 fullwidth', :"data-transactions-link" => admin_user_loyalty_points_path(@user) %>
           <%= f.hidden_field :source_type, { :value => 'Spree::Order' } %>
         </div>
 

@@ -26,9 +26,9 @@
       </div>
 
       <div class="field four columns">
-          <%= f.label :transaction_type, Spree.t(:transaction_type) %> <span class="required">*</span><br />
-          <%= f.select :transaction_type, options_for_select(Spree::LoyaltyPointsTransaction::TRANSACTION_TYPES), {}, :class => 'select2 fullwidth' %>
-          <%= f.error_message_on :transaction_type %>
+          <%= f.label :type, Spree.t(:transaction_type) %> <span class="required">*</span><br />
+          <%= f.select :type, options_for_select(Spree::LoyaltyPointsTransaction::CLASS_TO_TRANSACTION_TYPE.invert), {}, :class => 'select2 fullwidth' %>
+          <%= f.error_message_on :type %>
       </div>
 
         <div class="field four columns">

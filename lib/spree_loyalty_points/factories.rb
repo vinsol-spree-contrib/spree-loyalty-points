@@ -6,14 +6,14 @@ FactoryGirl.define do
 
   factory :loyalty_points_transaction, :class => 'Spree::LoyaltyPointsTransaction' do
     loyalty_points { (10..99).to_a.sample }
-    updated_balance { (100..999).to_a.sample }
+    balance { (100..999).to_a.sample }
     comment { Faker::Lorem.words(3).join(' ') }
-    transaction_type "Credit"
+    type "Spree::LoyaltyPointsCreditTransaction"
 
     association :user, factory: :user_with_loyalty_points
 
     factory :loyalty_points_debit_transaction do
-      transaction_type "Debit"
+      type "Spree::LoyaltyPointsDebitTransaction"
     end
 
   end

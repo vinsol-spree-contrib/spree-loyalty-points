@@ -36,7 +36,7 @@ $(document).ready(function() {
             this.appendTableRowData(transaction['comment'], $transactionRow);
             this.appendTableRowData(transaction['transaction_type'], $transactionRow);
             this.appendTableRowData(transaction['loyalty_points'], $transactionRow);
-            this.appendTableRowData(transaction['updated_balance'], $transactionRow);
+            this.appendTableRowData(transaction['balance'], $transactionRow);
         }.bind(this));
     }
     orderSelection.appendTable = function(container) {

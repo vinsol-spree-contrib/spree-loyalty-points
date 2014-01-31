@@ -14,7 +14,7 @@ class Spree::Admin::LoyaltyPointsController < Spree::Admin::BaseController
   def create
     @loyalty_points_transaction = @user.loyalty_points_transactions.create(loyalty_points_transaction_params)
     if @loyalty_points_transaction.persisted?
-      redirect_to admin_users_path, notice: "Successfully #{ loyalty_points_transaction_params[:transaction_type] }ed user's Loyalty Points"
+      redirect_to admin_users_path, notice: "Successfully updated user's Loyalty Points"
     else
       render action: :new
     end
@@ -31,7 +31,8 @@ class Spree::Admin::LoyaltyPointsController < Spree::Admin::BaseController
               :only => [:id, :number]
             }
           },
-          :only => [:transaction_type, :source_type, :comment, :updated_at, :loyalty_points, :updated_balance]
+          :only => [:source_type, :comment, :updated_at, :loyalty_points, :balance],
+          :methods => [:transaction_type]
         )
       end
     end
@@ -46,7 +47,7 @@ class Spree::Admin::LoyaltyPointsController < Spree::Admin::BaseController
     end
 
     def loyalty_points_transaction_params
-      params.require(:loyalty_points_transaction).permit(:loyalty_points, :transaction_type, :comment, :source_id, :source_type)
+      params.require(:loyalty_points_transaction).permit(:loyalty_points, :type, :comment, :source_id, :source_type)
     end
 
 end

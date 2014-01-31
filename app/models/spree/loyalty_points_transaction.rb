@@ -5,16 +5,19 @@
 #TODO ->  update user balance in after creating loyalty_point transactions
 module Spree
   class LoyaltyPointsTransaction < ActiveRecord::Base
-    TRANSACTION_TYPES = ['Credit', 'Debit']
+    TRANSACTION_TYPES = ['Spree::LoyaltyPointsCreditTransaction', 'Spree::LoyaltyPointsDebitTransaction']
+    CLASS_TO_TRANSACTION_TYPE = { 'Spree::LoyaltyPointsCreditTransaction' => 'Credit', 'Spree::LoyaltyPointsDebitTransaction' => 'Debit'}
     belongs_to :user
     belongs_to :source, polymorphic: true
 
     validates :loyalty_points, :numericality => { :only_integer => true, :message => Spree.t('validation.must_be_int'), :greater_than => 0 }
-    validates :transaction_type, inclusion: { in: TRANSACTION_TYPES }
-    validates :updated_balance, presence: true
+    validates :type, inclusion: { in: TRANSACTION_TYPES }
+    validates :balance, presence: true
     validate :source_or_comment_present
 
     scope :for_order, ->(order) { where(source: order) }
+    after_create :update_user_balance
+    before_create :update_balance
 
     def source_or_comment_present
       unless source.present? || comment.present?
@@ -22,20 +25,8 @@ module Spree
       end
     end
 
-    before_create :update_user_balance
-
-    def update_user_balance
-      if debit_transaction?
-        user.decrement(:loyalty_points_balance, loyalty_points)
-      else
-        user.increment(:loyalty_points_balance, loyalty_points)
-      end
-      user.save!
-      self.updated_balance = user.loyalty_points_balance
-    end
-
-    def debit_transaction?
-      transaction_type == "Debit"
+    def transaction_type
+      CLASS_TO_TRANSACTION_TYPE[type]
     end
 
   end

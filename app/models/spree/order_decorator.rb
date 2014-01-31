@@ -1,17 +1,21 @@
 Spree::Order.class_eval do
   has_many :loyalty_points_transactions, as: :source
+  has_many :loyalty_points_credit_transactions, as: :source
+  has_many :loyalty_points_debit_transactions, as: :source
+
+  scope :loyalty_points_not_awarded, -> { includes(:loyalty_points_credit_transactions).where(:spree_loyalty_points_transactions => { :source_id => nil } ) }
 
   def add_loyalty_points
     loyalty_points_earned = loyalty_points_for(item_total)
     if !payment_by_loyalty_points?
-      new_loyalty_points_transaction(loyalty_points_earned, 'Credit')
+      new_loyalty_points_transaction(loyalty_points_earned, 'Spree::LoyaltyPointsCreditTransaction')
     end
   end
 
   def redeem_loyalty_points
     loyalty_points_redeemed = loyalty_points_for(total, 'redeem')
     if payment_by_loyalty_points? && redeemable_loyalty_points_balance?(total)
-      new_loyalty_points_transaction(loyalty_points_redeemed, 'Debit')
+      new_loyalty_points_transaction(loyalty_points_redeemed, 'Spree::LoyaltyPointsDebitTransaction')
     end
   end
 
@@ -22,7 +26,7 @@ Spree::Order.class_eval do
 
   def new_loyalty_points_transaction(quantity, trans_type)
     if quantity != 0
-      user.loyalty_points_transactions.create(source: self, loyalty_points: quantity, transaction_type: trans_type)
+      user.loyalty_points_transactions.create(source: self, loyalty_points: quantity, type: trans_type)
     end
   end
 
@@ -48,8 +52,8 @@ Spree::Order.class_eval do
     amount >= Spree::Config.loyalty_points_redeeming_balance
   end
 
-  def mark_awarded
-    update_column(:loyalty_points_awarded, true)
+  def loyalty_points_awarded?
+    loyalty_points_credit_transactions.count > 0
   end
 
 end

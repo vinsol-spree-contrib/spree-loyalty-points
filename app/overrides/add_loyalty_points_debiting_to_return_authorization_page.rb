@@ -6,7 +6,7 @@ Deface::Override.new(:virtual_path => 'spree/admin/return_authorizations/_form',
     <%= f.field_container :loyalty_points do %>
       <%= label :loyalty_points, Spree.t(:loyalty_points_debit) %> <span class='required'>*</span><br />
       <% if @return_authorization.received? %>
-        <%= @return_authorization.loyalty_points %> points <%= @return_authorization.loyalty_points_transaction_type %>ed <br />
+        <%= @return_authorization.loyalty_points %> points Debited <br />
       <% else %>
         <%= f.text_field :loyalty_points, {:style => 'width:80px;'} %>
         <%= f.hidden_field :loyalty_points_transaction_type, { value: :Debit } %>
@@ -17,7 +17,7 @@ Deface::Override.new(:virtual_path => 'spree/admin/return_authorizations/_form',
     <%= f.field_container :loyalty_points do %>
       <br /><%= label :loyalty_points, Spree.t(:loyalty_points_credit) %> <span class='required'>*</span><br />
       <% if @return_authorization.received? %>
-        <%= @return_authorization.loyalty_points %> points <%= @return_authorization.loyalty_points_transaction_type %>ed <br />
+        <%= @return_authorization.loyalty_points %> points Credited <br />
       <% else %>
         <%= f.text_field :loyalty_points, {:style => 'width:80px;'} %>
         <%= f.hidden_field :loyalty_points_transaction_type, { value: :Credit } %>

@@ -21,7 +21,7 @@ module Spree
       user = order.user
       loyalty_points_redeemed = order.loyalty_points_for(order.total, 'redeem')
 
-      user.loyalty_points_transactions.create(source: order, loyalty_points: loyalty_points_redeemed, transaction_type: 'Credit')
+      user.loyalty_points_transactions.create(source: order, loyalty_points: loyalty_points_redeemed, type: 'Spree::LoyaltyPointsCreditTransaction')
       ActiveMerchant::Billing::Response.new(true, "", {}, {})
     end
 

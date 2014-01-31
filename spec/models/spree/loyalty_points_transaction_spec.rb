@@ -15,8 +15,8 @@ describe Spree::LoyaltyPointsTransaction do
     @loyalty_points_transaction.should_not be_valid
   end
 
-  it "is invalid without updated_balance" do
-    @loyalty_points_transaction.updated_balance = nil
+  it "is invalid without balance" do
+    @loyalty_points_transaction.balance = nil
     @loyalty_points_transaction.should_not be_valid
   end
 
@@ -61,10 +61,10 @@ describe Spree::LoyaltyPointsTransaction do
 
     end
 
-    it "should change updated_balance" do
+    it "should change balance" do
       expect {
         @loyalty_points_transaction.update_user_balance
-      }.to change{ @loyalty_points_transaction.updated_balance}
+      }.to change{ @loyalty_points_transaction.balance}
     end
 
   end

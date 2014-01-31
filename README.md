@@ -1,7 +1,7 @@
 SpreeLoyaltyPoints
 ==================
 
-Introduction goes here.
+This extension is still under development. Please don't use it in production.
 
 Installation
 ------------

@@ -99,7 +99,7 @@ describe Spree::Order do
       
       it "should add a Loyalty Points Transaction" do
         expect {
-          @order.new_loyalty_points_transaction(30, 'Credit')
+          @order.new_loyalty_points_transaction(30, 'Spree::LoyaltyPointsCreditTransaction')
         }.to change{ Spree::LoyaltyPointsTransaction.count }.by(1)
       end
 
@@ -109,20 +109,10 @@ describe Spree::Order do
       
       it "should not add a Loyalty Points Transaction" do
         expect {
-          @order.new_loyalty_points_transaction(0, 'Debit')
+          @order.new_loyalty_points_transaction(0, 'Spree::LoyaltyPointsDebitTransaction')
         }.to change{ Spree::LoyaltyPointsTransaction.count }.by(0)
       end
 
-    end
-
-  end
-
-  describe 'mark_awarded' do
-
-    it "should update loyalty_points_awarded" do
-      expect {
-        @order.mark_awarded
-      }.to change{ @order.loyalty_points_awarded }.to(true)
     end
 
   end
@@ -186,6 +176,34 @@ describe Spree::Order do
 
       it "should return false" do
         @order.redeemable_loyalty_points_balance?(20).should eq(false)
+      end
+
+    end
+
+  end
+
+  describe 'loyalty_points_awarded?' do
+
+    context "when credit transactions are present" do
+
+      before :each do
+        @order.loyalty_points_credit_transactions = create_list(:loyalty_points_transaction, 5, source: @order)
+      end
+
+      it "should return true" do
+        @order.loyalty_points_awarded?.should eq(true)
+      end
+
+    end
+
+    context "when credit transactions are absent" do
+
+      before :each do
+        @order.loyalty_points_credit_transactions = []
+      end
+
+      it "should return false" do
+        @order.loyalty_points_awarded?.should eq(false)
       end
 
     end

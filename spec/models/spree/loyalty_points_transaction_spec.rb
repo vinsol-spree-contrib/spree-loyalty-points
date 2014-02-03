@@ -21,7 +21,7 @@ describe Spree::LoyaltyPointsTransaction do
   end
 
   it "is invalid if transaction type not in [Debit, Credit]" do
-    @loyalty_points_transaction.transaction_type = "XYZ"
+    @loyalty_points_transaction.type = "XYZ"
     @loyalty_points_transaction.should_not be_valid
   end
 
@@ -36,7 +36,7 @@ describe Spree::LoyaltyPointsTransaction do
     context "when transaction_type is Debit" do
 
       before :each do
-        @loyalty_points_transaction.transaction_type = "Debit"
+        @loyalty_points_transaction.type = "Spree::LoyaltyPointsDebitTransaction"
       end
 
       it "should decrement user's loyalty_points_balance" do
@@ -50,7 +50,7 @@ describe Spree::LoyaltyPointsTransaction do
     context "when transaction_type is Credit" do
 
       before :each do
-        @loyalty_points_transaction.transaction_type = "Credit"
+        @loyalty_points_transaction = FactoryGirl.build(:loyalty_points_transaction)
       end
 
       it "should increment user's loyalty_points_balance" do
@@ -61,36 +61,30 @@ describe Spree::LoyaltyPointsTransaction do
 
     end
 
-    it "should change balance" do
-      expect {
-        @loyalty_points_transaction.update_user_balance
-      }.to change{ @loyalty_points_transaction.balance}
-    end
-
   end
 
-  describe 'debit_transaction?' do
+  describe 'transaction_type' do
 
-    context "when transaction_type is Debit" do
+    context "when type is Spree::LoyaltyPointsDebitTransaction" do
 
       before :each do
-        @loyalty_points_transaction.transaction_type = "Debit"
+        @loyalty_points_transaction.type = "Spree::LoyaltyPointsDebitTransaction"
       end
 
-      it "should return true" do
-        @loyalty_points_transaction.debit_transaction?.should eq(true)
+      it "should be Debit" do
+        @loyalty_points_transaction.transaction_type.should eq('Debit')
       end
 
     end
 
-    context "when transaction_type is not Debit" do
+    context "when type is Spree::LoyaltyPointsCreditTransaction" do
 
       before :each do
-        @loyalty_points_transaction.transaction_type = "Credit"
+        @loyalty_points_transaction = FactoryGirl.build(:loyalty_points_transaction)
       end
 
-      it "should return false" do
-        @loyalty_points_transaction.debit_transaction?.should eq(false)
+      it "should be Credit" do
+        @loyalty_points_transaction.transaction_type.should eq('Credit')
       end
 
     end

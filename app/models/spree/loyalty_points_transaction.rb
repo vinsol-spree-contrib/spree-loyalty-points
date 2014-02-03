@@ -1,8 +1,5 @@
-#TODO ->  we can change column name updated_balance to balance.
-#TODO ->  we can remove loyalty_points_awarded column from spree_order.
-#TODO ->  Add indexes wherever required.
-#TODO ->  Use Sti in credit or debit of loyalty_point
-#TODO ->  update user balance in after creating loyalty_point transactions
+#TODO -> Add transaction_id in loyalty_points_transactions
+
 module Spree
   class LoyaltyPointsTransaction < ActiveRecord::Base
     TRANSACTION_TYPES = ['Spree::LoyaltyPointsCreditTransaction', 'Spree::LoyaltyPointsDebitTransaction']

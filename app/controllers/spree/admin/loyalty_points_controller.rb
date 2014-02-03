@@ -1,3 +1,5 @@
+#TODO -> We can use resource_controller of spree here.
+
 class Spree::Admin::LoyaltyPointsController < Spree::Admin::BaseController
   before_action :set_user
 

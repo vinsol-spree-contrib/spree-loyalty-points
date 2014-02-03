@@ -1,3 +1,5 @@
+#TODO -> Use concern for loyaltypoint related logic in order model.
+
 Spree::Order.class_eval do
   has_many :loyalty_points_transactions, as: :source
   has_many :loyalty_points_credit_transactions, as: :source
@@ -19,11 +21,13 @@ Spree::Order.class_eval do
     end
   end
 
+  #TODO -> Please confirm whether we use item_total or total as it is used for redeeming awarded loyalty points after receiving return_authorization.
   def update_loyalty_points(quantity, trans_type)
     loyalty_points_debit_quantity = [user.loyalty_points_balance, loyalty_points_for(total), quantity].min
     new_loyalty_points_transaction(loyalty_points_debit_quantity, trans_type)
   end
 
+  # TODO -> Create loyalty points transactions by using LoyaltyPointsDebitTransaction or LoyaltyPointsCreditTransaction instead of passing type as argument.
   def new_loyalty_points_transaction(quantity, trans_type)
     if quantity != 0
       user.loyalty_points_transactions.create(source: self, loyalty_points: quantity, type: trans_type)
@@ -57,5 +61,7 @@ Spree::Order.class_eval do
   end
 
 end
+
+#TODO -> Redeem loyalty points before completing the order. Also, we can move this logic in before completing the correponding loyalty_point payment 
 
 Spree::Order.state_machine.after_transition :to => :complete, :do => :redeem_loyalty_points

@@ -16,6 +16,7 @@ module Spree
     after_create :update_user_balance
     before_create :update_balance
 
+    #TODO -> Make this method private. Also check this in other classes also.
     def source_or_comment_present
       unless source.present? || comment.present?
         errors.add :base, 'Source or Comment should be present'

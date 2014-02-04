@@ -5,6 +5,7 @@ describe Spree::Admin::LoyaltyPointsController do
   context "when user found" do
     
     before(:each) do
+      #TODO -> Do not create actual objects in controller.
       user = create(:user_with_loyalty_points)
       controller.stub(:spree_current_user).and_return(user)
       user.stub(:generate_spree_api_key!).and_return(true)
@@ -16,8 +17,9 @@ describe Spree::Admin::LoyaltyPointsController do
     end
 
     describe "GET 'index'" do
-
+      #TODO -> should receive the methods also.
       it "assigns @loyalty_points" do
+        #TODO -> We can extract this request line in a separate method.
         get :index, :use_route => :spree
         assigns[:loyalty_points].should_not be_nil
       end
@@ -50,6 +52,7 @@ describe Spree::Admin::LoyaltyPointsController do
         assigns[:loyalty_points_transaction].should_not be_nil
       end
 
+      #TODO -> Do not create actual loyalty_points transactions. Instead should receive create.
       context "when transaction created " do
 
         it "redirects to admin users page" do
@@ -75,7 +78,7 @@ describe Spree::Admin::LoyaltyPointsController do
     end
 
     describe "GET 'order_transactions'" do
-
+      #TODO -> rspecs missing
       before :each do
         order = create(:order_with_loyalty_points)
         Spree::Order.stub(:find_by).and_return(order)

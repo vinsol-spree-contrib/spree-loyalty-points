@@ -1,5 +1,6 @@
 require "spec_helper"
 
+#TODO -> Rspecs missing
 describe Spree::LoyaltyPointsTransaction do
 
   before(:each) do
@@ -10,6 +11,7 @@ describe Spree::LoyaltyPointsTransaction do
     @loyalty_points_transaction.should be_valid
   end
 
+  #TODO -> We can use matchers to test these validations.
   it "is invalid without loyalty_points" do
     @loyalty_points_transaction.loyalty_points = nil
     @loyalty_points_transaction.should_not be_valid
@@ -25,12 +27,14 @@ describe Spree::LoyaltyPointsTransaction do
     @loyalty_points_transaction.should_not be_valid
   end
 
+  #TODO -> Also check error message.
   it "is invalid if neither source or comment is present" do
     @loyalty_points_transaction.source = nil
     @loyalty_points_transaction.comment = nil
     @loyalty_points_transaction.should_not be_valid
   end
 
+  #TODO -> Write these rspecs in debit and credit classes. Also, write rspecs for update_balance method.
   describe 'update_user_balance' do
 
     context "when transaction_type is Debit" do

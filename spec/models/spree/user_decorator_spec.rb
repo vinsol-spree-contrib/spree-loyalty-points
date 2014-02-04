@@ -1,5 +1,7 @@
 require "spec_helper"
 
+#TODO -> Rspecs missing
+
 describe Spree::User do
 
   before(:each) do
@@ -9,6 +11,8 @@ describe Spree::User do
   it "is valid with valid attributes" do
     @user.should be_valid
   end
+
+  #TODO -> We can use matchers here.
 
   it "is invalid without loyalty_points_balance" do
     @user.loyalty_points_balance = nil
@@ -22,6 +26,7 @@ describe Spree::User do
 
   describe 'loyalty_points_balance_sufficient?' do
 
+    #TODO -> Also check when loyalty_points_balance equal to redeeming balance
     before :each do
       Spree::Config.stub(:loyalty_points_redeeming_balance).and_return(30)
     end
@@ -53,6 +58,8 @@ describe Spree::User do
   end
 
   describe 'has_sufficient_loyalty_points?' do
+
+    #TODO -> Also check when loyalty_points_equivalent_currency equal to order total
 
     before :each do
       @order = create(:order_with_loyalty_points)

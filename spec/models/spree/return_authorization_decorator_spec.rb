@@ -1,4 +1,5 @@
 require "spec_helper"
+#TODO -> Rspecs missing
 
 describe Spree::ReturnAuthorization do
 
@@ -9,6 +10,7 @@ describe Spree::ReturnAuthorization do
 
   describe 'update_loyalty_points' do
 
+    #TODO -> We can test this by checking that order's update_loyalty_points should be called because this method is already tested in order model.
     it "should create a Loyalty Points Transaction" do
       expect {
         @return_authorization.update_loyalty_points

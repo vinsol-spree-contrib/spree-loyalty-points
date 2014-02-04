@@ -15,7 +15,7 @@ describe Spree::CheckoutController do
   end
 
   describe "PUT 'update'" do
-
+    #TODO -> Check all conditions.
     before :each do
       controller.stub(:ensure_order_not_completed).and_return(true)
       controller.stub(:ensure_checkout_allowed).and_return(true)

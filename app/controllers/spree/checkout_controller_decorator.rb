@@ -14,6 +14,7 @@ module Spree
         end
       end
 
+      #TODO -> This can be moved to model. Infact payment_by_loyalty_points? method can be used which is currently present in order model.
       def loyalty_points_used?(payments)
         payments.any? { |payment| payment.payment_method.type == "Spree::PaymentMethod::LoyaltyPoints" && payment.state != "invalid" }
       end

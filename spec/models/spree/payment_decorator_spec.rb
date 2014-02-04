@@ -1,5 +1,6 @@
 require "spec_helper"
 
+#TODO -> rspecs missing
 describe Spree::Payment do
 
   before(:each) do
@@ -38,6 +39,8 @@ describe Spree::Payment do
 
   end
 
+
+  #TODO -> Test state_not scope separately.
   describe 'all_payments_completed?' do
 
     let (:payments) { create_list(:payment_with_loyalty_points, 5, state: "completed") }

@@ -21,6 +21,7 @@ module Spree
     def void(source, gateway)
       order = get_order(gateway[:order_id])
       user = order.user
+      #TODO -> Use payment's amount instead of order's total
       loyalty_points_redeemed = order.loyalty_points_for(order.total, 'redeem')
 
       user.loyalty_points_transactions.create(source: order, loyalty_points: loyalty_points_redeemed, type: 'Spree::LoyaltyPointsCreditTransaction')

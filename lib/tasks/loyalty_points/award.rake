@@ -1,3 +1,4 @@
+#TODO -> Rspecs missing
 namespace :spree do
   namespace :loyalty_points do
     desc "Credit loyalty points to pending users accounts"

@@ -1,5 +1,7 @@
 require "spec_helper"
 
+#TODO -> Missing rspecs.
+
 describe Spree::Order do
 
   before(:each) do
@@ -10,6 +12,7 @@ describe Spree::Order do
     @order.should be_valid
   end
 
+  # TODO -> We can should receive the methods that have been tested separately.
   describe 'add_loyalty_points' do
 
     context "when payment not done via Loyalty Points" do
@@ -45,6 +48,7 @@ describe Spree::Order do
 
   describe 'redeem_loyalty_points' do
 
+  #TODO -> Also test this context that loyaty points are redeemable or not redeemable.
     context "when payment done via Loyalty Points" do
 
       before :each do
@@ -121,6 +125,7 @@ describe Spree::Order do
 
     context "when purpose is to award" do
 
+      #TODO -> Update this context.
       context "when ineligible for being awarded" do
 
         before :each do
@@ -191,6 +196,7 @@ describe Spree::Order do
       end
 
       it "should return true" do
+        #TODO -> We can use be_loyalty_points_awarded.
         @order.loyalty_points_awarded?.should eq(true)
       end
 

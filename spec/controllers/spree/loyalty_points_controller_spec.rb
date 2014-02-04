@@ -10,7 +10,7 @@ describe Spree::LoyaltyPointsController do
   end
 
   describe "GET 'index'" do
-
+    #TODO -> Check expectation of all methods.
     it "assigns @loyalty_points" do
       get :index, :use_route => :spree
       assigns[:loyalty_points].should_not be_nil

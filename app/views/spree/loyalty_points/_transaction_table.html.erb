@@ -1,6 +1,6 @@
-<%= paginate @loyalty_points %>
+<%= paginate @loyalty_points_transactions %>
 
-<% if @loyalty_points.present? %>
+<% if @loyalty_points_transactions.present? %>
   <table class="loyalty-points-summary">
     <thead>
     <tr>
@@ -14,7 +14,7 @@
     </tr>
     </thead>
     <tbody>
-    <% @loyalty_points.each do |loyalty_point_transaction| %>
+    <% @loyalty_points_transactions.each do |loyalty_point_transaction| %>
       <tr class="<%= cycle('even', 'odd') %>">
         <td class="loyalty-points-date"><%= pretty_time(loyalty_point_transaction.updated_at) %></td>
         <% if loyalty_point_transaction.source.present? %>
@@ -41,4 +41,4 @@
   <p><%= Spree.t(:you_have_not_earned_any_loyalty_points_yet) %></p>
 <% end %>
 
-<%= paginate @loyalty_points %>
+<%= paginate @loyalty_points_transactions %>

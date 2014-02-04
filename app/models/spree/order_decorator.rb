@@ -44,6 +44,7 @@ Spree::Order.class_eval do
     end
   end
 
+  #TODO -> create this method in payment model.
   def payment_by_loyalty_points?
     payments.includes(:payment_method).any? { |payment| payment.payment_method.type == "Spree::PaymentMethod::LoyaltyPoints" && payment.state != "invalid" }
   end

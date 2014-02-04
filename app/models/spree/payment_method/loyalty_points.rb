@@ -1,3 +1,4 @@
+#TODO -> Mark loyalty point payment completed automatically.
 module Spree
   class PaymentMethod::LoyaltyPoints < PaymentMethod
     def actions
@@ -16,6 +17,7 @@ module Spree
       ActiveMerchant::Billing::Response.new(true, "", {}, {})
     end
 
+    #TODO -> Credit loyalty points not just in payment void. Instead in any transition from complete state to any other state.
     def void(source, gateway)
       order = get_order(gateway[:order_id])
       user = order.user

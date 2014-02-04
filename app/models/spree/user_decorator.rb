@@ -2,6 +2,8 @@ Spree::User.class_eval do
   validates :loyalty_points_balance, numericality: { only_integer: true, greater_than: 0 }
 
   has_many :loyalty_points_transactions
+  has_many :loyalty_points_debit_transactions
+  has_many :loyalty_points_credit_transactions
 
   def loyalty_points_balance_sufficient?
     loyalty_points_balance >= Spree::Config.loyalty_points_redeeming_balance

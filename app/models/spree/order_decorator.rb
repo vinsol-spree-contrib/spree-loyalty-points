@@ -10,7 +10,7 @@ Spree::Order.class_eval do
   def add_loyalty_points
     loyalty_points_earned = loyalty_points_for(item_total)
     if !payment_by_loyalty_points?
-      new_loyalty_points_transaction(loyalty_points_earned, 'Spree::LoyaltyPointsCreditTransaction')
+      new_loyalty_points_credit_transaction(loyalty_points_earned)
     end
   end
 
@@ -24,13 +24,23 @@ Spree::Order.class_eval do
   #TODO -> Please confirm whether we use item_total or total as it is used for redeeming awarded loyalty points after receiving return_authorization.
   def update_loyalty_points(quantity, trans_type)
     loyalty_points_debit_quantity = [user.loyalty_points_balance, loyalty_points_for(total), quantity].min
-    new_loyalty_points_transaction(loyalty_points_debit_quantity, trans_type)
+    if trans_type == "Debit"
+      new_loyalty_points_debit_transaction(loyalty_points_debit_quantity)
+    else
+      new_loyalty_points_credit_transaction(loyalty_points_debit_quantity)
+    end
   end
 
   # TODO -> Create loyalty points transactions by using LoyaltyPointsDebitTransaction or LoyaltyPointsCreditTransaction instead of passing type as argument.
-  def new_loyalty_points_transaction(quantity, trans_type)
+  def new_loyalty_points_credit_transaction(quantity)
     if quantity != 0
-      user.loyalty_points_transactions.create(source: self, loyalty_points: quantity, type: trans_type)
+      user.loyalty_points_credit_transactions.create(source: self, loyalty_points: quantity)
+    end
+  end
+
+  def new_loyalty_points_debit_transaction(quantity)
+    if quantity != 0
+      user.loyalty_points_debit_transactions.create(source: self, loyalty_points: quantity)
     end
   end
 

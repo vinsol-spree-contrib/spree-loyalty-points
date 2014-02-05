@@ -1,3 +1,5 @@
+#TODO -> Add validation that -ve loyaltypoint payment cannot be created.
+
 Spree::Payment.class_eval do
 
   scope :state_not, ->(s) { where('state != ?', s) }

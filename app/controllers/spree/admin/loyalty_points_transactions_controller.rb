@@ -1,5 +1,3 @@
-#TODO -> We can use resource_controller of spree here.
-
 class Spree::Admin::LoyaltyPointsTransactionsController < Spree::Admin::ResourceController
   before_action :set_user, only: [:order_transactions]
   belongs_to 'spree/user'

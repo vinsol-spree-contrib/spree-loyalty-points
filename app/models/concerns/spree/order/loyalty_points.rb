@@ -5,6 +5,7 @@ module Spree
     module LoyaltyPoints
       extend ActiveSupport::Concern
 
+      #TODO -> Change name of this method.
       def add_loyalty_points
         loyalty_points_earned = loyalty_points_for(item_total)
         if !loyalty_points_used?
@@ -27,6 +28,7 @@ module Spree
       #TODO -> Please confirm whether we use item_total or total as it is used for redeeming awarded loyalty points after receiving return_authorization.
       def update_loyalty_points(quantity, trans_type)
         loyalty_points_debit_quantity = [user.loyalty_points_balance, loyalty_points_for(total), quantity].min
+        #TODO -> We can create new
         if trans_type == "Debit"
           new_loyalty_points_debit_transaction(loyalty_points_debit_quantity)
         else
@@ -67,13 +69,14 @@ module Spree
       
       private
 
-        # TODO -> Create loyalty points transactions by using LoyaltyPointsDebitTransaction or LoyaltyPointsCreditTransaction instead of passing type as argument.
+        #TODO -> change name of this method to something like credit_loyalty_points.
         def new_loyalty_points_credit_transaction(quantity)
           if quantity != 0
             user.loyalty_points_credit_transactions.create(source: self, loyalty_points: quantity)
           end
         end
 
+        #TODO -> change name of this method.
         def new_loyalty_points_debit_transaction(quantity)
           if quantity != 0
             user.loyalty_points_debit_transactions.create(source: self, loyalty_points: quantity)
@@ -84,7 +87,6 @@ module Spree
           payments.by_loyalty_points.with_state('checkout').each { |payment| payment.complete! }
         end
 
-        #TODO -> create this method in payment model.
         def loyalty_points_used?
           payments.any_with_loyalty_points?
         end

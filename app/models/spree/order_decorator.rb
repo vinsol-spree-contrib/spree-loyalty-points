@@ -14,12 +14,6 @@ Spree::Order.class_eval do
 
   scope :with_uncredited_loyalty_points, ->(num) { with_hours_since_payment(num).loyalty_points_not_awarded }
 
-  #TODO -> Redeem loyalty points before completing the order. Also, we can move this logic in before completing the correponding loyalty_point payment 
-
   fsm = self.state_machines[:state]
   fsm.before_transition :from => fsm.states.map(&:name) - [:complete], :to => [:complete], :do => :complete_loyalty_points_payments
-
-  #TODO -> create this method in payment model.
-  #TODO -> Check whether loading of all payments required or not.
-
 end

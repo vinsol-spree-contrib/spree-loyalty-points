@@ -1,5 +1,3 @@
-#TODO -> Add validation that -ve loyaltypoint payment cannot be created.
-
 Spree::Payment.class_eval do
 
   validates :amount, numericality: { greater_than: 0 }, :if => :by_loyalty_points?
@@ -7,6 +5,9 @@ Spree::Payment.class_eval do
 
   fsm = self.state_machines[:state]
   fsm.after_transition :from => fsm.states.map(&:name) - [:completed], :to => [:completed], :do => :notify_paid_order
+
+  #TODO -> Use payment's amount instead of order's total
+  
   fsm.after_transition :from => fsm.states.map(&:name) - [:completed], :to => [:completed], :do => :redeem_loyalty_points, :if => :by_loyalty_points?
   fsm.after_transition :from => [:completed], :to => fsm.states.map(&:name) - [:completed] , :do => :return_loyalty_points, :if => :by_loyalty_points?
 
@@ -14,6 +15,7 @@ Spree::Payment.class_eval do
     by_loyalty_points.size != 0
   end
 
+  #TODO -> Why eager load payment methods ?
   def self.by_loyalty_points
     includes(:payment_method).where(:spree_payment_methods => { type: 'Spree::PaymentMethod::LoyaltyPoints'})
   end

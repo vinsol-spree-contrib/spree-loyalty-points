@@ -17,7 +17,7 @@ Spree::Payment.class_eval do
 
   #TODO -> Why eager load payment methods ?
   def self.by_loyalty_points
-    includes(:payment_method).where(:spree_payment_methods => { type: 'Spree::PaymentMethod::LoyaltyPoints'})
+    joins(:payment_method).where(:spree_payment_methods => { type: 'Spree::PaymentMethod::LoyaltyPoints'})
   end
 
   def invalidate_old_payments
@@ -43,11 +43,11 @@ Spree::Payment.class_eval do
     end
 
     def return_loyalty_points
-      order.return_loyalty_points
+      order.return_loyalty_points(amount)
     end
 
     def redeem_loyalty_points
-      order.redeem_loyalty_points
+      order.redeem_loyalty_points()
     end
 
 end

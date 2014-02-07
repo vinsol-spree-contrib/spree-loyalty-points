@@ -1,6 +1,9 @@
 module Spree
   class LoyaltyPointsDebitTransaction < LoyaltyPointsTransaction
 
+    after_create :update_user_balance
+    before_create :update_balance
+
   private
 
     #TODO -> update user's balance directly by one query instead of fetching the record and then save because it may save wrong value.

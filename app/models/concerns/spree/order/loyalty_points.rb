@@ -6,35 +6,29 @@ module Spree
       extend ActiveSupport::Concern
 
       #TODO -> Change name of this method.
-      def add_loyalty_points
+      def award_loyalty_points
         loyalty_points_earned = loyalty_points_for(item_total)
         if !loyalty_points_used?
-          new_loyalty_points_credit_transaction(loyalty_points_earned)
+          create_credit_transaction(loyalty_points_earned)
         end
       end
 
-      def redeem_loyalty_points
+      def redeem_loyalty_points(amount = nil)
         loyalty_points_redeemed = loyalty_points_for(total, 'redeem')
+        loyalty_points_redeemed = loyalty_points_for(amount) if amount
         if loyalty_points_used? && redeemable_loyalty_points_balance?(total)
-          new_loyalty_points_debit_transaction(loyalty_points_redeemed)
+          create_debit_transaction(loyalty_points_redeemed)
         end
       end
 
       def return_loyalty_points
         loyalty_points_redeemed = loyalty_points_for(total, 'redeem')
-        new_loyalty_points_credit_transaction(loyalty_points_redeemed)
+        loyalty_points_redeemed = loyalty_points_for(amount) if amount
+        create_credit_transaction(loyalty_points_redeemed)
       end
 
       #TODO -> Please confirm whether we use item_total or total as it is used for redeeming awarded loyalty points after receiving return_authorization.
-      def update_loyalty_points(quantity, trans_type)
-        loyalty_points_debit_quantity = [user.loyalty_points_balance, loyalty_points_for(total), quantity].min
         #TODO -> We can create new
-        if trans_type == "Debit"
-          new_loyalty_points_debit_transaction(loyalty_points_debit_quantity)
-        else
-          new_loyalty_points_credit_transaction(loyalty_points_debit_quantity)
-        end
-      end
 
       def loyalty_points_for(amount, purpose = 'award')
         loyalty_points = if purpose == 'award' && eligible_for_loyalty_points?(amount)
@@ -54,6 +48,10 @@ module Spree
         loyalty_points_credit_transactions.count > 0
       end
 
+      def loyalty_points_used?
+        payments.any_with_loyalty_points?
+      end
+
       module ClassMethods
         
         def credit_loyalty_points_to_user
@@ -61,7 +59,7 @@ module Spree
           #TODO -> create scope in order model.
           uncredited_orders = Spree::Order.with_uncredited_loyalty_points(points_award_period)
           uncredited_orders.each do |order|
-            order.add_loyalty_points
+            order.award_loyalty_points
           end
         end
 
@@ -70,25 +68,17 @@ module Spree
       private
 
         #TODO -> change name of this method to something like credit_loyalty_points.
-        def new_loyalty_points_credit_transaction(quantity)
-          if quantity != 0
-            user.loyalty_points_credit_transactions.create(source: self, loyalty_points: quantity)
-          end
+        def create_credit_transaction(quantity)
+          user.loyalty_points_credit_transactions.create(source: self, loyalty_points: quantity)
         end
 
         #TODO -> change name of this method.
-        def new_loyalty_points_debit_transaction(quantity)
-          if quantity != 0
-            user.loyalty_points_debit_transactions.create(source: self, loyalty_points: quantity)
-          end
+        def create_debit_transaction(quantity)
+          user.loyalty_points_debit_transactions.create(source: self, loyalty_points: quantity)
         end
 
         def complete_loyalty_points_payments
           payments.by_loyalty_points.with_state('checkout').each { |payment| payment.complete! }
-        end
-
-        def loyalty_points_used?
-          payments.any_with_loyalty_points?
         end
 
         def redeemable_loyalty_points_balance?(amount)

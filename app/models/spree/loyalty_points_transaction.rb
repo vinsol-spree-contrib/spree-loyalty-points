@@ -13,8 +13,8 @@ module Spree
     validate :source_or_comment_present
 
     scope :for_order, ->(order) { where(source: order) }
-    after_create :update_user_balance
-    before_create :update_balance
+
+    before_create :generate_transaction_id
 
     def transaction_type
       CLASS_TO_TRANSACTION_TYPE[type]
@@ -27,6 +27,12 @@ module Spree
         unless source.present? || comment.present?
           errors.add :base, 'Source or Comment should be present'
         end
+      end
+
+      def generate_transaction_id
+        begin
+          self.transaction_id = (Time.now.strftime("%s") + rand(999999).to_s).to(15)
+        end while Spree::LoyaltyPointsTransaction.where(:transaction_id => transaction_id).present? 
       end
 
   end

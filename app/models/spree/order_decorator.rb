@@ -12,6 +12,8 @@ Spree::Order.class_eval do
 
   scope :with_hours_since_payment, ->(num) { where('`spree_orders`.`paid_at` < ? ', num.hours.ago).loyalty_points_not_awarded }
 
+  scope :with_uncredited_loyalty_points, ->(num) { with_hours_since_payment(num).loyalty_points_not_awarded }
+
   #TODO -> Redeem loyalty points before completing the order. Also, we can move this logic in before completing the correponding loyalty_point payment 
 
   fsm = self.state_machines[:state]

@@ -1,6 +1,9 @@
+require 'active_support/concern'
+
 module Spree
   class Order < ActiveRecord::Base
     module LoyaltyPoints
+      extend ActiveSupport::Concern
 
       def add_loyalty_points
         loyalty_points_earned = loyalty_points_for(item_total)
@@ -49,6 +52,19 @@ module Spree
         loyalty_points_credit_transactions.count > 0
       end
 
+      module ClassMethods
+        
+        def credit_loyalty_points_to_user
+          points_award_period = Spree::Config.loyalty_points_award_period
+          #TODO -> create scope in order model.
+          uncredited_orders = Spree::Order.with_uncredited_loyalty_points(points_award_period)
+          uncredited_orders.each do |order|
+            order.add_loyalty_points
+          end
+        end
+
+      end
+      
       private
 
         # TODO -> Create loyalty points transactions by using LoyaltyPointsDebitTransaction or LoyaltyPointsCreditTransaction instead of passing type as argument.

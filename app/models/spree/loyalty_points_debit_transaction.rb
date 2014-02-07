@@ -1,6 +1,8 @@
 module Spree
   class LoyaltyPointsDebitTransaction < LoyaltyPointsTransaction
 
+  private
+
     def update_user_balance
       user.decrement(:loyalty_points_balance, loyalty_points)
       user.save!

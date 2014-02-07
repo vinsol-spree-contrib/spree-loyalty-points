@@ -1,3 +1,5 @@
+#TODO -> Add validation that -ve loyaltypoint payment cannot be created.
+
 Spree::Payment.class_eval do
 
   validates :amount, numericality: { greater_than: 0 }, :if => :by_loyalty_points?

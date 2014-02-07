@@ -5,6 +5,7 @@ module Spree
     private
 
       def sufficient_loyalty_points
+        #TODO -> There is no need to create Payment object for checking loyalty point payment used or not.
         payment_method_ids = params[:order][:payments_attributes].collect do |payment|
           payment["payment_method_id"]
         end

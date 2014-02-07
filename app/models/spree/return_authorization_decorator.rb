@@ -1,3 +1,5 @@
+#TODO -> Show all information related to transactions either debit or credit in creating return authorization at admin end. Also, confirm in which condition admin would debit and credit with return.
+
 Spree::ReturnAuthorization.class_eval do
 
   def update_loyalty_points

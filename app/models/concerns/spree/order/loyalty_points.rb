@@ -21,7 +21,7 @@ module Spree
         end
       end
 
-      def return_loyalty_points
+      def return_loyalty_points(amount = nil)
         loyalty_points_redeemed = loyalty_points_for(total, 'redeem')
         loyalty_points_redeemed = loyalty_points_for(amount) if amount
         create_credit_transaction(loyalty_points_redeemed)
@@ -68,13 +68,13 @@ module Spree
       private
 
         #TODO -> change name of this method to something like credit_loyalty_points.
-        def create_credit_transaction(quantity)
-          user.loyalty_points_credit_transactions.create(source: self, loyalty_points: quantity)
+        def create_credit_transaction(points)
+          user.loyalty_points_credit_transactions.create(source: self, loyalty_points: points)
         end
 
         #TODO -> change name of this method.
-        def create_debit_transaction(quantity)
-          user.loyalty_points_debit_transactions.create(source: self, loyalty_points: quantity)
+        def create_debit_transaction(points)
+          user.loyalty_points_debit_transactions.create(source: self, loyalty_points: points)
         end
 
         def complete_loyalty_points_payments

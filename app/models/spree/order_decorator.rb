@@ -1,5 +1,3 @@
-#TODO -> Use concern for loyaltypoint related logic in order model.
-
 Spree::Order.class_eval do
 
   include Spree::Order::LoyaltyPoints

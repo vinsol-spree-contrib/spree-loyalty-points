@@ -1,5 +1,3 @@
-#TODO -> Add transaction_id in loyalty_points_transactions
-
 module Spree
   class LoyaltyPointsTransaction < ActiveRecord::Base
     TRANSACTION_TYPES = ['Spree::LoyaltyPointsCreditTransaction', 'Spree::LoyaltyPointsDebitTransaction']
@@ -22,7 +20,6 @@ module Spree
 
     private
 
-      #TODO -> Make this method private. Also check this in other classes also.
       def source_or_comment_present
         unless source.present? || comment.present?
           errors.add :base, 'Source or Comment should be present'
@@ -31,6 +28,7 @@ module Spree
 
       def generate_transaction_id
         begin
+          #TODO -> Use Time.current here.
           self.transaction_id = (Time.now.strftime("%s") + rand(999999).to_s).to(15)
         end while Spree::LoyaltyPointsTransaction.where(:transaction_id => transaction_id).present? 
       end

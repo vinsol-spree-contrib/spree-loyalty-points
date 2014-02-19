@@ -5,7 +5,6 @@ module Spree
     module LoyaltyPoints
       extend ActiveSupport::Concern
 
-      #TODO -> Change name of this method.
       def award_loyalty_points
         loyalty_points_earned = loyalty_points_for(item_total)
         if !loyalty_points_used?
@@ -13,6 +12,7 @@ module Spree
         end
       end
 
+      #TODO -> I think both methods given below can be implemented in payment model.
       def redeem_loyalty_points(amount = nil)
         loyalty_points_redeemed = loyalty_points_for(total, 'redeem')
         loyalty_points_redeemed = loyalty_points_for(amount) if amount
@@ -27,9 +27,7 @@ module Spree
         create_credit_transaction(loyalty_points_redeemed)
       end
 
-      #TODO -> Please confirm whether we use item_total or total as it is used for redeeming awarded loyalty points after receiving return_authorization.
-        #TODO -> We can create new
-
+      #TODO -> Some methods like this can be moved in separate module as they are not related to order.
       def loyalty_points_for(amount, purpose = 'award')
         loyalty_points = if purpose == 'award' && eligible_for_loyalty_points?(amount)
           (amount * Spree::Config.loyalty_points_awarding_unit).floor
@@ -56,7 +54,6 @@ module Spree
         
         def credit_loyalty_points_to_user
           points_award_period = Spree::Config.loyalty_points_award_period
-          #TODO -> create scope in order model.
           uncredited_orders = Spree::Order.with_uncredited_loyalty_points(points_award_period)
           uncredited_orders.each do |order|
             order.award_loyalty_points
@@ -65,12 +62,10 @@ module Spree
 
       end
       
-      #TODO -> change name of this method to something like credit_loyalty_points.
       def create_credit_transaction(points)
         user.loyalty_points_credit_transactions.create(source: self, loyalty_points: points)
       end
 
-      #TODO -> change name of this method.
       def create_debit_transaction(points)
         user.loyalty_points_debit_transactions.create(source: self, loyalty_points: points)
       end

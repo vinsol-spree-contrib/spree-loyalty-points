@@ -15,7 +15,6 @@ Spree::Payment.class_eval do
     by_loyalty_points.size != 0
   end
 
-  #TODO -> Why eager load payment methods ?
   def self.by_loyalty_points
     joins(:payment_method).where(:spree_payment_methods => { type: 'Spree::PaymentMethod::LoyaltyPoints'})
   end

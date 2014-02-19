@@ -23,13 +23,5 @@ module Spree
     def source_required?
       false
     end
-
-    private
-
-      def get_order(order_id)
-        actual_order_id = order_id.split('-').first
-        Spree::Order.find_by_number(actual_order_id)
-      end
-
   end
 end

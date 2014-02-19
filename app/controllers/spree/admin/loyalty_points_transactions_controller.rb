@@ -46,7 +46,11 @@ class Spree::Admin::LoyaltyPointsTransactionsController < Spree::Admin::Resource
     end
 
     def collection_url
-      admin_user_loyalty_points_url(parent)
+      if (parent_data.present? && @parent.nil?) || parent_data.blank?
+        admin_users_url
+      else
+        admin_user_loyalty_points_url(parent)
+      end
     end
 
     def set_ordered_transactions

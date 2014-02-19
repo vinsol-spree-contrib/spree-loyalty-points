@@ -65,17 +65,17 @@ module Spree
 
       end
       
+      #TODO -> change name of this method to something like credit_loyalty_points.
+      def create_credit_transaction(points)
+        user.loyalty_points_credit_transactions.create(source: self, loyalty_points: points)
+      end
+
+      #TODO -> change name of this method.
+      def create_debit_transaction(points)
+        user.loyalty_points_debit_transactions.create(source: self, loyalty_points: points)
+      end
+
       private
-
-        #TODO -> change name of this method to something like credit_loyalty_points.
-        def create_credit_transaction(points)
-          user.loyalty_points_credit_transactions.create(source: self, loyalty_points: points)
-        end
-
-        #TODO -> change name of this method.
-        def create_debit_transaction(points)
-          user.loyalty_points_debit_transactions.create(source: self, loyalty_points: points)
-        end
 
         def complete_loyalty_points_payments
           payments.by_loyalty_points.with_state('checkout').each { |payment| payment.complete! }

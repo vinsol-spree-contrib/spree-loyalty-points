@@ -1,5 +1,6 @@
 Spree::Order.class_eval do
 
+  include Spree::LoyaltyPoints
   include Spree::Order::LoyaltyPoints
 
   has_many :loyalty_points_transactions, as: :source
@@ -14,4 +15,5 @@ Spree::Order.class_eval do
 
   fsm = self.state_machines[:state]
   fsm.before_transition :from => fsm.states.map(&:name) - [:complete], :to => [:complete], :do => :complete_loyalty_points_payments
+
 end

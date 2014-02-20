@@ -1,5 +1,5 @@
 Spree::Admin::ReturnAuthorizationsController.class_eval do
-  before_action :set_loyalty_points_transactions, only: [:new, :edit]
+  before_action :set_loyalty_points_transactions, only: [:new, :edit, :create, :update]
 
   private
 

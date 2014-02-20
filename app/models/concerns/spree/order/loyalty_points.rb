@@ -5,6 +5,10 @@ module Spree
     module LoyaltyPoints
       extend ActiveSupport::Concern
 
+      def loyalty_points_total
+        loyalty_points_credit_transactions.sum(:loyalty_points) - loyalty_points_debit_transactions.sum(:loyalty_points)
+      end
+
       def award_loyalty_points
         loyalty_points_earned = loyalty_points_for(item_total)
         if !loyalty_points_used?
@@ -12,35 +16,13 @@ module Spree
         end
       end
 
-      #TODO -> I think both methods given below can be implemented in payment model.
-      def redeem_loyalty_points(amount = nil)
-        loyalty_points_redeemed = loyalty_points_for(total, 'redeem')
-        loyalty_points_redeemed = loyalty_points_for(amount) if amount
-        if loyalty_points_used? && redeemable_loyalty_points_balance?(total)
-          create_debit_transaction(loyalty_points_redeemed)
-        end
+      def with_loyalty_points_payment
+        payments.by_loyalty_points
       end
 
-      def return_loyalty_points(amount = nil)
-        loyalty_points_redeemed = loyalty_points_for(total, 'redeem')
-        loyalty_points_redeemed = loyalty_points_for(amount) if amount
-        create_credit_transaction(loyalty_points_redeemed)
-      end
+      #TODO -> I think both methods given below can be implemented in payment model.
 
       #TODO -> Some methods like this can be moved in separate module as they are not related to order.
-      def loyalty_points_for(amount, purpose = 'award')
-        loyalty_points = if purpose == 'award' && eligible_for_loyalty_points?(amount)
-          (amount * Spree::Config.loyalty_points_awarding_unit).floor
-        elsif purpose == 'redeem'
-          (amount / Spree::Config.loyalty_points_conversion_rate).ceil
-        else
-          0
-        end
-      end
-
-      def eligible_for_loyalty_points?(amount)
-        amount >= Spree::Config.min_amount_required_to_get_loyalty_points
-      end
 
       def loyalty_points_awarded?
         loyalty_points_credit_transactions.count > 0
@@ -76,9 +58,6 @@ module Spree
           payments.by_loyalty_points.with_state('checkout').each { |payment| payment.complete! }
         end
 
-        def redeemable_loyalty_points_balance?(amount)
-          amount >= Spree::Config.loyalty_points_redeeming_balance
-        end
     end
   end
 end

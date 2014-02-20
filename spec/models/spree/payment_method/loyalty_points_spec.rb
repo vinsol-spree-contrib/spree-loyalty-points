@@ -78,6 +78,7 @@ describe Spree::PaymentMethod::LoyaltyPoints do
       end
     end
 
+    #TODO -> context description is not right.
     context 'when payment state is one of [checkout, pending]' do
       before(:each) do
         payment.state = 'void'

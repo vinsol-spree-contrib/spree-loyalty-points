@@ -16,10 +16,6 @@ module Spree
         end
       end
 
-      def with_loyalty_points_payment
-        payments.by_loyalty_points
-      end
-
       #TODO -> I think both methods given below can be implemented in payment model.
 
       #TODO -> Some methods like this can be moved in separate module as they are not related to order.

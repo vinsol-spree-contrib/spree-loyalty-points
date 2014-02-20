@@ -12,87 +12,56 @@ describe Spree::LoyaltyPointsTransaction do
   end
 
   #TODO -> We can use matchers to test these validations.
-  it "is invalid without loyalty_points" do
-    @loyalty_points_transaction.loyalty_points = nil
-    @loyalty_points_transaction.should_not be_valid
+  it "is invalid without numeric loyalty_points" do
+    should validate_numericality_of(:loyalty_points).only_integer.with_message(Spree.t('validation.must_be_int'))
+    should validate_numericality_of(:loyalty_points).is_greater_than(0).with_message(Spree.t('validation.must_be_int'))
   end
 
   it "is invalid without balance" do
-    @loyalty_points_transaction.balance = nil
-    @loyalty_points_transaction.should_not be_valid
+    should validate_presence_of :balance
   end
 
-  it "is invalid if transaction type not in [Debit, Credit]" do
-    @loyalty_points_transaction.type = "XYZ"
-    @loyalty_points_transaction.should_not be_valid
+  it "is invalid if type is not in [Spree::LoyaltyPointsCreditTransaction, Spree::LoyaltyPointsDebitTransaction]" do
+    should ensure_inclusion_of(:type).in_array(['Spree::LoyaltyPointsCreditTransaction', 'Spree::LoyaltyPointsDebitTransaction'])
+  end
+
+  it "belongs_to user" do
+    should belong_to(:user)
+  end
+
+  it "belongs_to source" do
+    should belong_to(:source)
   end
 
   #TODO -> Also check error message.
-  it "is invalid if neither source or comment is present" do
-    @loyalty_points_transaction.source = nil
-    @loyalty_points_transaction.comment = nil
-    @loyalty_points_transaction.should_not be_valid
-  end
+  context "when neither source or comment is present" do
 
-  #TODO -> Write these rspecs in debit and credit classes. Also, write rspecs for update_balance method.
-  describe 'update_user_balance' do
-
-    context "when transaction_type is Debit" do
-
-      before :each do
-        @loyalty_points_transaction.type = "Spree::LoyaltyPointsDebitTransaction"
-      end
-
-      it "should decrement user's loyalty_points_balance" do
-        expect {
-          @loyalty_points_transaction.update_user_balance
-        }.to change{ @loyalty_points_transaction.user.loyalty_points_balance}.by(-@loyalty_points_transaction.loyalty_points)
-      end
-
+    before :each do
+      @loyalty_points_transaction.source = nil
+      @loyalty_points_transaction.comment = nil
     end
 
-    context "when transaction_type is Credit" do
+    it "is invalid" do
+      @loyalty_points_transaction.should_not be_valid
+    end
 
-      before :each do
-        @loyalty_points_transaction = FactoryGirl.build(:loyalty_points_transaction)
-      end
+    it "should add error 'Source or Comment should be present'" do
+      @loyalty_points_transaction.errors[:base].include? ('Source or Comment should be present').should be_true
+    end
 
-      it "should increment user's loyalty_points_balance" do
-        expect {
-          @loyalty_points_transaction.update_user_balance
-        }.to change{ @loyalty_points_transaction.user.loyalty_points_balance}.by(@loyalty_points_transaction.loyalty_points)
-      end
+  end
 
+  describe "generate_transaction_id" do
+
+    before :each do
+      @loyalty_points_transaction.send(:generate_transaction_id)
+    end
+
+    it "adds a transaction_id" do
+      @loyalty_points_transaction.transaction_id.should_not be_nil
     end
 
   end
 
-  describe 'transaction_type' do
-
-    context "when type is Spree::LoyaltyPointsDebitTransaction" do
-
-      before :each do
-        @loyalty_points_transaction.type = "Spree::LoyaltyPointsDebitTransaction"
-      end
-
-      it "should be Debit" do
-        @loyalty_points_transaction.transaction_type.should eq('Debit')
-      end
-
-    end
-
-    context "when type is Spree::LoyaltyPointsCreditTransaction" do
-
-      before :each do
-        @loyalty_points_transaction = FactoryGirl.build(:loyalty_points_transaction)
-      end
-
-      it "should be Credit" do
-        @loyalty_points_transaction.transaction_type.should eq('Credit')
-      end
-
-    end
-
-  end
-
+  #TODO -> Write these rspecs in debit and credit classes. Also, write rspecs for update_balance method.
 end

@@ -55,12 +55,6 @@ describe Spree::PaymentMethod::LoyaltyPoints do
       @order.stub(:loyalty_points_for).and_return(30)
     end
 
-    it 'should create a Loyalty Points Transaction' do
-      expect {
-        loyalty_points_payment_method.void(source, gateway).should be_a(ActiveMerchant::Billing::Response)
-      }.to change{ Spree::LoyaltyPointsTransaction.count }.by(1)
-    end
-
     it 'should be a new ActiveMerchant::Billing::Response' do
       loyalty_points_payment_method.void(source, gateway).should be_a(ActiveMerchant::Billing::Response)
     end

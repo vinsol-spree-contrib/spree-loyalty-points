@@ -14,14 +14,13 @@ describe Spree::User do
 
   #TODO -> We can use matchers here.
 
-  it "is invalid without loyalty_points_balance" do
-    @user.loyalty_points_balance = nil
-    @user.should_not be_valid
-  end
+  it { should have_many :loyalty_points_transactions }
+  it { should have_many :loyalty_points_credit_transactions }
+  it { should have_many :loyalty_points_debit_transactions }
 
-  it "is invalid when loyalty_points_balance is not a positive integer" do
-    @user.loyalty_points_balance = -2
-    @user.should_not be_valid
+  it "is invalid without numeric loyalty_points_balance" do
+    should validate_numericality_of(:loyalty_points_balance).only_integer
+    should validate_numericality_of(:loyalty_points_balance).is_greater_than(0)
   end
 
   describe 'loyalty_points_balance_sufficient?' do
@@ -35,6 +34,18 @@ describe Spree::User do
 
       before :each do
         @user.loyalty_points_balance = 40
+      end
+
+      it "should return true" do
+        @user.loyalty_points_balance_sufficient?.should eq(true)
+      end
+
+    end
+
+    context "when loyalty_points_balance equal to redeeming balance" do
+
+      before :each do
+        @user.loyalty_points_balance = 30
       end
 
       it "should return true" do
@@ -70,6 +81,18 @@ describe Spree::User do
 
       before :each do
         @user.stub(:loyalty_points_equivalent_currency).and_return(40)
+      end
+
+      it "should return true" do
+        @user.has_sufficient_loyalty_points?(@order).should eq(true)
+      end
+
+    end
+
+    context "when loyalty_points_equivalent_currency equal to order total" do
+
+      before :each do
+        @user.stub(:loyalty_points_equivalent_currency).and_return(30)
       end
 
       it "should return true" do

@@ -2,8 +2,9 @@ require 'spec_helper'
 
 describe Spree::Admin::GeneralSettingsController do
 
+  let(:user) { mock_model(Spree::User).as_null_object }
+
   before(:each) do
-    user = create(:user_with_loyalty_points)
     controller.stub(:spree_current_user).and_return(user)
     user.stub(:generate_spree_api_key!).and_return(true)
     controller.stub(:authorize!).and_return(true)

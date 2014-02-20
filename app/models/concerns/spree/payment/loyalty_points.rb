@@ -17,12 +17,6 @@ module Spree
 
         end
 
-      def invalidate_old_payments
-        order.payments.with_state('checkout').where("id != ?", self.id).each do |payment|
-          payment.invalidate!
-        end unless by_loyalty_points?
-      end
-
       private
 
         def redeem_loyalty_points

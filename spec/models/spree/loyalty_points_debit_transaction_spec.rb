@@ -1,3 +1,4 @@
+# TODO -> Same CR points as in loyalty point credit transaction.
 require "spec_helper"
 
 describe Spree::LoyaltyPointsDebitTransaction do

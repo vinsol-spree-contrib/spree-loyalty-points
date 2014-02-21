@@ -10,7 +10,7 @@ describe Spree::LoyaltyPointsCreditTransaction do
     @loyalty_points_credit_transaction.should be_valid
   end
 
-  #TODO -> We can use matchers to test these validations.
+  #TODO -> We can Test things which exist in this model only. Not the things which exist in loyalty_points_transaction model also.
   it "is invalid without numeric loyalty_points" do
     should validate_numericality_of(:loyalty_points).only_integer.with_message(Spree.t('validation.must_be_int'))
     should validate_numericality_of(:loyalty_points).is_greater_than(0).with_message(Spree.t('validation.must_be_int'))
@@ -64,6 +64,7 @@ describe Spree::LoyaltyPointsCreditTransaction do
 
   end
 
+  #TODO -> Check exact balance
   describe 'update_balance' do
 
     before :each do

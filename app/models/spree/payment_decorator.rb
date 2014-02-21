@@ -9,8 +9,6 @@ Spree::Payment.class_eval do
   fsm = self.state_machines[:state]
   fsm.after_transition :from => fsm.states.map(&:name) - [:completed], :to => [:completed], :do => :notify_paid_order
 
-  #TODO -> Use payment's amount instead of order's total
-
   fsm.after_transition :from => fsm.states.map(&:name) - [:completed], :to => [:completed], :do => :redeem_loyalty_points, :if => :by_loyalty_points?
   fsm.after_transition :from => [:completed], :to => fsm.states.map(&:name) - [:completed] , :do => :return_loyalty_points, :if => :by_loyalty_points?
 

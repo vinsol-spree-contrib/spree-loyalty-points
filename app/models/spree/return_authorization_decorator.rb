@@ -1,5 +1,3 @@
-#TODO -> Show all information related to transactions either debit or credit in creating return authorization at admin end. Also, confirm in which condition admin would debit and credit with return.
-
 Spree::ReturnAuthorization.class_eval do
 
   validate :negative_loyalty_points_total, if: -> { order.loyalty_points_used? && order.loyalty_points_debit_transactions.present? }

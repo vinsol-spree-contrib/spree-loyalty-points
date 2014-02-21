@@ -16,10 +16,6 @@ module Spree
         end
       end
 
-      #TODO -> I think both methods given below can be implemented in payment model.
-
-      #TODO -> Some methods like this can be moved in separate module as they are not related to order.
-
       def loyalty_points_awarded?
         loyalty_points_credit_transactions.count > 0
       end

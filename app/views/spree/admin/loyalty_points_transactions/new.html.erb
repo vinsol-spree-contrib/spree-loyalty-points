@@ -6,6 +6,7 @@
   <li><%= button_link_to Spree.t(:back_to_users_list), admin_users_path, :icon => 'icon-arrow-left' %></li>
 <% end %>
 
+<%= render :partial => 'spree/shared/error_messages', :locals => { :target => @loyalty_points_transaction.user } %>
 <%= render :partial => 'spree/shared/error_messages', :locals => { :target => @loyalty_points_transaction } %>
 
 <div id='loyalty-points-order-transactions'></div>

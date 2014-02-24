@@ -1,8 +1,5 @@
 module Spree
   class LoyaltyPointsDebitTransaction < LoyaltyPointsTransaction
-
-    #TODO -> Update conditions as discussed.
-
     after_create :update_user_balance
     before_create :update_balance
 

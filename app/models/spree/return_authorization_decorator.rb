@@ -1,7 +1,7 @@
 Spree::ReturnAuthorization.class_eval do
+  include Spree::TransactionsTotalValidation
   #TODO -> Write rspecs for these conditions also.
-  validate :negative_loyalty_points_total, if: -> { order.loyalty_points_used? && order.loyalty_points_debit_transactions.present? }
-  validate :positive_loyalty_points_total, if: -> { !order.loyalty_points_used? && order.loyalty_points_credit_transactions.present? }
+  validate :transactions_total_range, if: -> { order.present? && order.loyalty_points_transactions.present? }
 
   def update_loyalty_points
     if loyalty_points_transaction_type == "Debit"
@@ -15,20 +15,8 @@ Spree::ReturnAuthorization.class_eval do
 
   private
 
-    def negative_loyalty_points_total
-      positive_total = order.loyalty_points_credit_transactions.sum(:loyalty_points) + loyalty_points
-      negative_total = order.loyalty_points_debit_transactions.sum(:loyalty_points)
-      if negative_total < positive_total
-        errors.add :base, 'Loyalty Points Total cannot be positive for this order'
-      end
-    end
-
-    def positive_loyalty_points_total
-      positive_total = order.loyalty_points_credit_transactions.sum(:loyalty_points)
-      negative_total = order.loyalty_points_debit_transactions.sum(:loyalty_points) + loyalty_points
-      if negative_total > positive_total
-        errors.add :base, 'Loyalty Points Total cannot be negative for this order'
-      end
+    def transactions_total_range
+      validate_transactions_total_range(loyalty_points_transaction_type, order)
     end
 
 end

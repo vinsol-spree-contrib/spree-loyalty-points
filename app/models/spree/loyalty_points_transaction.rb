@@ -1,5 +1,6 @@
 module Spree
   class LoyaltyPointsTransaction < ActiveRecord::Base
+    include Spree::TransactionsTotalValidation
     TRANSACTION_TYPES = ['Spree::LoyaltyPointsCreditTransaction', 'Spree::LoyaltyPointsDebitTransaction']
     CLASS_TO_TRANSACTION_TYPE = { 'Spree::LoyaltyPointsCreditTransaction' => 'Credit', 'Spree::LoyaltyPointsDebitTransaction' => 'Debit'}
     belongs_to :user
@@ -9,6 +10,7 @@ module Spree
     validates :type, inclusion: { in: TRANSACTION_TYPES }
     validates :balance, presence: true
     validate :source_or_comment_present
+    validate :transactions_total_range, if: -> { source.present? && source.loyalty_points_transactions.present? }
 
     scope :for_order, ->(order) { where(source: order) }
 
@@ -30,6 +32,10 @@ module Spree
         begin
           self.transaction_id = (Time.current.strftime("%s") + rand(999999).to_s).to(15)
         end while Spree::LoyaltyPointsTransaction.where(:transaction_id => transaction_id).present? 
+      end
+
+      def transactions_total_range
+        validate_transactions_total_range(transaction_type, source)
       end
 
   end

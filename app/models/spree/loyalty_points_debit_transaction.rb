@@ -1,6 +1,7 @@
 module Spree
   class LoyaltyPointsDebitTransaction < LoyaltyPointsTransaction
 
+    #TODO -> Update conditions as discussed.
     validate :negative_loyalty_points_total, if: -> { source.present? && source.loyalty_points_used? && source.loyalty_points_debit_transactions.present? }
 
     after_create :update_user_balance
@@ -8,7 +9,6 @@ module Spree
 
     private
 
-      #TODO -> update user's balance directly by one query instead of fetching the record and then save because it may save wrong value.
       def update_user_balance
         user.decrement(:loyalty_points_balance, loyalty_points)
         user.save!

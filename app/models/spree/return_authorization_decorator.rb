@@ -1,5 +1,6 @@
 Spree::ReturnAuthorization.class_eval do
   #TODO -> Write rspecs for these conditions also.
+  #TODO -> We can use concern as they are used in two locations.
   validate :negative_loyalty_points_total, if: -> { order.loyalty_points_used? && order.loyalty_points_debit_transactions.present? }
   validate :positive_loyalty_points_total, if: -> { !order.loyalty_points_used? && order.loyalty_points_credit_transactions.present? }
 

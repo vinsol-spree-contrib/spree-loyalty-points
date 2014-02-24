@@ -2,6 +2,7 @@ module Spree
   class LoyaltyPointsCreditTransaction < LoyaltyPointsTransaction
 
     #TODO -> I think we have not test this method on these conditions. Please check.
+    #TODO -> Update conditions as discussed.
     validate :positive_loyalty_points_total, if: -> { source.present? && !source.loyalty_points_used? && source.loyalty_points_credit_transactions.present? }
 
     after_create :update_user_balance

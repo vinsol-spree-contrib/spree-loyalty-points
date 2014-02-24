@@ -11,6 +11,7 @@ module Spree
             by_loyalty_points.size != 0
           end
 
+          #TODO -> We can create scope for this.
           def by_loyalty_points
             joins(:payment_method).where(:spree_payment_methods => { type: 'Spree::PaymentMethod::LoyaltyPoints'})
           end
@@ -31,6 +32,7 @@ module Spree
           order.create_credit_transaction(loyalty_points_redeemed)
         end
 
+        #TODO -> Rspecs for this method is missed.
         def by_loyalty_points?
           payment_method.type == "Spree::PaymentMethod::LoyaltyPoints"
         end

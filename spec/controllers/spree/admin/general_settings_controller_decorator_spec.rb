@@ -13,6 +13,7 @@ describe Spree::Admin::GeneralSettingsController do
 
   describe "GET 'edit'" do
 
+    #TODO -> Check actual value of preferences_loyalty_points.
     it "assigns @preferences_loyalty_points" do
       get :edit, :use_route => :spree
       assigns[:preferences_loyalty_points].should_not be_nil

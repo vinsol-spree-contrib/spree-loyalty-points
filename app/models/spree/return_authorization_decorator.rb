@@ -1,5 +1,5 @@
 Spree::ReturnAuthorization.class_eval do
-
+  #TODO -> Write rspecs for these conditions also.
   validate :negative_loyalty_points_total, if: -> { order.loyalty_points_used? && order.loyalty_points_debit_transactions.present? }
   validate :positive_loyalty_points_total, if: -> { !order.loyalty_points_used? && order.loyalty_points_credit_transactions.present? }
 
@@ -33,4 +33,5 @@ Spree::ReturnAuthorization.class_eval do
 
 end
 
+#TODO -> Rspecs missed for this state machine transition.
 Spree::ReturnAuthorization.state_machine.after_transition :to => :received, :do => :update_loyalty_points

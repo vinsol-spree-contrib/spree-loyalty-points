@@ -8,10 +8,8 @@ describe Spree::ReturnAuthorization do
     @return_authorization.order.stub(:loyalty_points_for).and_return(40)
   end
 
+  #TODO -> Write different test cases after considering each thing minimum in different case.
   describe 'update_loyalty_points' do
-
-    #TODO -> We can test this by checking that order's update_loyalty_points should be called because this method is already tested in order model.
-
     context "when loyalty_points_transaction_type is Debit" do
 
       before(:each) do

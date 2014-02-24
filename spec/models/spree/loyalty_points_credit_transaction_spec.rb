@@ -10,9 +10,6 @@ describe Spree::LoyaltyPointsCreditTransaction do
     @loyalty_points_credit_transaction.should be_valid
   end
 
-  #TODO -> We can Test things which exist in this model only. Not the things which exist in loyalty_points_transaction model also.
-
-  #TODO -> Also check error message.
   describe 'update_user_balance' do
 
     it "should increment user's loyalty_points_balance" do
@@ -23,7 +20,6 @@ describe Spree::LoyaltyPointsCreditTransaction do
 
   end
 
-  #TODO -> Check exact balance
   describe 'update_balance' do
 
     before :each do

@@ -128,6 +128,7 @@ describe Spree::Payment do
       @payment.send(:invalidate_old_payments)
     end
 
+    #TODO -> Check only loyalty_points payments should invalidate.
     it "should receive invalidate" do
       @payment.should_receive(:invalidate!)
       @payment.send(:invalidate_old_payments)
@@ -137,7 +138,6 @@ describe Spree::Payment do
 
   describe 'redeem_loyalty_points' do
 
-  #TODO -> Also test this context that loyaty points are redeemable or not redeemable.
     context "when payment done via Loyalty Points" do
 
       before :each do
@@ -151,6 +151,7 @@ describe Spree::Payment do
           @payment.stub(:redeemable_loyalty_points_balance?).and_return(true)
         end
 
+        #TODO -> Also check with how much loyalty_points debit transaction is created.
         it "should receive create_debit_transaction on order" do
           @payment.order.should_receive(:create_debit_transaction)
           @payment.send(:redeem_loyalty_points)
@@ -204,6 +205,7 @@ describe Spree::Payment do
 
   end
 
+  #TODO -> Also write rspecs when payment's amount equal to redeeming balance.
   describe 'redeemable_loyalty_points_balance?' do
 
     before :each do
@@ -250,6 +252,7 @@ describe Spree::Payment do
       Spree::Payment.by_loyalty_points
     end
 
+    #TODO -> Check actual query of database(i.e. actual fetching of records).
     it "should receive where" do
       payments.should_receive(:where)
       Spree::Payment.by_loyalty_points

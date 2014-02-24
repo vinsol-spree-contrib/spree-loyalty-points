@@ -1,5 +1,6 @@
 Spree::Payment.class_eval do
 
+  #Rspecs missing.
   include Spree::LoyaltyPoints
   include Spree::Payment::LoyaltyPoints
 

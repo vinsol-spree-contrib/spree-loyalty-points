@@ -16,7 +16,6 @@ describe Spree::Order do
   it { should have_many :loyalty_points_credit_transactions }
   it { should have_many :loyalty_points_debit_transactions }
 
-  # TODO -> We can should receive the methods that have been tested separately.
   describe 'award_loyalty_points' do
 
     context "when payment not done via Loyalty Points" do
@@ -48,6 +47,7 @@ describe Spree::Order do
 
   end
 
+  #TODO -> It is not checking for which user it is creating transaction and of how much amount ?
   describe 'create_credit_transaction' do
 
     context "when quantity is not 0" do
@@ -72,6 +72,7 @@ describe Spree::Order do
 
   end
 
+  #TODO -> It is not checking for which user it is creating transaction and of how much amount ?
   describe 'create_debit_transaction' do
 
     context "when quantity is not 0" do
@@ -105,6 +106,7 @@ describe Spree::Order do
 
   end
 
+  #TODO -> Testing of method's Desired behaviour(payment completion) is missed
   describe 'complete_loyalty_points_payments' do
 
     before :each do
@@ -142,7 +144,7 @@ describe Spree::Order do
 
     context "when purpose is to award" do
 
-      #TODO -> Update this context.
+      #TODO -> Check also with which amount it is eligible.
       context "when eligible for being awarded" do
 
         before :each do
@@ -169,6 +171,7 @@ describe Spree::Order do
       
     end
 
+    #TODO -> Same rspecs written two times.
     context "when purpose is to redeem" do
 
       it "should return redeem amount" do
@@ -193,7 +196,6 @@ describe Spree::Order do
     context "when credit transactions are present" do
 
       it "should return true" do
-        #TODO -> We can use be_loyalty_points_awarded.
         @order.should be_loyalty_points_awarded
       end
 

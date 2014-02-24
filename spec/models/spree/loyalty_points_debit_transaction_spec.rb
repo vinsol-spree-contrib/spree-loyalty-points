@@ -1,4 +1,3 @@
-# TODO -> Same CR points as in loyalty point credit transaction.
 require "spec_helper"
 
 describe Spree::LoyaltyPointsDebitTransaction do
@@ -11,7 +10,6 @@ describe Spree::LoyaltyPointsDebitTransaction do
     @loyalty_points_debit_transaction.should be_valid
   end
 
-  #TODO -> We can use matchers to test these validations.
   describe 'update_user_balance' do
 
     it "should decrement user's loyalty_points_balance" do

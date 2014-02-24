@@ -7,7 +7,6 @@ describe Spree::Admin::LoyaltyPointsTransactionsController do
   let(:order) { mock_model(Spree::Order).as_null_object }
 
   before(:each) do
-    #TODO -> Do not create actual objects in controller.
     controller.stub(:spree_current_user).and_return(user)
     user.stub(:generate_spree_api_key!).and_return(true)
     controller.stub(:authorize!).and_return(true)
@@ -23,7 +22,6 @@ describe Spree::Admin::LoyaltyPointsTransactionsController do
   context "when user found" do
 
     before(:each) do
-      #TODO -> Do not create actual objects in controller.
       controller.stub(:parent).and_return(user)
       Spree::User.stub(:find_by).and_return(user)
     end
@@ -33,9 +31,7 @@ describe Spree::Admin::LoyaltyPointsTransactionsController do
         get :index, params.merge!(:use_route => :spree)
       end
 
-      #TODO -> should receive the methods also.
       it "assigns @loyalty_points_transactions" do
-        #TODO -> We can extract this request line in a separate method.
         send_request
         assigns[:loyalty_points_transactions].should_not be_nil
       end
@@ -90,7 +86,6 @@ describe Spree::Admin::LoyaltyPointsTransactionsController do
         send_request
       end
 
-      #TODO -> Do not create actual loyalty_points transactions. Instead should receive create.
       context "when transaction created " do
 
         before(:each) do

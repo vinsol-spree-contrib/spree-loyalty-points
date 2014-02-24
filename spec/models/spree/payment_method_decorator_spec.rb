@@ -5,6 +5,7 @@ describe Spree::PaymentMethod do
   let(:payment_method) { mock_model(Spree::PaymentMethod).as_null_object }
   let(:payment_methods) { [payment_method] }
 
+  #TODO -> Check this for actaul queries.
   describe "loyalty_points_id_included?" do
     
     before :each do

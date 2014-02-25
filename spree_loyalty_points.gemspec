@@ -3,29 +3,18 @@ Gem::Specification.new do |s|
   s.platform    = Gem::Platform::RUBY
   s.name        = 'spree_loyalty_points'
   s.version     = '2.1.3'
-  s.summary     = 'To award loyalty points to users'
-  s.description = 'To award loyalty points to users'
+  s.summary     = 'Add loyalty points to spree'
+  s.description = 'To award loyalty points and add loyalty points payment method to spree'
   s.required_ruby_version = '>= 1.9.3'
+  s.files = Dir['LICENSE', 'README.md', 'app/**/*', 'config/**/*', 'lib/**/*', 'db/**/*']
 
-  s.author    = 'Jatin'
-  # s.email     = 'you@example.com'
-  # s.homepage  = 'http://www.spreecommerce.com'
+  s.author    = 'Jatin Baweja'
+  s.email     = 'info@vinsol.com'
+  s.homepage  = 'http://vinsol.com'
+  s.license   = "MIT"
 
-  #s.files       = `git ls-files`.split("\n")
-  #s.test_files  = `git ls-files -- {test,spec,features}/*`.split("\n")
   s.require_path = 'lib'
   s.requirements << 'none'
 
-  s.add_dependency 'spree_core', '~> 2.1.3'
-
-  s.add_development_dependency 'capybara', '~> 2.1'
-  s.add_development_dependency 'coffee-rails'
-  s.add_development_dependency 'database_cleaner'
-  s.add_development_dependency 'factory_girl', '~> 4.2'
-  s.add_development_dependency 'ffaker'
-  s.add_development_dependency 'rspec-rails',  '~> 2.13'
-  s.add_development_dependency 'sass-rails'
-  s.add_development_dependency 'selenium-webdriver'
-  s.add_development_dependency 'simplecov'
-  s.add_development_dependency 'sqlite3'
+  s.add_dependency 'spree_core', '~> 2.1'
 end

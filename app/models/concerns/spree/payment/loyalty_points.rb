@@ -12,10 +12,6 @@ module Spree
           end
 
           #TODO -> We can create scope for this.
-          def by_loyalty_points
-            joins(:payment_method).readonly(false).where(:spree_payment_methods => { type: 'Spree::PaymentMethod::LoyaltyPoints'})
-          end
-
         end
 
       private

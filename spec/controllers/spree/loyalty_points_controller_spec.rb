@@ -15,16 +15,19 @@ describe Spree::LoyaltyPointsController do
       get :index, params.merge!(:use_route => :spree)
     end
 
-    before(:each) do
+    #TODO -> Check expectation of all methods.
+    it "should receive loyalty_points_transactions on spree_current_user" do
+      user.should_receive(:loyalty_points_transactions).and_return(user.loyalty_points_transactions)
       send_request
     end
 
-    #TODO -> Check expectation of all methods.
-    it "assigns @loyalty_points" do
+    it "assigns @loyalty_points_transactions" do
+      send_request
       assigns[:loyalty_points_transactions].should_not be_nil
     end
 
     it "renders index template" do
+      send_request
       expect(response).to render_template(:index)
     end
 

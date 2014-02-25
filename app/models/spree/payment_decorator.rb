@@ -6,6 +6,7 @@ Spree::Payment.class_eval do
 
   validates :amount, numericality: { greater_than: 0 }, :if => :by_loyalty_points?
   scope :state_not, ->(s) { where('state != ?', s) }
+  scope :by_loyalty_points, -> { joins(:payment_method).readonly(false).where(:spree_payment_methods => { type: 'Spree::PaymentMethod::LoyaltyPoints'}) }
 
   fsm = self.state_machines[:state]
   fsm.after_transition :from => fsm.states.map(&:name) - [:completed], :to => [:completed], :do => :notify_paid_order

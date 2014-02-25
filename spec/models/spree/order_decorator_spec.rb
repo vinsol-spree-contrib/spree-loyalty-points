@@ -1,4 +1,6 @@
 require "spec_helper"
+require "models/concerns/spree/loyalty_points_spec"
+require "models/concerns/spree/order/loyalty_points_spec"
 
 #TODO -> Missing rspecs.
 
@@ -12,218 +14,73 @@ describe Spree::Order do
     @order.should be_valid
   end
 
+  it "should include complete_loyalty_points_payments in state_machine after callbacks" do
+    Spree::Order.state_machine.callbacks[:before].map { |callback| callback.instance_variable_get(:@methods) }.include?([:complete_loyalty_points_payments]).should be_true
+  end
+
   it { should have_many :loyalty_points_transactions }
   it { should have_many :loyalty_points_credit_transactions }
   it { should have_many :loyalty_points_debit_transactions }
 
-  describe 'award_loyalty_points' do
-
-    context "when payment not done via Loyalty Points" do
-
-      before :each do
-        @order.stub(:loyalty_points_used?).and_return(false)
-        @order.stub(:loyalty_points_for).and_return(50)
-      end
-
-      it "should receive create_credit_transaction" do
-        @order.should_receive(:create_credit_transaction)
-        @order.award_loyalty_points
-      end
-
-    end
-
-    context "when payment done via Loyalty Points" do
-
-      before :each do
-        @order.stub(:loyalty_points_used?).and_return(true)
-      end
-
-      it "should not receive create_credit_transaction" do
-        @order.should_not_receive(:create_credit_transaction)
-        @order.award_loyalty_points
-      end
-
-    end
-
+  it_should_behave_like "LoyaltyPoints" do
+    let(:resource_instance) { @order }
   end
 
-  #TODO -> It is not checking for which user it is creating transaction and of how much amount ?
-  describe 'create_credit_transaction' do
-
-    context "when quantity is not 0" do
-      
-      it "should add a Loyalty Points Credit Transaction" do
-        expect {
-          @order.send(:create_credit_transaction, 30)
-        }.to change{ Spree::LoyaltyPointsCreditTransaction.count }.by(1)
-      end
-
-    end
-
-    context "when quantity is 0" do
-      
-      it "should not add a Loyalty Points Credit Transaction" do
-        expect {
-          @order.send(:create_credit_transaction, 0)
-        }.to change{ Spree::LoyaltyPointsCreditTransaction.count }.by(0)
-      end
-
-    end
-
+  it_should_behave_like "Order::LoyaltyPoints" do
+    let(:resource_instance) { @order }
   end
 
-  #TODO -> It is not checking for which user it is creating transaction and of how much amount ?
-  describe 'create_debit_transaction' do
+  describe 'loyalty_points_not_awarded' do
 
-    context "when quantity is not 0" do
-      
-      it "should add a Loyalty Points Debit Transaction" do
-        expect {
-          @order.send(:create_debit_transaction, 30)
-        }.to change{ Spree::LoyaltyPointsDebitTransaction.count }.by(1)
-      end
-
-    end
-
-    context "when quantity is 0" do
-      
-      it "should not add a Loyalty Points Debit Transaction" do
-        expect {
-          @order.send(:create_debit_transaction, 0)
-        }.to change{ Spree::LoyaltyPointsDebitTransaction.count }.by(0)
-      end
-
-    end
-
-  end
-
-  describe 'loyalty_points_used?' do
-
-    it "should receive any_with_loyalty_points? on payments" do
-      @order.payments.should_receive(:any_with_loyalty_points?)
-      @order.loyalty_points_used?
-    end
-
-  end
-
-  #TODO -> Testing of method's Desired behaviour(payment completion) is missed
-  describe 'complete_loyalty_points_payments' do
+    let (:order2) { create(:order_with_loyalty_points) }
 
     before :each do
-      @order.payments.stub(:by_loyalty_points).and_return(@order.payments)
-      @order.payments.stub(:with_state).with('checkout').and_return(@order.payments)
+      @order.loyalty_points_credit_transactions = []
+      order2.loyalty_points_credit_transactions = create_list(:loyalty_points_credit_transaction, 1, source: order2)
     end
 
-    it "should receive by_loyalty_points on payments" do
-      @order.payments.should_receive(:by_loyalty_points)
-      @order.send(:complete_loyalty_points_payments)
-    end
-
-    it "should receive with_state on payments" do
-      @order.payments.by_loyalty_points.should_receive(:with_state).with('checkout')
-      @order.send(:complete_loyalty_points_payments)
+    it "should return orders where loyalty points haven't been awarded" do
+      Spree::Order.loyalty_points_not_awarded.should eq([@order])
     end
 
   end
 
-  describe 'credit_loyalty_points_to_user' do
+  describe 'with_hours_since_payment' do
+
+    let (:order2) { create(:order_with_loyalty_points) }
 
     before :each do
-      Spree::Config.stub(:loyalty_points_award_period).and_return(1)
-      Spree::Order.stub(:with_uncredited_loyalty_points).and_return([@order])
+      @order.paid_at = 4.hours.ago
+      order2.paid_at = 1.hour.ago
+      @order.save!
+      order2.save!
     end
 
-    it "should receive award_loyalty_points" do
-      @order.should_receive(:award_loyalty_points)
-      Spree::Order.credit_loyalty_points_to_user
-    end
-
-  end
-
-  describe 'loyalty_points_for' do
-
-    context "when purpose is to award" do
-
-      #TODO -> Check also with which amount it is eligible.
-      context "when eligible for being awarded" do
-
-        before :each do
-          @order.stub(:eligible_for_loyalty_points?).and_return(true)
-        end
-
-        it "should return award amount" do
-          @order.loyalty_points_for(50, 'award').should eq((50 * Spree::Config.loyalty_points_awarding_unit).floor)
-        end
-
-      end
-
-      context "when ineligible for being awarded" do
-
-        before :each do
-          @order.stub(:eligible_for_loyalty_points?).and_return(false)
-        end
-
-        it "should return 0" do
-          @order.loyalty_points_for(0, 'award').should eq(0)
-        end
-        
-      end
-      
-    end
-
-    #TODO -> Same rspecs written two times.
-    context "when purpose is to redeem" do
-
-      it "should return redeem amount" do
-        @order.loyalty_points_for(50, 'redeem').should eq((50 / Spree::Config.loyalty_points_conversion_rate).ceil)
-      end
-      
-    end
-
-    context "when purpose is neither to redeem" do
-
-      it "should return redeem amount" do
-        @order.loyalty_points_for(50, 'redeem').should eq((50 / Spree::Config.loyalty_points_conversion_rate).ceil)
-      end
-      
-    end
-
-
-  end
-
-  describe 'loyalty_points_awarded?' do
-
-    context "when credit transactions are present" do
-
-      it "should return true" do
-        @order.should be_loyalty_points_awarded
-      end
-
-    end
-
-    context "when credit transactions are absent" do
-
-      before :each do
-        @order.loyalty_points_credit_transactions = []
-      end
-
-      it "should return false" do
-        @order.should_not be_loyalty_points_awarded
-      end
-
+    it "should return orders where paid_at is before given time" do
+      Spree::Order.with_hours_since_payment(2).should eq([@order])
     end
 
   end
 
-  describe 'loyalty_points_total' do
+  describe 'with_uncredited_loyalty_points' do
+
+    let (:order2) { create(:order_with_loyalty_points) }
+    let (:order3) { create(:order_with_loyalty_points) }
 
     before :each do
-      @order.loyalty_points_credit_transactions = create_list(:loyalty_points_credit_transaction, 5, loyalty_points: 50)
-      @order.loyalty_points_debit_transactions = create_list(:loyalty_points_debit_transaction, 5, loyalty_points: 30)
+      @order.paid_at = 4.hours.ago
+      @order.loyalty_points_credit_transactions = []
+      order2.paid_at = 1.hour.ago
+      order2.loyalty_points_credit_transactions = []
+      order3.paid_at = 5.hours.ago
+      order3.loyalty_points_credit_transactions = create_list(:loyalty_points_credit_transaction, 1, source: order2)
+      @order.save!
+      order2.save!
+      order3.save!
     end
 
-    it "should result in net loyalty points for that order" do
-      @order.loyalty_points_total.should eq(100)
+    it "should return orders where loyalty_points haven't been credited" do
+      Spree::Order.with_uncredited_loyalty_points(2).should eq([@order])
     end
 
   end

@@ -48,25 +48,6 @@ describe Spree::Admin::LoyaltyPointsTransactionsController do
 
     end
 
-    describe "GET 'new'" do
-      def send_request(params = {})
-        get :new, params.merge!(:use_route => :spree)
-      end
-
-      before(:each) do
-        send_request
-      end
-
-      it "assigns @loyalty_points_transaction" do
-        assigns[:loyalty_points_transaction].should_not be_nil
-      end
-
-      it "renders new template" do
-        expect(response).to render_template(:new)
-      end
-
-    end
-
     describe "POST 'create'" do
       def send_request(params = {})
         post :create, params.merge!(loyalty_points_transaction: attributes_for(:loyalty_points_transaction), :use_route => :spree)

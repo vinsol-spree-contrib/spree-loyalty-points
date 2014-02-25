@@ -1,4 +1,5 @@
 require "spec_helper"
+require "models/concerns/spree/transactions_total_validation_spec"
 #TODO -> Rspecs missing
 
 describe Spree::ReturnAuthorization do
@@ -6,6 +7,10 @@ describe Spree::ReturnAuthorization do
   before(:each) do
     @return_authorization = create(:return_authorization_with_loyalty_points)
     @return_authorization.order.stub(:loyalty_points_for).and_return(40)
+  end
+
+  it "should include update_loyalty_points in state_machine after callbacks" do
+    Spree::ReturnAuthorization.state_machine.callbacks[:after].map { |callback| callback.instance_variable_get(:@methods) }.include?([:update_loyalty_points]).should be_true
   end
 
   #TODO -> Write different test cases after considering each thing minimum in different case.
@@ -17,9 +22,49 @@ describe Spree::ReturnAuthorization do
         @debit_points = [@return_authorization.order.user.loyalty_points_balance, @return_authorization.order.loyalty_points_for(@return_authorization.order.item_total), @return_authorization.loyalty_points].min
       end
 
-      it "should receive create_debit_transaction" do
-        @return_authorization.order.should_receive(:create_debit_transaction).with(@debit_points)
-        @return_authorization.update_loyalty_points
+      context "when user's balance is lowest" do
+
+        before :each do
+          @return_authorization.order.stub(:loyalty_points_for).with(@return_authorization.order.item_total).and_return(@return_authorization.order.user.loyalty_points_balance + 10)
+          @return_authorization.stub(:loyalty_points).and_return(@return_authorization.order.user.loyalty_points_balance + 20)
+          @debit_points = @return_authorization.order.user.loyalty_points_balance
+        end
+
+        it "should receive create_debit_transaction with user's balance" do
+          @return_authorization.order.should_receive(:create_debit_transaction).with(@debit_points)
+          @return_authorization.update_loyalty_points
+        end
+
+      end
+
+      context "when loyalty_points_for is lowest" do
+
+        before :each do
+          @debit_points = @return_authorization.order.loyalty_points_for(@return_authorization.order.item_total)
+          @return_authorization.order.user.stub(:loyalty_points_balance).and_return(@debit_points + 10)
+          @return_authorization.stub(:loyalty_points).and_return(@debit_points + 20)
+        end
+
+        it "should receive create_debit_transaction with order's loyalty_points_for" do
+          @return_authorization.order.should_receive(:create_debit_transaction).with(@debit_points)
+          @return_authorization.update_loyalty_points
+        end
+
+      end
+
+      context "when loyalty_points are lowest" do
+
+        before :each do
+          @debit_points = @return_authorization.loyalty_points
+          @return_authorization.order.stub(:loyalty_points_for).with(@return_authorization.order.item_total).and_return(@debit_points + 10)
+          @return_authorization.order.user.stub(:loyalty_points_balance).and_return(@debit_points + 20)
+        end
+
+        it "should receive create_debit_transaction with return_authorization's loyalty_points" do
+          @return_authorization.order.should_receive(:create_debit_transaction).with(@debit_points)
+          @return_authorization.update_loyalty_points
+        end
+
       end
 
     end
@@ -40,85 +85,78 @@ describe Spree::ReturnAuthorization do
 
   end
 
-  describe 'positive_loyalty_points_total' do
+  describe "TransactionsTotalValidation" do
+    
+    it_should_behave_like "TransactionsTotalValidation" do
+      let(:resource_instance) { @return_authorization }
+      let(:relation) { @return_authorization.order }
+    end
 
-    context "when negative_total is greater than positive_total" do
+  end
+
+  describe 'validate transactions_total_range' do
+
+    before :each do
+      @order = create(:order_with_loyalty_points)
+      @return_authorization = build(:return_authorization_with_loyalty_points, order: @order)
+    end
+
+    def save_record
+      @return_authorization.save
+    end
+
+    after :each do
+      save_record
+    end
+
+    context "when order is present" do
 
       before :each do
-        @order = create(:order_with_loyalty_points)
-        @return_authorization.order = @order
-        @order.loyalty_points_credit_transactions = create_list(:loyalty_points_credit_transaction, 5)
-        @order.loyalty_points_debit_transactions = create_list(:loyalty_points_debit_transaction, 5)
-        @return_authorization.order.loyalty_points_credit_transactions.stub(:sum).and_return(50)
-        @return_authorization.order.loyalty_points_debit_transactions.stub(:sum).and_return(1000)
-        @return_authorization.send(:positive_loyalty_points_total)
+        @return_authorization.order.stub(:present?).and_return(true)
       end
 
-      it "should add error 'Loyalty Points Total cannot be negative for this source'" do
-        @return_authorization.errors[:base].should eq(["Loyalty Points Total cannot be negative for this order"])
+      context "when loyalty_points_transactions are present" do
+
+        before :each do
+          @return_authorization.order.loyalty_points_transactions.stub(:present?).and_return(true)
+        end
+
+        it "should receive transactions_total_range" do
+          @return_authorization.should_receive(:transactions_total_range)
+        end
+
+        it "should receive validate_transactions_total_range" do
+          @return_authorization.should_receive(:validate_transactions_total_range)
+        end
+
+      end
+
+      context "when loyalty_points_transactions are absent" do
+
+        before :each do
+          @return_authorization.order.loyalty_points_transactions.stub(:present?).and_return(false)
+        end
+
+        it "should not receive transactions_total_range" do
+          @return_authorization.should_not_receive(:transactions_total_range)
+        end
+
       end
 
     end
 
-    context "when negative_total is less than positive_total" do
+    context "when order is absent" do
 
       before :each do
-        @order = create(:order_with_loyalty_points)
-        @return_authorization.order = @order
-        @order.loyalty_points_credit_transactions = create_list(:loyalty_points_credit_transaction, 5)
-        @order.loyalty_points_debit_transactions = create_list(:loyalty_points_debit_transaction, 5)
-        @return_authorization.order.loyalty_points_credit_transactions.stub(:sum).and_return(1000)
-        @return_authorization.order.loyalty_points_debit_transactions.stub(:sum).and_return(20)
-        @return_authorization.send(:positive_loyalty_points_total)
+        @return_authorization.order.stub(:present?).and_return(false)
       end
 
-      it "should not add any error" do
-        @return_authorization.errors.should be_empty
+      it "should not receive transactions_total_range" do
+        @return_authorization.should_not_receive(:transactions_total_range)
       end
 
     end
 
   end
-
-  describe 'negative_loyalty_points_total' do
-
-    context "when negative_total is less than positive_total" do
-
-      before :each do
-        @order = create(:order_with_loyalty_points)
-        @return_authorization.order = @order
-        @order.loyalty_points_credit_transactions = create_list(:loyalty_points_credit_transaction, 5)
-        @order.loyalty_points_debit_transactions = create_list(:loyalty_points_debit_transaction, 5)
-        @return_authorization.order.loyalty_points_credit_transactions.stub(:sum).and_return(1000)
-        @return_authorization.order.loyalty_points_debit_transactions.stub(:sum).and_return(30)
-        @return_authorization.send(:negative_loyalty_points_total)
-      end
-
-      it "should add error 'Loyalty Points Total cannot be negative for this source'" do
-        @return_authorization.errors[:base].should eq(["Loyalty Points Total cannot be positive for this order"])
-      end
-
-    end
-
-    context "when negative_total is greater than positive_total" do
-
-      before :each do
-        @order = create(:order_with_loyalty_points)
-        @return_authorization.order = @order
-        @order.loyalty_points_credit_transactions = create_list(:loyalty_points_credit_transaction, 5)
-        @order.loyalty_points_debit_transactions = create_list(:loyalty_points_debit_transaction, 5)
-        @return_authorization.order.loyalty_points_credit_transactions.stub(:sum).and_return(50)
-        @return_authorization.order.loyalty_points_debit_transactions.stub(:sum).and_return(1000)
-        @return_authorization.send(:negative_loyalty_points_total)
-      end
-
-      it "should not add any error" do
-        @return_authorization.errors.should be_empty
-      end
-
-    end
-
-  end
-
 
 end

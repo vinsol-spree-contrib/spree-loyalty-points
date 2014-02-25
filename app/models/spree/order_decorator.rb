@@ -10,7 +10,7 @@ Spree::Order.class_eval do
 
   scope :loyalty_points_not_awarded, -> { includes(:loyalty_points_credit_transactions).where(:spree_loyalty_points_transactions => { :source_id => nil } ) }
 
-  scope :with_hours_since_payment, ->(num) { where('`spree_orders`.`paid_at` < ? ', num.hours.ago).loyalty_points_not_awarded }
+  scope :with_hours_since_payment, ->(num) { where('`spree_orders`.`paid_at` < ? ', num.hours.ago) }
 
   scope :with_uncredited_loyalty_points, ->(num) { with_hours_since_payment(num).loyalty_points_not_awarded }
 

@@ -135,7 +135,6 @@ shared_examples_for "Payment::LoyaltyPoints" do
 
   end
 
-  #TODO -> Also write rspecs when payment's amount equal to redeeming balance.
   describe 'redeemable_loyalty_points_balance?' do
 
     before :each do

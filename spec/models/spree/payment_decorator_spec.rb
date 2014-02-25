@@ -2,13 +2,13 @@ require "spec_helper"
 require "models/concerns/spree/loyalty_points_spec"
 require "models/concerns/spree/payment/loyalty_points_spec"
 
-#TODO -> rspecs missing
 describe Spree::Payment do
 
   before(:each) do
     @payment = create(:payment_with_loyalty_points)
   end
 
+  #TODO -> Write complete rspec with all things(eg: from states).
   it "should include notify_paid_order in state_machine after callbacks" do
     Spree::Payment.state_machine.callbacks[:after].map { |callback| callback.instance_variable_get(:@methods) }.include?([:notify_paid_order]).should be_true
   end
@@ -53,7 +53,6 @@ describe Spree::Payment do
 
   end
 
-  #TODO -> Test state_not scope separately.
   describe 'state_not' do
 
     let (:payment1) { create(:payment_with_loyalty_points, state: 'checkout') }
@@ -136,7 +135,6 @@ describe Spree::Payment do
         @payment.send(:invalidate_old_payments)
       end
 
-      #TODO -> Check only loyalty_points payments should invalidate.
       it "should receive invalidate" do
         @payment.should_receive(:invalidate!)
         @payment.send(:invalidate_old_payments)
@@ -174,7 +172,6 @@ describe Spree::Payment do
     let (:payment1) { create(:payment_with_loyalty_points, payment_method: loyalty_points_payment_method) }
     let (:payment2) { create(:payment_with_loyalty_points, payment_method: check_payment_method) }
 
-    #TODO -> Check actual query of database(i.e. actual fetching of records).
     it "should return payments with loyalty_points payment method" do
       Spree::Payment.by_loyalty_points.should eq([payment1])
     end

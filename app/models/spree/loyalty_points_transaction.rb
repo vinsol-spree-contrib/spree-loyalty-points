@@ -12,10 +12,13 @@ module Spree
     validate :source_or_comment_present
     validate :transactions_total_range, if: -> { source.present? && source.loyalty_points_transactions.present? }
 
+    #TODO -> rspecs missing for this scope
     scope :for_order, ->(order) { where(source: order) }
 
+    #TODO -> Rspecs missing for this callback.
     before_create :generate_transaction_id
 
+    #TODO -> Rspecs missing for this method.
     def transaction_type
       CLASS_TO_TRANSACTION_TYPE[type]
     end

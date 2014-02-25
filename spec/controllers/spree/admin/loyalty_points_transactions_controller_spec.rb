@@ -212,7 +212,6 @@ describe Spree::Admin::LoyaltyPointsTransactionsController do
       get :order_transactions, params.merge!(loyalty_points_transaction: attributes_for(:loyalty_points_transaction), :use_route => :spree, format: :json)
     end
 
-    #TODO -> rspecs missing
     before :each do
       Spree::Order.stub(:find_by).and_return(order)
     end

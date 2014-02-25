@@ -1,6 +1,4 @@
 Spree::Order.class_eval do
-  #TODO -> Rspecs missing.
-
   include Spree::LoyaltyPoints
   include Spree::Order::LoyaltyPoints
 

@@ -1,6 +1,5 @@
 require "spec_helper"
 require "models/concerns/spree/transactions_total_validation_spec"
-#TODO -> Rspecs missing
 
 describe Spree::ReturnAuthorization do
 
@@ -9,6 +8,7 @@ describe Spree::ReturnAuthorization do
     @return_authorization.order.stub(:loyalty_points_for).and_return(40)
   end
 
+  #TODO -> Write complete rspec with all things(eg: from states).
   it "should include update_loyalty_points in state_machine after callbacks" do
     Spree::ReturnAuthorization.state_machine.callbacks[:after].map { |callback| callback.instance_variable_get(:@methods) }.include?([:update_loyalty_points]).should be_true
   end

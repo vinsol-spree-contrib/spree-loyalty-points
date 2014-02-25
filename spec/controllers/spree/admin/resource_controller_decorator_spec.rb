@@ -3,14 +3,12 @@ require 'spec_helper'
 describe Spree::Admin::ResourceController do
 
   describe "parent" do
-    #TODO -> Write rspec when parent data is absent.
     context "when parent_data is present" do
 
       before :each do
         controller.stub(:parent_data).and_return({ :model_name => 'spree/order', :model_class => Spree::Order, :find_by => 'id' })
       end
 
-      #TODO -> Do not run actual query for finding the parent.
       context "when @parent is present" do
 
         before :each do

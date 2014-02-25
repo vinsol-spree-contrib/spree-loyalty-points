@@ -2,8 +2,6 @@ require "spec_helper"
 require "models/concerns/spree/loyalty_points_spec"
 require "models/concerns/spree/order/loyalty_points_spec"
 
-#TODO -> Missing rspecs.
-
 describe Spree::Order do
 
   before(:each) do
@@ -14,6 +12,7 @@ describe Spree::Order do
     @order.should be_valid
   end
 
+  #TODO -> Write complete rspec with all things(eg: from states).
   it "should include complete_loyalty_points_payments in state_machine after callbacks" do
     Spree::Order.state_machine.callbacks[:before].map { |callback| callback.instance_variable_get(:@methods) }.include?([:complete_loyalty_points_payments]).should be_true
   end

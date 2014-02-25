@@ -31,7 +31,6 @@ shared_examples_for "LoyaltyPoints" do
       
     end
 
-    #TODO -> Same rspecs written two times.
     context "when purpose is to redeem" do
 
       it "should return redeem amount" do

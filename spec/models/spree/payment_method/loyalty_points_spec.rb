@@ -78,7 +78,6 @@ describe Spree::PaymentMethod::LoyaltyPoints do
       end
     end
 
-    #TODO -> context description is not right.
     context 'when payment state is void' do
       before(:each) do
         payment.state = 'void'

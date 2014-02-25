@@ -1,4 +1,3 @@
-#TODO -> Write rspecs by using shared_example and then call that shared_example in respective classes.
 require 'active_support/concern'
 
 module Spree
@@ -15,7 +14,6 @@ module Spree
       end
     end
 
-    #TODO -> Rspecs missed for this method.
     def eligible_for_loyalty_points?(amount)
       amount >= Spree::Config.min_amount_required_to_get_loyalty_points
     end

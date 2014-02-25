@@ -33,6 +33,7 @@ describe Spree::LoyaltyPointsTransaction do
     should belong_to(:source)
   end
 
+  #TODO -> Write rspecs for all conditions.
   context "when neither source or comment is present" do
 
     before :each do

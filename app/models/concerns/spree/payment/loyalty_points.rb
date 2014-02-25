@@ -10,8 +10,6 @@ module Spree
           def any_with_loyalty_points?
             by_loyalty_points.size != 0
           end
-
-          #TODO -> We can create scope for this.
         end
 
       private
@@ -28,7 +26,6 @@ module Spree
           order.create_credit_transaction(loyalty_points_redeemed)
         end
 
-        #TODO -> Rspecs for this method is missed.
         def by_loyalty_points?
           payment_method.type == "Spree::PaymentMethod::LoyaltyPoints"
         end

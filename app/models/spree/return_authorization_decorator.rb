@@ -1,6 +1,5 @@
 Spree::ReturnAuthorization.class_eval do
   include Spree::TransactionsTotalValidation
-  #TODO -> Write rspecs for these conditions also.
   validate :transactions_total_range, if: -> { order.present? && order.loyalty_points_transactions.present? }
 
   def update_loyalty_points
@@ -21,5 +20,4 @@ Spree::ReturnAuthorization.class_eval do
 
 end
 
-#TODO -> Rspecs missed for this state machine transition.
 Spree::ReturnAuthorization.state_machine.after_transition :to => :received, :do => :update_loyalty_points

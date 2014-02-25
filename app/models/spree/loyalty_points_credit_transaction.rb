@@ -1,7 +1,5 @@
 module Spree
   class LoyaltyPointsCreditTransaction < LoyaltyPointsTransaction
-
-    #TODO -> I think we have not test this method on these conditions. Please check.
     after_create :update_user_balance
     before_create :update_balance
 

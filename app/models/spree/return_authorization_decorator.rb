@@ -1,7 +1,6 @@
 Spree::ReturnAuthorization.class_eval do
   include Spree::TransactionsTotalValidation
   #TODO -> Write rspecs for these conditions also.
-  #TODO -> We can use concern as they are used in two locations.
   validate :transactions_total_range, if: -> { order.present? && order.loyalty_points_transactions.present? }
 
   def update_loyalty_points

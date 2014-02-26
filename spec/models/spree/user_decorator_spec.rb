@@ -16,7 +16,7 @@ describe Spree::User do
 
   it "is invalid without numeric loyalty_points_balance" do
     should validate_numericality_of(:loyalty_points_balance).only_integer
-    should validate_numericality_of(:loyalty_points_balance).is_greater_than(0)
+    should validate_numericality_of(:loyalty_points_balance).is_greater_than_or_equal_to(0)
   end
 
   describe 'loyalty_points_balance_sufficient?' do

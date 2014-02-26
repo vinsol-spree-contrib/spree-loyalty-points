@@ -1,7 +1,8 @@
 SpreeLoyaltyPoints
 ==================
 
-This extension is still under development. Please don't use it in production.
+This extension adds Loyalty Points for users.
+
 
 Installation
 ------------

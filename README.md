@@ -1,5 +1,5 @@
-SpreeLoyaltyPoints
-==================
+Spree Loyalty Points
+====================
 
 This extension adds Loyalty Points for users.
 
@@ -10,9 +10,7 @@ Installation
 Add spree_loyalty_points to your Gemfile:
 
 ```ruby
-gem 'spree_loyalty_points', :git => 'git://github.com/vinsol/spree_loyalty_points.git'
-                 OR
-gem 'spree_loyalty_points', '~> 2.1.0'
+gem 'spree_loyalty_points', '~> 1.0.0'
 ```
 
 Bundle your dependencies and run the installation generator:

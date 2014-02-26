@@ -12,7 +12,7 @@ Add spree_loyalty_points to your Gemfile:
 ```ruby
 gem 'spree_loyalty_points', :git => 'git://github.com/vinsol/spree_loyalty_points.git'
                  OR
-gem 'spree_loyalty_points', '~> 2.1.3'
+gem 'spree_loyalty_points', '~> 2.1.0'
 ```
 
 Bundle your dependencies and run the installation generator:

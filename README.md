@@ -1,4 +1,4 @@
-Spree Loyalty Points
+Spree Loyalty Points [![Code Climate](https://codeclimate.com/github/vinsol/spree-loyalty-points.png)](https://codeclimate.com/github/vinsol/spree-loyalty-points) [![Build Status](https://travis-ci.org/vinsol/spree-loyalty-points.png?branch=master)](https://travis-ci.org/vinsol/spree-loyalty-points)
 ====================
 
 This extension adds Loyalty Points for users.

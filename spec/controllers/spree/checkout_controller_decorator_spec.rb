@@ -21,6 +21,7 @@ describe Spree::CheckoutController do
       controller.stub(:ensure_sufficient_stock_lines).and_return(true)
       order.user.stub(:has_sufficient_loyalty_points?).and_return(false)
       controller.instance_variable_set(:@order, order)
+      controller.stub(:load_order_with_lock).and_return(true)
     end
 
     context "when loyalty points used" do
@@ -34,20 +35,20 @@ describe Spree::CheckoutController do
       end
 
       #TODO: Need to fix these specs
-      # it "should receive loyalty_points_id_included? on Spree::PaymentMethod" do
-      #   Spree::PaymentMethod.should_receive(:loyalty_points_id_included?)
-      #   send_request
-      # end
+      it "should receive loyalty_points_id_included? on Spree::PaymentMethod" do
+        Spree::PaymentMethod.should_receive(:loyalty_points_id_included?)
+        send_request
+      end
 
-      # it "should add error to flash" do
-      #   send_request
-      #   flash[:error].should eq(Spree.t(:insufficient_loyalty_points))
-      # end
+      it "should add error to flash" do
+        send_request
+        flash[:error].should eq(Spree.t(:insufficient_loyalty_points))
+      end
 
-      # it "should redirect to payments page" do
-      #   send_request
-      #   expect(response).to redirect_to(checkout_state_path(order.state))
-      # end
+      it "should redirect to payments page" do
+        send_request
+        expect(response).to redirect_to(checkout_state_path(order.state))
+      end
 
     end
 

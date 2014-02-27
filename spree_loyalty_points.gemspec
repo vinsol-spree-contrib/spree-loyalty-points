@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.required_ruby_version = '>= 1.9.3'
   s.files = Dir['LICENSE', 'README.md', 'app/**/*', 'config/**/*', 'lib/**/*', 'db/**/*']
 
-  s.author    = 'Jatin Baweja'
+  s.author    = ['Jatin Baweja', 'Sushant Mittal']
   s.email     = 'info@vinsol.com'
   s.homepage  = 'http://vinsol.com'
   s.license   = "MIT"

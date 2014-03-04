@@ -58,7 +58,6 @@ shared_examples_for "Payment::LoyaltyPoints" do
           resource_instance.stub(:redeemable_loyalty_points_balance?).and_return(true)
         end
 
-        #TODO -> Also check with how much loyalty_points debit transaction is created.
         it "should receive create_debit_transaction on order" do
           resource_instance.order.should_receive(:create_debit_transaction)
           resource_instance.send(:redeem_loyalty_points)

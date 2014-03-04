@@ -31,7 +31,6 @@ shared_examples_for "Order::LoyaltyPoints" do
 
   end
 
-  #TODO -> It is not checking for which user it is creating transaction and of how much amount ?
   describe 'create_credit_transaction' do
 
     context "when quantity is not 0" do
@@ -66,7 +65,6 @@ shared_examples_for "Order::LoyaltyPoints" do
 
   end
 
-  #TODO -> It is not checking for which user it is creating transaction and of how much amount ?
   describe 'create_debit_transaction' do
 
     context "when quantity is not 0" do
@@ -110,7 +108,6 @@ shared_examples_for "Order::LoyaltyPoints" do
 
   end
 
-  #TODO -> Testing of method's Desired behaviour(payment completion) is missed
   describe 'complete_loyalty_points_payments' do
 
     before :each do

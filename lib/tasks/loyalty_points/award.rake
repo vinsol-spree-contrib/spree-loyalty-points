@@ -1,5 +1,3 @@
-#TODO -> Rspecs missing
-#TODO -> Add description of this rake task in README and also tell them to create a cron job for this.
 namespace :spree do
   namespace :loyalty_points do
     desc "Credit loyalty points to pending users accounts"

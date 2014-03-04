@@ -14,7 +14,6 @@ describe Spree::PaymentMethod do
 
   end
 
-  #TODO -> Check this for actaul queries.
   describe "loyalty_points_id_included?" do
 
     context "when loyalty points id included in method ids" do

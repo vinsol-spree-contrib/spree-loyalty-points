@@ -8,7 +8,6 @@ describe Spree::Payment do
     @payment = create(:payment_with_loyalty_points)
   end
 
-  #TODO -> Write complete rspec with all things(eg: from states).
   describe "notify_paid_order callback" do
 
     it "should be included in state_machine after callbacks" do

@@ -12,7 +12,6 @@ describe Spree::Order do
     @order.should be_valid
   end
 
-  #TODO -> Write complete rspec with all things(eg: from states).
   describe "complete_loyalty_points_payments callback" do
 
     it "should be included in state_machine before callbacks" do

@@ -4,7 +4,6 @@ shared_examples_for "LoyaltyPoints" do
 
     context "when purpose is to award" do
 
-      #TODO -> Check also with which amount it is eligible.
       context "when eligible for being awarded" do
 
         before :each do

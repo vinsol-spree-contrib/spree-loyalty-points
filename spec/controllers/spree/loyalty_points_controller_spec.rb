@@ -23,7 +23,6 @@ describe Spree::LoyaltyPointsController do
       @loyalty_points_transactions.stub(:per).and_return(@loyalty_points_transactions)
     end
 
-    #TODO -> Check expectation of all methods.
     it "should receive loyalty_points_transactions on spree_current_user" do
       user.should_receive(:loyalty_points_transactions).and_return(@loyalty_points_transactions)
       send_request
@@ -54,6 +53,7 @@ describe Spree::LoyaltyPointsController do
       send_request(page: 2)
     end
 
+    #TODO -> rspec for both conditions of per_page either it is present or not.
     it "should receive per on loyalty_points_transactions" do
       @loyalty_points_transactions.should_receive(:per).with('20')
       send_request(per_page: 20)

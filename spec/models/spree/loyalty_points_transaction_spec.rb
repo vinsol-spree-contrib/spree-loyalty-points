@@ -1,7 +1,6 @@
 require "spec_helper"
 require "models/concerns/spree/transactions_total_validation_spec"
 
-#TODO -> Rspecs still missing. Please check again.
 describe Spree::LoyaltyPointsTransaction do
 
   before(:each) do
@@ -33,7 +32,6 @@ describe Spree::LoyaltyPointsTransaction do
     should belong_to(:source)
   end
 
-  #TODO -> Write rspecs for all conditions.
   context "when neither source or comment is present" do
 
     before :each do
@@ -94,6 +92,7 @@ describe Spree::LoyaltyPointsTransaction do
     Spree::LoyaltyPointsTransaction._create_callbacks.select { |callback| callback.kind == :before }.map(&:filter).include?(:generate_transaction_id).should be_true
   end
 
+  #TODO -> Testing of this method is not complete.
   describe "generate_transaction_id" do
 
     before :each do

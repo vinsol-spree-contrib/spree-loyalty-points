@@ -8,7 +8,6 @@ describe Spree::ReturnAuthorization do
     @return_authorization.order.stub(:loyalty_points_for).and_return(40)
   end
 
-  #TODO -> Write complete rspec with all things(eg: from states).
   describe "update_loyalty_points callback" do
 
     it "should be included in state_machine after callbacks" do
@@ -21,7 +20,6 @@ describe Spree::ReturnAuthorization do
 
   end
 
-  #TODO -> Write different test cases after considering each thing minimum in different case.
   describe 'update_loyalty_points' do
     context "when loyalty_points_transaction_type is Debit" do
 

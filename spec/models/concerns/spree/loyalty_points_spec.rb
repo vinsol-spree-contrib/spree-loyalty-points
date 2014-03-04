@@ -8,11 +8,12 @@ shared_examples_for "LoyaltyPoints" do
       context "when eligible for being awarded" do
 
         before :each do
-          resource_instance.stub(:eligible_for_loyalty_points?).and_return(true)
+          @amount = 50
+          resource_instance.stub(:eligible_for_loyalty_points?).with(@amount).and_return(true)
         end
 
         it "should return award amount" do
-          resource_instance.loyalty_points_for(50, 'award').should eq((50 * Spree::Config.loyalty_points_awarding_unit).floor)
+          resource_instance.loyalty_points_for(@amount, 'award').should eq((@amount * Spree::Config.loyalty_points_awarding_unit).floor)
         end
 
       end
@@ -20,11 +21,12 @@ shared_examples_for "LoyaltyPoints" do
       context "when ineligible for being awarded" do
 
         before :each do
-          resource_instance.stub(:eligible_for_loyalty_points?).and_return(false)
+          @amount = 0
+          resource_instance.stub(:eligible_for_loyalty_points?).with(@amount).and_return(false)
         end
 
         it "should return 0" do
-          resource_instance.loyalty_points_for(0, 'award').should eq(0)
+          resource_instance.loyalty_points_for(@amount, 'award').should eq(0)
         end
         
       end

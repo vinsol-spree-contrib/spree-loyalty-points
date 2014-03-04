@@ -34,16 +34,4 @@ describe Spree::LoyaltyPointsDebitTransaction do
 
   end
 
-  describe 'transaction_type' do
-
-    before :each do
-      @loyalty_points_debit_transaction = FactoryGirl.build(:loyalty_points_debit_transaction)
-    end
-
-    it "should be Debit" do
-      @loyalty_points_debit_transaction.transaction_type.should eq('Debit')
-    end
-
-  end
-
 end

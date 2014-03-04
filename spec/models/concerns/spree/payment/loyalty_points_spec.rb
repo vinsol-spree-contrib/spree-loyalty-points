@@ -1,5 +1,18 @@
 shared_examples_for "Payment::LoyaltyPoints" do
 
+  describe 'by_loyalty_points' do
+
+    let(:loyalty_points_payment_method) { Spree::PaymentMethod::LoyaltyPoints.create!(:environment => Rails.env, :active => true, :name => 'LoyaltyPoints') }
+    let(:check_payment_method) { Spree::PaymentMethod::Check.create!(:environment => Rails.env, :active => true, :name => 'Check') }
+    let (:payment1) { create(:payment_with_loyalty_points, payment_method: loyalty_points_payment_method) }
+    let (:payment2) { create(:payment_with_loyalty_points, payment_method: check_payment_method) }
+
+    it "should return payments with loyalty_points payment method" do
+      Spree::Payment.by_loyalty_points.should eq([payment1])
+    end
+
+  end
+
   describe 'any_with_loyalty_points?' do
 
     let (:payments) { create_list(:payment_with_loyalty_points, 5, state: "completed") }
@@ -100,6 +113,11 @@ shared_examples_for "Payment::LoyaltyPoints" do
     it "should receive create_credit_transaction on order" do
       resource_instance.order.should_receive(:create_credit_transaction).with(@loyalty_points_redeemed)
       resource_instance.send(:return_loyalty_points)
+    end
+
+    it "should create loyalty_points_credit_transaction on order" do
+      resource_instance.send(:return_loyalty_points)
+      Spree::LoyaltyPointsCreditTransaction.last.loyalty_points.should eq(30)
     end
 
   end

@@ -13,8 +13,20 @@ describe Spree::Order do
   end
 
   #TODO -> Write complete rspec with all things(eg: from states).
-  it "should include complete_loyalty_points_payments in state_machine after callbacks" do
-    Spree::Order.state_machine.callbacks[:before].map { |callback| callback.instance_variable_get(:@methods) }.include?([:complete_loyalty_points_payments]).should be_true
+  describe "complete_loyalty_points_payments callback" do
+
+    it "should be included in state_machine before callbacks" do
+      Spree::Order.state_machine.callbacks[:before].map { |callback| callback.instance_variable_get(:@methods) }.include?([:complete_loyalty_points_payments]).should be_true
+    end
+
+    it "should not include complete in 'from' states" do
+      Spree::Order.state_machine.callbacks[:before].select { |callback| callback.instance_variable_get(:@methods) == [:complete_loyalty_points_payments] }.first.branch.state_requirements.first[:from].values.should eq(Spree::Order.state_machines[:state].states.map(&:name) - [:complete])
+    end
+
+    it "should include only complete in 'to' states" do
+      Spree::Order.state_machine.callbacks[:before].select { |callback| callback.instance_variable_get(:@methods) == [:complete_loyalty_points_payments] }.first.branch.state_requirements.first[:to].values.should eq([:complete])
+    end
+
   end
 
   it { should have_many :loyalty_points_transactions }

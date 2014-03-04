@@ -9,8 +9,16 @@ describe Spree::ReturnAuthorization do
   end
 
   #TODO -> Write complete rspec with all things(eg: from states).
-  it "should include update_loyalty_points in state_machine after callbacks" do
-    Spree::ReturnAuthorization.state_machine.callbacks[:after].map { |callback| callback.instance_variable_get(:@methods) }.include?([:update_loyalty_points]).should be_true
+  describe "update_loyalty_points callback" do
+
+    it "should be included in state_machine after callbacks" do
+      Spree::ReturnAuthorization.state_machine.callbacks[:after].map { |callback| callback.instance_variable_get(:@methods) }.include?([:update_loyalty_points]).should be_true
+    end
+
+    it "should include only received in 'to' states" do
+      Spree::ReturnAuthorization.state_machine.callbacks[:after].select { |callback| callback.instance_variable_get(:@methods) == [:update_loyalty_points] }.first.branch.state_requirements.first[:to].values.should eq([:received])
+    end
+
   end
 
   #TODO -> Write different test cases after considering each thing minimum in different case.
@@ -19,7 +27,6 @@ describe Spree::ReturnAuthorization do
 
       before(:each) do
         @return_authorization.loyalty_points_transaction_type = "Debit"
-        @debit_points = [@return_authorization.order.user.loyalty_points_balance, @return_authorization.order.loyalty_points_for(@return_authorization.order.item_total), @return_authorization.loyalty_points].min
       end
 
       context "when user's balance is lowest" do
@@ -73,12 +80,34 @@ describe Spree::ReturnAuthorization do
 
       before(:each) do
         @return_authorization.loyalty_points_transaction_type = "Credit"
-        @credit_points = [@return_authorization.order.loyalty_points_for(@return_authorization.order.total), @return_authorization.loyalty_points].min
       end
 
-      it "should receive create_credit_transaction" do
-        @return_authorization.order.should_receive(:create_credit_transaction).with(@credit_points)
-        @return_authorization.update_loyalty_points
+      context "when loyalty_points_for is lowest" do
+
+        before :each do
+          @credit_points = @return_authorization.order.loyalty_points_for(@return_authorization.order.item_total)
+          @return_authorization.stub(:loyalty_points).and_return(@credit_points + 10)
+        end
+
+        it "should receive create_credit_transaction with order's loyalty_points_for" do
+          @return_authorization.order.should_receive(:create_credit_transaction).with(@credit_points)
+          @return_authorization.update_loyalty_points
+        end
+
+      end
+
+      context "when loyalty_points are lowest" do
+
+        before :each do
+          @credit_points = @return_authorization.loyalty_points
+          @return_authorization.order.stub(:loyalty_points_for).with(@return_authorization.order.item_total).and_return(@credit_points + 10)
+        end
+
+        it "should receive create_credit_transaction with return_authorization's loyalty_points" do
+          @return_authorization.order.should_receive(:create_credit_transaction).with(@credit_points)
+          @return_authorization.update_loyalty_points
+        end
+
       end
 
     end

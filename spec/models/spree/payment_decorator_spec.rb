@@ -9,16 +9,60 @@ describe Spree::Payment do
   end
 
   #TODO -> Write complete rspec with all things(eg: from states).
-  it "should include notify_paid_order in state_machine after callbacks" do
-    Spree::Payment.state_machine.callbacks[:after].map { |callback| callback.instance_variable_get(:@methods) }.include?([:notify_paid_order]).should be_true
+  describe "notify_paid_order callback" do
+
+    it "should be included in state_machine after callbacks" do
+      Spree::Payment.state_machine.callbacks[:after].map { |callback| callback.instance_variable_get(:@methods) }.include?([:notify_paid_order]).should be_true
+    end
+
+    it "should not include completed in 'from' states" do
+      Spree::Payment.state_machine.callbacks[:after].select { |callback| callback.instance_variable_get(:@methods) == [:notify_paid_order] }.first.branch.state_requirements.first[:from].values.should eq(Spree::Payment.state_machines[:state].states.map(&:name) - [:completed])
+    end
+
+    it "should include only completed in 'to' states" do
+      Spree::Payment.state_machine.callbacks[:after].select { |callback| callback.instance_variable_get(:@methods) == [:notify_paid_order] }.first.branch.state_requirements.first[:to].values.should eq([:completed])
+    end
+
   end
 
-  it "should include redeem_loyalty_points in state_machine after callbacks" do
-    Spree::Payment.state_machine.callbacks[:after].map { |callback| callback.instance_variable_get(:@methods) }.include?([:redeem_loyalty_points]).should be_true
+  describe "redeem_loyalty_points callback" do
+
+    it "should be included in state_machine after callbacks" do
+      Spree::Payment.state_machine.callbacks[:after].map { |callback| callback.instance_variable_get(:@methods) }.include?([:redeem_loyalty_points]).should be_true
+    end
+
+    it "should not include completed in 'from' states" do
+      Spree::Payment.state_machine.callbacks[:after].select { |callback| callback.instance_variable_get(:@methods) == [:redeem_loyalty_points] }.first.branch.state_requirements.first[:from].values.should eq(Spree::Payment.state_machines[:state].states.map(&:name) - [:completed])
+    end
+
+    it "should include only completed in 'to' states" do
+      Spree::Payment.state_machine.callbacks[:after].select { |callback| callback.instance_variable_get(:@methods) == [:redeem_loyalty_points] }.first.branch.state_requirements.first[:to].values.should eq([:completed])
+    end
+
+    it "should have if condition of by_loyalty_points?" do
+      Spree::Payment.state_machine.callbacks[:after].select { |callback| callback.instance_variable_get(:@methods) == [:redeem_loyalty_points] }.first.branch.if_condition.should eq(:by_loyalty_points?)
+    end
+
   end
 
-  it "should include return_loyalty_points in state_machine after callbacks" do
-    Spree::Payment.state_machine.callbacks[:after].map { |callback| callback.instance_variable_get(:@methods) }.include?([:return_loyalty_points]).should be_true
+  describe "return_loyalty_points callback" do
+
+    it "should be included in state_machine after callbacks" do
+      Spree::Payment.state_machine.callbacks[:after].map { |callback| callback.instance_variable_get(:@methods) }.include?([:return_loyalty_points]).should be_true
+    end
+
+    it "should include only completed in 'from' states" do
+      Spree::Payment.state_machine.callbacks[:after].select { |callback| callback.instance_variable_get(:@methods) == [:return_loyalty_points] }.first.branch.state_requirements.first[:from].values.should eq([:completed])
+    end
+
+    it "should not include completed in 'to' states" do
+      Spree::Payment.state_machine.callbacks[:after].select { |callback| callback.instance_variable_get(:@methods) == [:return_loyalty_points] }.first.branch.state_requirements.first[:to].values.should eq(Spree::Payment.state_machines[:state].states.map(&:name) - [:completed])
+    end
+
+    it "should have if condition of by_loyalty_points?" do
+      Spree::Payment.state_machine.callbacks[:after].select { |callback| callback.instance_variable_get(:@methods) == [:return_loyalty_points] }.first.branch.if_condition.should eq(:by_loyalty_points?)
+    end
+
   end
 
   describe 'notify_paid_order' do
@@ -163,19 +207,6 @@ describe Spree::Payment do
 
   it_should_behave_like "Payment::LoyaltyPoints" do
     let(:resource_instance) { @payment }
-  end
-
-  describe 'by_loyalty_points' do
-
-    let(:loyalty_points_payment_method) { Spree::PaymentMethod::LoyaltyPoints.create!(:environment => Rails.env, :active => true, :name => 'LoyaltyPoints') }
-    let(:check_payment_method) { Spree::PaymentMethod::Check.create!(:environment => Rails.env, :active => true, :name => 'Check') }
-    let (:payment1) { create(:payment_with_loyalty_points, payment_method: loyalty_points_payment_method) }
-    let (:payment2) { create(:payment_with_loyalty_points, payment_method: check_payment_method) }
-
-    it "should return payments with loyalty_points payment method" do
-      Spree::Payment.by_loyalty_points.should eq([payment1])
-    end
-
   end
 
 end

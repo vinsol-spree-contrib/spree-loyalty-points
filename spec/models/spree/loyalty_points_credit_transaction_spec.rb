@@ -34,16 +34,4 @@ describe Spree::LoyaltyPointsCreditTransaction do
 
   end
 
-  describe 'transaction_type' do
-
-    before :each do
-      @loyalty_points_credit_transaction = FactoryGirl.build(:loyalty_points_credit_transaction)
-    end
-
-    it "should be Credit" do
-      @loyalty_points_credit_transaction.transaction_type.should eq('Credit')
-    end
-
-  end
-
 end

@@ -128,6 +128,13 @@ shared_examples_for "Order::LoyaltyPoints" do
       resource_instance.send(:complete_loyalty_points_payments)
     end
 
+    it "should receive complete on each payment" do
+      resource_instance.payments.each do |payment|
+        payment.should_receive(:complete!)
+      end
+      resource_instance.send(:complete_loyalty_points_payments)
+    end
+
   end
 
   describe 'credit_loyalty_points_to_user' do

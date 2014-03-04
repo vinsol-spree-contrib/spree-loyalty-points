@@ -2,31 +2,35 @@ require "spec_helper"
 
 describe Spree::PaymentMethod do
 
-  let(:payment_method) { mock_model(Spree::PaymentMethod).as_null_object }
-  let(:payment_methods) { [payment_method] }
+  let(:loyalty_points_payment_method) { Spree::PaymentMethod::LoyaltyPoints.create!(:environment => Rails.env, :active => true, :name => 'Loyalty_Points') }
+  let(:payment_method2) { Spree::PaymentMethod::Check.create!(:environment => Rails.env, :active => true, :name => 'Check1') }
+  let(:payment_method3) { Spree::PaymentMethod::Check.create!(:environment => Rails.env, :active => true, :name => 'Check1') }
+
+  describe 'loyalty_points_type' do
+
+    it "should return PaymentMethod of LoyaltyPoints type" do
+      Spree::PaymentMethod.loyalty_points_type.should eq([loyalty_points_payment_method])
+    end
+
+  end
 
   #TODO -> Check this for actaul queries.
   describe "loyalty_points_id_included?" do
-    
-    before :each do
-      Spree::PaymentMethod.stub(:where).and_return(payment_methods)
-      payment_methods.stub(:where).and_return(payment_methods)
+
+    context "when loyalty points id included in method ids" do
+      
+      it "should return true" do
+        Spree::PaymentMethod.loyalty_points_id_included?([loyalty_points_payment_method.id, payment_method2.id]).should be_true
+      end
+
     end
 
-    after :each do
-      Spree::PaymentMethod.loyalty_points_id_included?([1, 2])
-    end
+    context "when loyalty points id not included in method ids" do
+      
+      it "should return false" do
+        Spree::PaymentMethod.loyalty_points_id_included?([payment_method2.id, payment_method3.id]).should be_false
+      end
 
-    it "should receive where with type: Spree::PaymentMethod::LoyaltyPoints" do
-      Spree::PaymentMethod.should_receive(:where).with(type: 'Spree::PaymentMethod::LoyaltyPoints').and_return(payment_methods)
-    end
-
-    it "should receive where with id: method_ids array" do
-      payment_methods.should_receive(:where).and_return(payment_methods)
-    end
-
-    it "should receive size" do
-      payment_methods.should_receive(:size).and_return(1)
     end
 
   end

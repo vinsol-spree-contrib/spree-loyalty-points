@@ -39,6 +39,7 @@ describe Spree::LoyaltyPointsTransaction do
     before :each do
       @loyalty_points_transaction.source = nil
       @loyalty_points_transaction.comment = nil
+      @loyalty_points_transaction.save
     end
 
     it "is invalid" do
@@ -46,9 +47,51 @@ describe Spree::LoyaltyPointsTransaction do
     end
 
     it "should add error 'Source or Comment should be present'" do
-      @loyalty_points_transaction.errors[:base].include? ('Source or Comment should be present').should be_true
+      @loyalty_points_transaction.errors[:base].include?('Source or Comment should be present').should be_true
     end
 
+  end
+
+  context "when source is present" do
+
+    let(:order) { create(:order) }
+
+    before :each do
+      @loyalty_points_transaction.source = order
+      @loyalty_points_transaction.comment = nil
+      @loyalty_points_transaction.save
+    end
+
+    it "is valid" do
+      @loyalty_points_transaction.should be_valid
+    end
+
+    it "should not add error 'Source or Comment should be present'" do
+      @loyalty_points_transaction.errors[:base].include?('Source or Comment should be present').should be_false
+    end
+
+  end
+
+  context "when comment is present" do
+
+    before :each do
+      @loyalty_points_transaction.source = nil
+      @loyalty_points_transaction.comment = 'Random Comment'
+      @loyalty_points_transaction.save
+    end
+
+    it "is valid" do
+      @loyalty_points_transaction.should be_valid
+    end
+
+    it "should not add error 'Source or Comment should be present'" do
+      @loyalty_points_transaction.errors[:base].include?('Source or Comment should be present').should be_false
+    end
+
+  end
+
+  it "should include generate_transaction_id in before create callbacks" do
+    Spree::LoyaltyPointsTransaction._create_callbacks.select { |callback| callback.kind == :before }.map(&:filter).include?(:generate_transaction_id).should be_true
   end
 
   describe "generate_transaction_id" do
@@ -59,6 +102,50 @@ describe Spree::LoyaltyPointsTransaction do
 
     it "adds a transaction_id" do
       @loyalty_points_transaction.transaction_id.should_not be_nil
+    end
+
+  end
+
+  describe 'for_order' do
+
+    let (:order) { create(:order) }
+    let (:transaction1) { create(:loyalty_points_credit_transaction, source: order) }
+    let (:transaction2) { create(:loyalty_points_debit_transaction, source: nil, comment: 'Random') }
+
+    before :each do
+      Spree::LoyaltyPointsTransaction.destroy_all
+    end
+
+    it "should return payments where source is the given order" do
+      Spree::LoyaltyPointsTransaction.for_order(order).should eq([transaction1])
+    end
+
+  end
+
+  describe 'transaction_type' do
+
+    context "when type is Spree::LoyaltyPointsCreditTransaction" do
+
+      before :each do
+        @loyalty_points_credit_transaction = FactoryGirl.build(:loyalty_points_credit_transaction)
+      end
+
+      it "should be Credit" do
+        @loyalty_points_credit_transaction.transaction_type.should eq('Credit')
+      end
+
+    end
+
+    context "when type is Spree::LoyaltyPointsDebitTransaction" do
+
+      before :each do
+        @loyalty_points_debit_transaction = FactoryGirl.build(:loyalty_points_debit_transaction)
+      end
+
+      it "should be Debit" do
+        @loyalty_points_debit_transaction.transaction_type.should eq('Debit')
+      end
+
     end
 
   end

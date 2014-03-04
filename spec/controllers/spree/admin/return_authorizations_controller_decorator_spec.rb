@@ -13,6 +13,18 @@ describe Spree::Admin::ReturnAuthorizationsController do
     controller.stub(:authorize_admin).and_return(true)
   end
 
+  describe "set_loyalty_points_transactions callback" do
+
+    it "should be included in before action callbacks" do
+      Spree::Admin::ReturnAuthorizationsController._process_action_callbacks.select{ |callback| callback.kind == :before }.map(&:filter).include?(:set_loyalty_points_transactions).should be_true
+    end
+
+    it "should have only option set to [:new, :edit, :create, :update]" do
+      ([:new, :edit, :create, :update] - Spree::Admin::ReturnAuthorizationsController._process_action_callbacks.select{ |callback| callback.filter == :set_loyalty_points_transactions }.first.options[:only]).should be_empty
+    end
+
+  end
+
   describe "set_loyalty_points_transactions" do
 
     before :each do
@@ -41,9 +53,22 @@ describe Spree::Admin::ReturnAuthorizationsController do
       send_request(page: 2)
     end
 
-    it "should receive per on loyalty_points_transactions" do
-      @loyalty_points_transactions.should_receive(:per).with('20')
-      send_request(per_page: 20)
+    context "when per_page is passed as a parameter" do
+
+      it "should receive per with per_page on loyalty_points_transactions" do
+        @loyalty_points_transactions.should_receive(:per).with('20')
+        send_request(per_page: 20)
+      end
+
+    end
+
+    context "when per_page is not passed as a parameter" do
+
+      it "should receive per with Spree::Config[:orders_per_page] on loyalty_points_transactions" do
+        @loyalty_points_transactions.should_receive(:per).with(Spree::Config[:orders_per_page])
+        send_request
+      end
+
     end
 
   end

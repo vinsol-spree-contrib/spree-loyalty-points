@@ -54,9 +54,22 @@ describe Spree::LoyaltyPointsController do
     end
 
     #TODO -> rspec for both conditions of per_page either it is present or not.
-    it "should receive per on loyalty_points_transactions" do
-      @loyalty_points_transactions.should_receive(:per).with('20')
-      send_request(per_page: 20)
+    context "when per_page is passed as a parameter" do
+
+      it "should receive per with per_page on loyalty_points_transactions" do
+        @loyalty_points_transactions.should_receive(:per).with('20')
+        send_request(per_page: 20)
+      end
+
+    end
+
+    context "when per_page is not passed as a parameter" do
+
+      it "should receive per with Spree::Config[:orders_per_page] on loyalty_points_transactions" do
+        @loyalty_points_transactions.should_receive(:per).with(Spree::Config[:orders_per_page])
+        send_request
+      end
+
     end
 
   end

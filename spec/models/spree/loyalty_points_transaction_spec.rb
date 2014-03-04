@@ -96,11 +96,43 @@ describe Spree::LoyaltyPointsTransaction do
   describe "generate_transaction_id" do
 
     before :each do
-      @loyalty_points_transaction.send(:generate_transaction_id)
+      @time = Time.current
+      @random1 = rand(999999)
+      Time.stub(:current).and_return(@time)
+      # @loyalty_points_transaction.send(:generate_transaction_id)
     end
 
-    it "adds a transaction_id" do
-      @loyalty_points_transaction.transaction_id.should_not be_nil
+    context "when transaction_id does not exist earlier" do
+
+      before :each do
+        @transaction_id = (@time.strftime("%s") + @random1.to_s).to(15)
+        Spree::LoyaltyPointsTransaction.delete_all(transaction_id: @transaction_id)
+        @loyalty_points_transaction.stub(:rand).with(999999).and_return(@random1)
+        @loyalty_points_transaction.save
+      end
+
+      it "adds a transaction_id" do
+        @loyalty_points_transaction.transaction_id.should eq(@transaction_id)
+      end
+      
+    end
+
+    context "when transaction_id exists earlier" do
+
+      before :each do
+        begin
+          @random2 = rand(999999)
+        end while @random2 == @random1
+        @loyalty_points_transaction.stub(:rand).with(999999).and_return(@random2)
+        @transaction_id2 = (@time.strftime("%s") + @random2.to_s).to(15)
+        @loyalty_points_transaction2 = create(:loyalty_points_credit_transaction, transaction_id: @transaction_id)
+        @loyalty_points_transaction.save
+      end
+
+      it "adds a transaction_id not equal to the existing one" do
+        @loyalty_points_transaction.transaction_id.should eq(@transaction_id2)
+      end
+
     end
 
   end

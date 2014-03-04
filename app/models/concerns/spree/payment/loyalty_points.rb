@@ -5,6 +5,10 @@ module Spree
     module LoyaltyPoints
       extend ActiveSupport::Concern
 
+      included do
+        scope :by_loyalty_points, -> { joins(:payment_method).readonly(false).where(:spree_payment_methods => { type: 'Spree::PaymentMethod::LoyaltyPoints'}) }
+      end
+
         module ClassMethods
 
           def any_with_loyalty_points?

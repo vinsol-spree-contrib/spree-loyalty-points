@@ -92,7 +92,6 @@ describe Spree::LoyaltyPointsTransaction do
     Spree::LoyaltyPointsTransaction._create_callbacks.select { |callback| callback.kind == :before }.map(&:filter).include?(:generate_transaction_id).should be_true
   end
 
-  #TODO -> Testing of this method is not complete.
   describe "generate_transaction_id" do
 
     before :each do

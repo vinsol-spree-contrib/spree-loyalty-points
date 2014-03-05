@@ -39,7 +39,6 @@ describe Spree::CheckoutController do
           Spree::PaymentMethod.stub(:loyalty_points_id_included?).with(["#{loyalty_points_payment_method.id}"]).and_return(true)
         end
 
-        #TODO: Need to fix these specs
         it "should receive loyalty_points_id_included? on Spree::PaymentMethod" do
           Spree::PaymentMethod.should_receive(:loyalty_points_id_included?).with(["#{loyalty_points_payment_method.id}"])
           send_request

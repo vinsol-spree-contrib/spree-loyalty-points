@@ -1,4 +1,3 @@
-#TODO -> Rspecs missing for before_action.
 require 'spec_helper'
 
 describe Spree::Admin::ReturnAuthorizationsController do

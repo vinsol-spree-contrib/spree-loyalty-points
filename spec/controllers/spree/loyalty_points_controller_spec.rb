@@ -53,7 +53,6 @@ describe Spree::LoyaltyPointsController do
       send_request(page: 2)
     end
 
-    #TODO -> rspec for both conditions of per_page either it is present or not.
     context "when per_page is passed as a parameter" do
 
       it "should receive per with per_page on loyalty_points_transactions" do

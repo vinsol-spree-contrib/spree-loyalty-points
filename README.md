@@ -10,7 +10,7 @@ Installation
 Add spree_loyalty_points to your Gemfile:
 
 ```ruby
-gem 'spree_loyalty_points', '~> 1.0.0'
+gem 'spree_loyalty_points', '~> 1.0.2'
 ```
 
 Bundle your dependencies and run the installation generator:

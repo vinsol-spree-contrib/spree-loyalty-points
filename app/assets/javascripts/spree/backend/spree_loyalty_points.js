@@ -1,5 +1,3 @@
-//= require admin/spree_backend
-
 function SelectOptionChange(selectBoxId, containerId, heading) {
     var that = this;
     this.selectBoxId = selectBoxId;

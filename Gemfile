@@ -8,7 +8,7 @@ group :assets do
 end
 
 # Provides basic authentication functionality for testing parts of your engine
-gem 'spree_auth_devise', github: 'spree/spree_auth_devise', :branch => "2-1-stable"
+gem 'spree_auth_devise', github: 'spree/spree_auth_devise', :branch => "2-2-stable"
 
 group :test do
   gem 'shoulda-matchers'

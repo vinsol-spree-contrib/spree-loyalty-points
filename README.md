@@ -1,7 +1,7 @@
 Spree Loyalty Points [![Code Climate](https://codeclimate.com/github/vinsol/spree-loyalty-points.png)](https://codeclimate.com/github/vinsol/spree-loyalty-points) [![Build Status](https://travis-ci.org/vinsol/spree-loyalty-points.png?branch=master)](https://travis-ci.org/vinsol/spree-loyalty-points)
 ====================
 
-This extension adds Loyalty Points for users.
+This extension adds Loyalty Points for users in Spree.
 
 
 Installation
@@ -14,10 +14,11 @@ gem 'spree_loyalty_points'
 ```
 
 For Spree 2.1.x:
-
 ```ruby
 gem 'spree_loyalty_points', '1.0.2'
 ```
+
+At present this extention is not compatible with Spree 2.0.x
 
 Bundle your dependencies and run the installation generator:
 

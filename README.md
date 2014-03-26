@@ -18,7 +18,6 @@ Bundle your dependencies and run the installation generator:
 ```shell
 bundle
 bundle exec rails g spree_loyalty_points:install
-bundle exec rake db:migrate
 ```
 
 Usage

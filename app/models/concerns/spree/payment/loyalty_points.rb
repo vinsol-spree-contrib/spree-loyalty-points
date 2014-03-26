@@ -1,7 +1,7 @@
 require 'active_support/concern'
 
 module Spree
-  class Payment < ActiveRecord::Base
+  class Payment
     module LoyaltyPoints
       extend ActiveSupport::Concern
 

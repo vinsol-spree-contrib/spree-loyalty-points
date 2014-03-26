@@ -1,5 +1,4 @@
 require "spec_helper"
-require "models/concerns/spree/transactions_total_validation_spec"
 
 describe Spree::LoyaltyPointsTransaction do
 

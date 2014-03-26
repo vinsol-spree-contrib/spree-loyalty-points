@@ -1,6 +1,4 @@
 require "spec_helper"
-require "models/concerns/spree/loyalty_points_spec"
-require "models/concerns/spree/order/loyalty_points_spec"
 
 describe Spree::Order do
 

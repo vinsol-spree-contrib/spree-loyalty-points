@@ -1,6 +1,4 @@
 require "spec_helper"
-require "models/concerns/spree/loyalty_points_spec"
-require "models/concerns/spree/payment/loyalty_points_spec"
 
 describe Spree::Payment do
 

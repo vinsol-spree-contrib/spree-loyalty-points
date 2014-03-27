@@ -2,7 +2,7 @@
 Gem::Specification.new do |s|
   s.platform    = Gem::Platform::RUBY
   s.name        = 'spree_loyalty_points'
-  s.version     = '1.0.2'
+  s.version     = '1.0.3'
   s.summary     = 'Add loyalty points to spree'
   s.description = 'To award loyalty points and add loyalty points payment method to spree'
   s.required_ruby_version = '>= 1.9.3'

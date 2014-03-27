@@ -1,7 +1,7 @@
 require 'active_support/concern'
 
 module Spree
-  class Payment
+  class Payment < ActiveRecord::Base
     module LoyaltyPoints
       extend ActiveSupport::Concern
 
@@ -20,7 +20,7 @@ module Spree
 
         def redeem_loyalty_points
           loyalty_points_redeemed = loyalty_points_for(amount, 'redeem')
-          if by_loyalty_points? && redeemable_loyalty_points_balance?
+          if by_loyalty_points_and_redeemable?
             order.create_debit_transaction(loyalty_points_redeemed)
           end
         end
@@ -35,7 +35,11 @@ module Spree
         end
 
         def redeemable_loyalty_points_balance?
-          amount >= Spree::Config.loyalty_points_redeeming_balance
+          order.user.loyalty_points_balance >= Spree::Config.loyalty_points_redeeming_balance
+        end
+
+        def by_loyalty_points_and_redeemable?
+          by_loyalty_points? && redeemable_loyalty_points_balance?
         end
 
     end

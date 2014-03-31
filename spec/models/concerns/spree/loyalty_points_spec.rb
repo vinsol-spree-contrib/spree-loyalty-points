@@ -1,5 +1,13 @@
 shared_examples_for "LoyaltyPoints" do
 
+  describe 'loyalty_points_display' do
+
+    it 'returns the same amount of points' do
+      resource_instance.loyalty_points_display(100).should eq '100'
+    end
+
+  end
+
   describe 'loyalty_points_for' do
 
     context "when purpose is to award" do

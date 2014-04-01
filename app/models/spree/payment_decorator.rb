@@ -4,12 +4,13 @@ Spree::Payment.class_eval do
   include Spree::Payment::LoyaltyPoints
 
   validates :amount, numericality: { greater_than: 0 }, :if => :by_loyalty_points?
+  validate :sufficient_user_balance, :if => :by_loyalty_points?
   scope :state_not, ->(s) { where('state != ?', s) }
 
   fsm = self.state_machines[:state]
   fsm.after_transition :from => fsm.states.map(&:name) - [:completed], :to => [:completed], :do => :notify_paid_order
 
-  fsm.after_transition :from => fsm.states.map(&:name) - [:completed], :to => [:completed], :do => :redeem_loyalty_points, :if => :by_loyalty_points_and_redeemable?
+  fsm.after_transition :from => fsm.states.map(&:name) - [:completed], :to => [:completed], :do => :redeem_loyalty_points, :if => :by_loyalty_points?
   fsm.after_transition :from => [:completed], :to => fsm.states.map(&:name) - [:completed] , :do => :return_loyalty_points, :if => :by_loyalty_points?
 
   private

@@ -20,7 +20,7 @@ module Spree
 
         def redeem_loyalty_points
           loyalty_points_redeemed = loyalty_points_for(amount, 'redeem')
-          if by_loyalty_points_and_redeemable?
+          if by_loyalty_points?
             order.create_debit_transaction(loyalty_points_redeemed)
           end
         end
@@ -38,8 +38,11 @@ module Spree
           order.user.loyalty_points_balance >= Spree::Config.loyalty_points_redeeming_balance
         end
 
-        def by_loyalty_points_and_redeemable?
-          by_loyalty_points? && redeemable_loyalty_points_balance?
+        def sufficient_user_balance
+          unless redeemable_loyalty_points_balance?
+            min_balance = Spree::Config.loyalty_points_redeeming_balance
+            errors.add :loyalty_points_balance, "should be atleast #{ min_balance.to_s + " " + "point".pluralize(min_balance) } for redeeming Loyalty Points"
+          end
         end
 
     end

@@ -52,35 +52,14 @@ shared_examples_for "Payment::LoyaltyPoints" do
         resource_instance.stub(:loyalty_points_for).and_return(55)
       end
 
-      context "when Loyalty Points are redeemable" do
-
-        before :each do
-          resource_instance.stub(:redeemable_loyalty_points_balance?).and_return(true)
-        end
-
-        it "should receive create_debit_transaction on order" do
-          resource_instance.order.should_receive(:create_debit_transaction)
-          resource_instance.send(:redeem_loyalty_points)
-        end
-
-        it "should create loyalty_points_debit_transaction on order" do
-          resource_instance.send(:redeem_loyalty_points)
-          Spree::LoyaltyPointsDebitTransaction.last.loyalty_points.should eq(55)
-        end
-
+      it "should receive create_debit_transaction on order" do
+        resource_instance.order.should_receive(:create_debit_transaction)
+        resource_instance.send(:redeem_loyalty_points)
       end
 
-      context "when Loyalty Points are not redeemable" do
-
-        before :each do
-          resource_instance.stub(:redeemable_loyalty_points_balance?).and_return(false)
-        end
-
-        it "should not receive create_debit_transaction on order" do
-          resource_instance.order.should_not_receive(:create_debit_transaction)
-          resource_instance.send(:redeem_loyalty_points)
-        end
-
+      it "should create loyalty_points_debit_transaction on order" do
+        resource_instance.send(:redeem_loyalty_points)
+        Spree::LoyaltyPointsDebitTransaction.last.loyalty_points.should eq(55)
       end
 
     end
@@ -161,7 +140,7 @@ shared_examples_for "Payment::LoyaltyPoints" do
     context "when amount greater than redeeming balance" do
 
       before :each do
-        resource_instance.amount = 40
+        resource_instance.order.user.loyalty_points_balance = 40
       end
 
       it "should return true" do
@@ -173,7 +152,7 @@ shared_examples_for "Payment::LoyaltyPoints" do
     context "when amount less than redeeming balance" do
 
       before :each do
-        resource_instance.amount = 20
+        resource_instance.order.user.loyalty_points_balance = 20
       end
 
       it "should return false" do
@@ -185,11 +164,44 @@ shared_examples_for "Payment::LoyaltyPoints" do
     context "when amount equal to redeeming balance" do
 
       before :each do
-        resource_instance.amount = 30
+        resource_instance.order.user.loyalty_points_balance = 30
       end
 
       it "should return false" do
         resource_instance.send(:redeemable_loyalty_points_balance?).should be_true
+      end
+
+    end
+
+  end
+
+  describe 'sufficient_user_balance' do
+
+    context "when Loyalty Points are redeemable" do
+
+      before :each do
+        resource_instance.stub(:redeemable_loyalty_points_balance?).and_return(true)
+      end
+
+      it "should not add errors to loyalty_points_balance" do
+        resource_instance.valid?
+        resource_instance.errors[:loyalty_points_balance].should be_empty
+      end
+
+    end
+
+    context "when Loyalty Points are not redeemable" do
+
+      before :each do
+        resource_instance.stub(:redeemable_loyalty_points_balance?).and_return(false)
+        Spree::Config.stub(:loyalty_points_redeeming_balance).and_return(30)
+        resource_instance.order.user.stub(:loyalty_points_balance).and_return(20)
+      end
+
+      it "should not add errors to loyalty_points_balance" do
+        min_balance = Spree::Config.loyalty_points_redeeming_balance
+        resource_instance.send(:sufficient_user_balance)
+        resource_instance.errors[:loyalty_points_balance].should eq(["should be atleast #{ min_balance.to_s + " " + "point".pluralize(min_balance) } for redeeming Loyalty Points"])
       end
 
     end

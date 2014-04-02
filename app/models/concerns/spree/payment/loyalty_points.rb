@@ -1,6 +1,8 @@
 require 'active_support/concern'
 
 module Spree
+  #[TODO] -> Remove "ActiveRecord::Base" from this concern class
+
   class Payment < ActiveRecord::Base
     module LoyaltyPoints
       extend ActiveSupport::Concern
@@ -20,6 +22,8 @@ module Spree
 
         def redeem_loyalty_points
           loyalty_points_redeemed = loyalty_points_for(amount, 'redeem')
+          #[TODO] -> "by_loyalty_points?" condition is not required here.
+          
           if by_loyalty_points?
             order.create_debit_transaction(loyalty_points_redeemed)
           end
@@ -38,6 +42,8 @@ module Spree
           order.user.loyalty_points_balance >= Spree::Config.loyalty_points_redeeming_balance
         end
 
+        #[TODO] -> Name of this method resembles different thing. Please change this.
+        
         def sufficient_user_balance
           unless redeemable_loyalty_points_balance?
             min_balance = Spree::Config.loyalty_points_redeeming_balance

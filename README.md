@@ -15,7 +15,7 @@ gem 'spree_loyalty_points'
 
 For Spree 2.1.x:
 ```ruby
-gem 'spree_loyalty_points', '1.0.2'
+gem 'spree_loyalty_points', '1.0.3'
 ```
 
 At present this extention is not compatible with Spree 2.0.x

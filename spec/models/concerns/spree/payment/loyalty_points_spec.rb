@@ -198,6 +198,8 @@ shared_examples_for "Payment::LoyaltyPoints" do
         resource_instance.order.user.stub(:loyalty_points_balance).and_return(20)
       end
 
+      #[TODO] -> Change this test case description as "it is adding error"
+      
       it "should not add errors to loyalty_points_balance" do
         min_balance = Spree::Config.loyalty_points_redeeming_balance
         resource_instance.send(:sufficient_user_balance)

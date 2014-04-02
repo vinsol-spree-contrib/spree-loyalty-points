@@ -45,36 +45,19 @@ shared_examples_for "Payment::LoyaltyPoints" do
 
   describe 'redeem_loyalty_points' do
 
-    context "when payment done via Loyalty Points" do
-
-      before :each do
-        resource_instance.stub(:by_loyalty_points?).and_return(true)
-        resource_instance.stub(:loyalty_points_for).and_return(55)
-      end
-
-      it "should receive create_debit_transaction on order" do
-        resource_instance.order.should_receive(:create_debit_transaction)
-        resource_instance.send(:redeem_loyalty_points)
-      end
-
-      it "should create loyalty_points_debit_transaction on order" do
-        resource_instance.send(:redeem_loyalty_points)
-        Spree::LoyaltyPointsDebitTransaction.last.loyalty_points.should eq(55)
-      end
-
+    before :each do
+      resource_instance.stub(:by_loyalty_points?).and_return(true)
+      resource_instance.stub(:loyalty_points_for).and_return(55)
     end
 
-    context "when payment not done via Loyalty Points" do
+    it "should receive create_debit_transaction on order" do
+      resource_instance.order.should_receive(:create_debit_transaction)
+      resource_instance.send(:redeem_loyalty_points)
+    end
 
-      before :each do
-        resource_instance.stub(:by_loyalty_points?).and_return(false)
-      end
-
-      it "should not receive create_debit_transaction on order" do
-        resource_instance.order.should_not_receive(:create_debit_transaction)
-        resource_instance.send(:redeem_loyalty_points)
-      end
-
+    it "should create loyalty_points_debit_transaction on order" do
+      resource_instance.send(:redeem_loyalty_points)
+      Spree::LoyaltyPointsDebitTransaction.last.loyalty_points.should eq(55)
     end
 
   end
@@ -184,7 +167,7 @@ shared_examples_for "Payment::LoyaltyPoints" do
       end
 
       it "should not add errors to loyalty_points_balance" do
-        resource_instance.valid?
+        resource_instance.send(:redeemable_user_balance)
         resource_instance.errors[:loyalty_points_balance].should be_empty
       end
 

@@ -175,7 +175,7 @@ shared_examples_for "Payment::LoyaltyPoints" do
 
   end
 
-  describe 'sufficient_user_balance' do
+  describe 'redeemable_user_balance' do
 
     context "when Loyalty Points are redeemable" do
 
@@ -200,9 +200,9 @@ shared_examples_for "Payment::LoyaltyPoints" do
 
       #[TODO] -> Change this test case description as "it is adding error"
       
-      it "should not add errors to loyalty_points_balance" do
+      it "should add error to loyalty_points_balance" do
         min_balance = Spree::Config.loyalty_points_redeeming_balance
-        resource_instance.send(:sufficient_user_balance)
+        resource_instance.send(:redeemable_user_balance)
         resource_instance.errors[:loyalty_points_balance].should eq(["should be atleast #{ min_balance.to_s + " " + "point".pluralize(min_balance) } for redeeming Loyalty Points"])
       end
 

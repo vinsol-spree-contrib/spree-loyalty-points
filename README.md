@@ -7,7 +7,7 @@ This extension adds Loyalty Points for users in Spree.
 Installation
 ------------
 
-In your Gemfile, add:
+In your `Gemfile`, add:
 
 ```ruby
 gem 'spree_loyalty_points'
@@ -59,11 +59,22 @@ bundle exec rspec spec
 ```
 
 When testing your applications integration with this extension you may use it's factories.
-Simply add this require statement to your spec_helper:
+Simply add this require statement to your `spec_helper`:
 
 ```ruby
 require 'spree_loyalty_points/factories'
 ```
+
+Contributing
+------------
+
+1. Fork the repo.
+2. Clone your repo.
+3. Run `bundle install`.
+4. Run `bundle exec rake test_app` to create the test application in `spec/test_app`.
+5. Make your changes.
+6. Ensure specs pass by running `bundle exec rspec spec`.
+7. Submit your pull request.
 
 
 Credits

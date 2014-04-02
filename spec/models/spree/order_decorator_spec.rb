@@ -44,6 +44,15 @@ describe Spree::Order do
         @order.loyalty_points_eligible_total.should eq(line_items.first.amount)
       end
     end
+
+    context 'has a promotion' do
+      before do
+        @order.should_receive(:promo_total).and_return -2
+      end
+      it 'discounts the promo' do
+        @order.loyalty_points_eligible_total.should eq(line_items.first.amount - 2)
+      end
+    end
   end
 
   describe "complete_loyalty_points_payments callback" do

@@ -16,7 +16,7 @@ Spree::Order.class_eval do
   fsm.before_transition :from => fsm.states.map(&:name) - [:complete], :to => [:complete], :do => :complete_loyalty_points_payments
 
   def loyalty_points_eligible_total
-    line_items.select(&:loyalty_points_eligible).map(&:amount).sum
+    [line_items.select(&:loyalty_points_eligible).map(&:amount).sum + promo_total, 0].max
   end
 
 end

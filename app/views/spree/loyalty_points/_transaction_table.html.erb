@@ -31,8 +31,8 @@
         <% end %>
         <td class="loyalty-points-comment"><%= loyalty_point_transaction.comment %></td>
         <td class="loyalty-points-type"><%= loyalty_point_transaction.transaction_type %></td>
-        <td class="loyalty-points"><%= loyalty_point_transaction.loyalty_points %></td>
-        <td class="loyalty-points-balance"><%= loyalty_point_transaction.balance %></td>
+        <td class="loyalty-points"><%= Spree::LoyaltyPoints.loyalty_points_format.display(loyalty_point_transaction, loyalty_point_transaction.loyalty_points) %></td>
+        <td class="loyalty-points-balance"><%= Spree::LoyaltyPoints.loyalty_points_format.display(loyalty_point_transaction, loyalty_point_transaction.balance) %></td>
       </tr>
     <% end %>
     </tbody>

@@ -6,7 +6,7 @@ Deface::Override.new(:virtual_path => 'spree/admin/users/show',
     <th><%= Spree.t(:loyalty_points_balance) %></th>
     <td>
       <% if @user.loyalty_points_balance.present? %>
-        <%= link_to @user.loyalty_points_balance, spree.admin_user_loyalty_points_path(@user) %>
+        <%= link_to Spree::LoyaltyPoints.loyalty_points_format.display(@user, @user.loyalty_points_balance), spree.admin_user_loyalty_points_path(@user) %>
       <% else %>
         <%= 'No loyalty points yet' %>
       <% end %>

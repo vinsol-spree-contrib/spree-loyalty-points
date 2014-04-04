@@ -11,6 +11,6 @@
 
 <div id='loyalty-points-order-transactions'></div>
 
-<%= form_for @loyalty_points_transaction, as: :loyalty_points_transaction, url: [:admin, @user, :loyalty_points_transactions] do |f| %>
+<%= form_for @loyalty_points_transaction, as: :loyalty_points_transaction, url: admin_user_loyalty_points_transaction_path(@user.id, @loyalty_points_transaction.id) do |f| %>
   <%= render partial: 'form', locals: { f: f } %>
 <% end %>

@@ -7,10 +7,10 @@
     <%= button_link_to Spree.t(:back_to_user_profile), :back, :icon => 'icon-arrow-left', :id => 'admin_user_link' %>
   </li>
   <li>
-    <%= button_link_to Spree.t(:update_loyalty_points), new_admin_user_loyalty_point_path(@user), :icon => 'icon-plus', :id => 'admin_user_new_loyalty_point_link' %>
+    <%= button_link_to Spree.t(:update_loyalty_points), new_admin_user_loyalty_points_transaction_path(@user), :icon => 'icon-plus', :id => 'admin_user_new_loyalty_point_link' %>
   </li>
 <% end %>
 
-<p>Current Balance: <%= Spree::LoyaltyPoints.loyalty_points_format.display(@user, @user.loyalty_points_balance) %></p>
-<%= render partial: 'spree/loyalty_points/transaction_table' %>
-<br />
+  <p>Current Balance: <%= Spree::LoyaltyPoints.loyalty_points_format.display(@user, @user.loyalty_points_balance) %></p>
+  <%= render partial: 'spree/loyalty_points/transaction_table' %>
+  <br />

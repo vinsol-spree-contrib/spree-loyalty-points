@@ -67,7 +67,7 @@ class Spree::Admin::LoyaltyPointsTransactionsController < Spree::Admin::Resource
       if (parent_data.present? && @parent.nil?) || parent_data.blank?
         admin_users_url
       else
-        admin_user_loyalty_points_url(parent)
+        admin_user_loyalty_points_transactions_url(@parent)
       end
     end
 

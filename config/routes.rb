@@ -5,7 +5,7 @@ Spree::Core::Engine.routes.draw do
 
   namespace :admin do
     resources :users do
-      resources :loyalty_points, only: [:index, :new, :create], controller: 'loyalty_points_transactions' do
+      resources :loyalty_points_transactions,  except: [:show]  do
         get 'order_transactions/:order_id', action: :order_transactions, on: :collection
       end
     end

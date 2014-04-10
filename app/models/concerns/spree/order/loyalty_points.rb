@@ -10,7 +10,7 @@ module Spree
       end
 
       def award_loyalty_points
-        loyalty_points_earned = loyalty_points_for(item_total)
+        loyalty_points_earned = loyalty_points_for(loyalty_points_eligible_total)
         if !loyalty_points_used?
           create_credit_transaction(loyalty_points_earned)
         end

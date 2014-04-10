@@ -100,7 +100,7 @@ describe Spree::Admin::LoyaltyPointsTransactionsController do
         end
 
         it "redirects to admin users loyalty points page" do
-          expect(response).to redirect_to(admin_user_loyalty_points_url(user, default_host))
+          expect(response).to redirect_to(admin_user_loyalty_points_transactions_url(user, default_host))
         end
 
       end
@@ -164,7 +164,7 @@ describe Spree::Admin::LoyaltyPointsTransactionsController do
         end
 
         it "should return admin_users_url" do
-          controller.send(:collection_url).should eq(admin_user_loyalty_points_url(user, default_host))
+          controller.send(:collection_url).should eq(admin_user_loyalty_points_transactions_url(user, default_host))
         end
 
       end

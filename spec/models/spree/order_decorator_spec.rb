@@ -10,6 +10,51 @@ describe Spree::Order do
     @order.should be_valid
   end
 
+  describe 'loyalty_points_eligible_total' do
+    let(:line_items) do
+      [ build(:line_item) ]
+    end
+    before do
+      @order.line_items << line_items
+    end
+
+    subject { @order.loyalty_points_eligible_total }
+
+    it 'is the same as item total' do
+      @order.loyalty_points_eligible_total.should eq(line_items[0].amount)
+    end
+
+    context 'has multiple line items' do
+      let(:line_items) do
+        [ build(:line_item), build(:line_item) ]
+      end
+      it 'has the sum of all items' do
+        @order.loyalty_points_eligible_total.should eq(line_items.map(&:amount).sum)
+      end
+    end
+
+    context 'has loyalty point inelgible products' do
+      let(:line_items) do
+        [ build(:line_item), build(:line_item) ]
+      end
+      before do
+        line_items.last.should_receive(:loyalty_points_eligible).and_return false
+      end
+      it 'does not count inelgible products' do
+        @order.loyalty_points_eligible_total.should eq(line_items.first.amount)
+      end
+    end
+
+    context 'has a promotion' do
+      before do
+        @order.should_receive(:promo_total).and_return -2
+      end
+      it 'discounts the promo' do
+        @order.loyalty_points_eligible_total.should eq(line_items.first.amount - 2)
+      end
+    end
+  end
+
   describe "complete_loyalty_points_payments callback" do
 
     it "should be included in state_machine before callbacks" do

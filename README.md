@@ -34,13 +34,13 @@ bundle exec rails g spree_loyalty_points:install
 How it works 
 -----
 
-1. To add loyalty point feature, Spree admin needs to create “Loyalty Points” payment method 
+* To add loyalty point feature, Spree admin needs to create “Loyalty Points” payment method 
 
     Configuration -> Payment Methods -> New payment Method 
     
     You need to select “Spree::PaymentMethod::LoyaltyPoints” as a Provider
 
-2. Spree admin need to make following settings on Configuration page:
+* Spree admin need to make following settings on Configuration page:
 
    - **Set minimum amount of an order that should be spent by the customer to earn loyalty points** - On the basis of this, it will be decided by the system whether loyalty points should be awarded for the order or not, based on the order value.
 
@@ -62,14 +62,14 @@ How it works
 
     ![lp settings](http://vinsol.com/gems_screenshots/spree-loyalty-points/lp%20settings.png)
 
-3. Admin can view list of the loyalty point transactions by following below mentioned steps:
+* Admin can view list of the loyalty point transactions by following below mentioned steps:
 
   -  Go to Users Tab.
   - Select the user account.
   - Click on the Loyalty points Balance value.
 ![lp transactions](http://vinsol.com/gems_screenshots/spree-loyalty-points/lp%20transactions.png)
 
-4. Admin can also credit/debit loyalty points to the customers manually, by following below mentioned steps:
+* Admin can also credit/debit loyalty points to the customers manually, by following below mentioned steps:
     
   - Go to Users tab.
   - Select the User .
@@ -77,7 +77,7 @@ How it works
   - Click on “Update loyalty Points” to Credit/Debit Loyalty points.
    ![Credit LP](http://vinsol.com/gems_screenshots/spree-loyalty-points/credit%20lp.png)
   
-5. After setting mentioned configurations, Customer will be able to see this payment method on Checkout Page. Customer will be able to make payments with this method if sufficient loyalty points are available. Customer can see:
+* After setting mentioned configurations, Customer will be able to see this payment method on Checkout Page. Customer will be able to make payments with this method if sufficient loyalty points are available. Customer can see:
 
   - Loyalty Points balance on “My Account” page.
 

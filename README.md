@@ -1,7 +1,11 @@
 Spree Loyalty Points [![Code Climate](https://codeclimate.com/github/vinsol/spree-loyalty-points.png)](https://codeclimate.com/github/vinsol/spree-loyalty-points) [![Build Status](https://travis-ci.org/vinsol/spree-loyalty-points.png?branch=master)](https://travis-ci.org/vinsol/spree-loyalty-points)
 ====================
 
-This extension adds Loyalty Points for users in Spree.
+Loyalty Points extension allows customers to earn loyalty points on the basis of their purchases. Admin can also reward Loyalty Points to it’s customers manually. Customer can use these loyalty points to pay for their future orders.
+
+This extension allows admin to create a new payment method “Loyalty Points” in the system. Once this payment method is created and active, it would appear on checkout screen and Customers can use this payment method for payments.
+
+This extension also automates the awarding of loyalty points to customers based on the configuration done by admin and updating loyalty points based on the transactions on Spree Commerce platform. 
 
 
 Installation
@@ -27,25 +31,88 @@ bundle
 bundle exec rails g spree_loyalty_points:install
 ```
 
-Usage
+How it works 
 -----
 
-From Admin end, create a payment method of LoyaltyPoints type for payment with Loyalty Points.
+1. To add loyalty point feature, Spree admin needs to create “Loyalty Points” payment method 
 
-Go to the Admin end of the website and open the Configurations Tab. Set up the values for the following Loyalty Points Settings under General Settings:
+    Configuration -> Payment Methods -> New payment Method 
+    
+    You need to select “Spree::PaymentMethod::LoyaltyPoints” as a Provider
 
-* Minimum Amount to be spent per Order(Item Total, excluding Shipping and any other Charges) to award Loyalty Points : This is the minimum amount the user has to spend on an order to receive Loyalty Points for that order
-* Number of Loyalty Points to be awarded per Unit Amount Spent : Loyalty Points to be awarded against Unit Amount spent on Order
-* Minimum Loyalty Points Balance Required for Redeeming : Minimum Loyalty Points Balance a user should have for spending Loyalty Points
-* Loyalty Point to Amount Conversion Rate : Conversion Rate for getting Amount equivalent value of Loyalty Points
-* Time(in hours) after payment to award Loyalty Points : Time period to wait from the time payment is received for the order to award Loyalty Points
+2. Spree admin need to make following settings on Configuration page:
 
-After an order's payment is received, Loyalty Points will be awarded (only after the Time period specified in the above setting) when you run the rake task.
-Add a Cron Job to run the following Rake Task to Award Loyalty Points to Users:
+   - **Set minimum amount of an order that should be spent by the customer to earn loyalty points** - On the basis of this, it will be decided by the system whether loyalty points should be awarded for the order or not, based on the order value.
+
+  - **Set number of loyalty points to be awarded per unit amount spent** - On the    basis of this configuration, number of loyalty points to be awarded are calculated based on the order  value and per unit value defined. The loyalty points get added to the customer’s account which he can use in future purchases. 
+
+    Ex. Suppose Admin set this value this value to 1, it means, Customer will receive 1 Loyalty Point on spending every $1 on this site.
+
+       In order to receive loyalty points the payment should be done through some other  
+     mode like Credit card, Debit card, Cash, Check etc.
+          
+     No loyalty points are awarded for purchase done through existing Loyalty point 
+    balance
+
+  - **Set minimum loyalty points balance required for redeeming** - On the basis of this, Customer will be permitted to make a payment with Loyalty Points only if he/she has Loyalty Points balance more than the minimum loyalty points set by the Admin. 
+
+  - **Set Loyalty Point to Amount conversion rate** - This conversion rate converts the loyalty points into amount. This amount is displayed on the checkout screen with Loyalty Points balance.
+
+  - **Set Time to award Loyalty Points after payment** - Loyalty Points will be credited to the customer’s account on the basis of  this set time period  only after order amount is paid by the customer.
+
+    ![lp settings](http://vinsol.com/gems_screenshots/spree-loyalty-points/lp%20settings.png)
+
+3. Admin can view list of the loyalty point transactions by following below mentioned steps:
+
+  -  Go to Users Tab.
+  - Select the user account.
+  - Click on the Loyalty points Balance value.
+![lp transactions](http://vinsol.com/gems_screenshots/spree-loyalty-points/lp%20transactions.png)
+
+4. Admin can also credit/debit loyalty points to the customers manually, by following below mentioned steps:
+    
+  - Go to Users tab.
+  - Select the User .
+  - Click on Loyalty Points Balance value
+  - Click on “Update loyalty Points” to Credit/Debit Loyalty points.
+   ![Credit LP](http://vinsol.com/gems_screenshots/spree-loyalty-points/credit%20lp.png)
+  
+5. After setting mentioned configurations, Customer will be able to see this payment method on Checkout Page. Customer will be able to make payments with this method if sufficient loyalty points are available. Customer can see:
+
+  - Loyalty Points balance on “My Account” page.
+
+  - Loyalty Points and their respective money value at the time of checkout
+    ![LP Checkout](http://vinsol.com/gems_screenshots/spree-loyalty-points/lp%20checkout1.png)
+
+  - His loyalty points transactions and order details.
+
+    ![My Orders1](http://vinsol.com/gems_screenshots/spree-loyalty-points/lp%20myorders1.png)
+
+    ![My Orders2](http://vinsol.com/gems_screenshots/spree-loyalty-points/lp%20myorders2.png)
+
+Update Loyalty Points in the system
+-----
+
+After an order's payment is received, Loyalty Points will be awarded (after the Time period specified under "Set Time to award Loyalty Points after payment" configuration) only after running the rake task. 
+
+Add a Cron Job to run the following rake task to award Loyalty Points to customers
 
 ```shell
 bundle exec rake spree:loyalty_points:award
 ```
+
+
+
+Contributing
+------------
+
+1. Fork the repo.
+2. Clone your repo.
+3. Run `bundle install`.
+4. Run `bundle exec rake test_app` to create the test application in `spec/test_app`.
+5. Make your changes.
+6. Ensure specs pass by running `bundle exec rspec spec`.
+7. Submit your pull request.
 
 Testing
 -------
@@ -64,18 +131,6 @@ Simply add this require statement to your `spec_helper`:
 ```ruby
 require 'spree_loyalty_points/factories'
 ```
-
-Contributing
-------------
-
-1. Fork the repo.
-2. Clone your repo.
-3. Run `bundle install`.
-4. Run `bundle exec rake test_app` to create the test application in `spec/test_app`.
-5. Make your changes.
-6. Ensure specs pass by running `bundle exec rspec spec`.
-7. Submit your pull request.
-
 
 Credits
 -------

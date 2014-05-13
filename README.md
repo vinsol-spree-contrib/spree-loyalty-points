@@ -3,7 +3,7 @@ Spree Loyalty Points [![Code Climate](https://codeclimate.com/github/vinsol/spre
 
 Loyalty Points extension allows customers to earn loyalty points on the basis of their purchases. Admin can also reward Loyalty Points to it’s customers manually. Customer can use these loyalty points to pay for their future orders.
 
-This extension allows admin to create a new payment method “Loyalty Points” in the system. Once this payment method is created and active, it would appear on checkout screen and Customers can use this payment method for payments.
+This extension allows admin to create a new payment method “Loyalty Points” in the system. Once this payment method is created and active, it would appear on checkout screen and customers can use this payment method for payments.
 
 This extension also automates the awarding of loyalty points to customers based on the configuration done by admin and updating loyalty points based on the transactions on Spree Commerce platform. 
 

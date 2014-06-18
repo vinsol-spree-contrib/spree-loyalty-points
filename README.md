@@ -7,6 +7,7 @@ This extension allows admin to create a new payment method “Loyalty Points” 
 
 This extension also automates the awarding of loyalty points to customers based on the configuration done by admin and updating loyalty points based on the transactions on Spree Commerce platform. 
 
+This extension allows only Loyalty Points payment method for making a purchase and does not allow the payment through other payment modes like cash, check, credit card etc.
 
 Installation
 ------------
@@ -58,7 +59,12 @@ How it works
 
   - **Set Loyalty Point to Amount conversion rate** - This conversion rate converts the loyalty points into amount. This amount is displayed on the checkout screen with Loyalty Points balance.
 
-  - **Set Time to award Loyalty Points after payment** - Loyalty Points will be credited to the customer’s account on the basis of  this set time period  only after order amount is paid by the customer.
+  - **Set Time to award Loyalty Points after payment** - Loyalty Points will be credited to the    
+        customer’s account on the basis of  this set time period. This time period will be     
+        considered only after Customer makes the payment and Admin marks this payment 
+       “Capture”.
+    **This field is provided to curb the misuse of the Loyalty Points by the customers. So, we 
+       suggest  to set this time on the basis of the merchant’s “Return Policy”.**
 
     ![lp settings](http://vinsol.com/gems_screenshots/spree-loyalty-points/lp%20settings.png)
 
@@ -77,25 +83,44 @@ How it works
   - Click on “Update loyalty Points” to Credit/Debit Loyalty points.
    ![Credit LP](http://vinsol.com/gems_screenshots/spree-loyalty-points/credit%20lp.png)
   
-* After setting mentioned configurations, Customer will be able to see this payment method on Checkout Page. Customer will be able to make payments with this method if sufficient loyalty points are available. Customer can see:
-
-  - Loyalty Points balance on “My Account” page.
+* After setting mentioned configurations, Customer will be able to see this payment method on Checkout Page and can view details later on order detail page. 
 
   - Loyalty Points and their respective money value at the time of checkout
-    ![LP Checkout](http://vinsol.com/gems_screenshots/spree-loyalty-points/lp%20checkout1.png)
-
+    ![LP Checkout](http://vinsol.com/gems_screenshots/spree-loyalty-points/checkout.png)
+  
   - His loyalty points transactions and order details.
 
     ![My Orders1](http://vinsol.com/gems_screenshots/spree-loyalty-points/lp%20myorders1.png)
 
     ![My Orders2](http://vinsol.com/gems_screenshots/spree-loyalty-points/lp%20myorders2.png)
-
+* **View my points**:If a user wants to view his Loyalty Points balance he can go to “My Account” page.
+* **Changing system currency**:Loyalty Points can be set only for one operating currency at any time. If Admin wants to change currency for the App, he/she needs to reset Loyalty Points Settings by considering that currency.
+* **Cancelling Order **: If Admin wants to “Cancel” order, He/She needs to “Credit” Loyalty 
+     Points manually into the User’s account by following below mentioned steps:
+      - Go to Users tab.
+      - Select the User .
+      - Click on Loyalty Points Balance value
+      - Select “Transaction Type” “Credit” from drop down.
+      - Select respective “Order number” from “Order” drop down.
+      - Click on “Update Loyalty Points”.
+   ![Credit LP](http://vinsol.com/gems_screenshots/spree-loyalty-points/credit%20lp.png)
+* **Return Authorization**: In case a user returns the shipped order by contacting Customer Care then to return the LP associated with the order admin needs to create a “New Return Authorization” and mention LP to be credited into User’s account. 
+    Order’s Page -> Order Details Page -> Return Authorization -> New Return Authorization
+   ![Return Authorization](http://vinsol.com/gems_screenshots/spree-loyalty-points/return%20authorization.png)
+    After receiving the shipped product(s), Admin needs to “Receive” the Product. Once received,   
+    LP will be automatically credited into User’s account.
+   Order’s Page -> Order Details Page -> Return Authorization -> “Edit” Return Authorization -> 
+   Receive
+   ![Receive1](http://vinsol.com/gems_screenshots/spree-loyalty-points/receive1.png)
+   ![Receive](http://vinsol.com/gems_screenshots/spree-loyalty-points/receive.png)
 Update Loyalty Points in the system
 -----
 
-After an order's payment is received, Loyalty Points will be awarded (after the Time period specified under "Set Time to award Loyalty Points after payment" configuration) only after running the rake task. 
+Loyalty Points will be awarded to the customer only after:
+   - Admin captures the payment manually for his order
+   - “Time” set in Loyalty Point configuration has elapsed after capturing the payment. 
 
-Add a Cron Job to run the following rake task to award Loyalty Points to customers
+Add a Cron Job to run the following rake task to award Loyalty Points to customers who satisfy the above two conditions. 
 
 ```shell
 bundle exec rake spree:loyalty_points:award

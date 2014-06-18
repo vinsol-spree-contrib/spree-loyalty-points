@@ -91,8 +91,7 @@ How it works
     ![My Orders2](http://vinsol.com/gems_screenshots/spree-loyalty-points/lp%20myorders2.png)
 * **View my points**:If a user wants to view his Loyalty Points balance he can go to “My Account” page.
 * **Changing system currency**:Loyalty Points can be set only for one operating currency at any time. If Admin wants to change currency for the App, he/she needs to reset Loyalty Points Settings by considering that currency.
-* **Cancelling Order **: If Admin wants to “Cancel” order, He/She needs to “Credit” Loyalty 
-     Points manually into the User’s account by following below mentioned steps:
+* **Cancelling Order **:If Admin wants to “Cancel” order, He/She needs to “Credit” Loyalty Points manually into the User’s account by following below mentioned steps:
       - Go to Users tab.
       - Select the User .
       - Click on Loyalty Points Balance value
@@ -101,14 +100,19 @@ How it works
       - Click on “Update Loyalty Points”.
    ![Credit LP](http://vinsol.com/gems_screenshots/spree-loyalty-points/credit%20lp.png)
 * **Return Authorization**: In case a user returns the shipped order by contacting Customer Care then to return the LP associated with the order admin needs to create a “New Return Authorization” and mention LP to be credited into User’s account. 
+
     Order’s Page -> Order Details Page -> Return Authorization -> New Return Authorization
+    
    ![Return Authorization](http://vinsol.com/gems_screenshots/spree-loyalty-points/return%20authorization.png)
-    After receiving the shipped product(s), Admin needs to “Receive” the Product. Once received,   
-    LP will be automatically credited into User’s account.
-   Order’s Page -> Order Details Page -> Return Authorization -> “Edit” Return Authorization -> 
-   Receive
+   
+After receiving the shipped product(s), Admin needs to “Receive” the Product. Once received,LP will be automatically credited into User’s account.
+
+   Order’s Page -> Order Details Page -> Return Authorization -> “Edit” Return Authorization -> Receive
+   
    ![Receive1](http://vinsol.com/gems_screenshots/spree-loyalty-points/receive1.png)
+   
    ![Receive](http://vinsol.com/gems_screenshots/spree-loyalty-points/receive.png)
+   
 Update Loyalty Points in the system
 -----
 

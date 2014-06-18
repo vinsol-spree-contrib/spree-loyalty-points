@@ -94,7 +94,7 @@ How it works
     
 * **View my points**:If a user wants to view his Loyalty Points balance he can go to “My Account” page.
 * **Changing system currency**:Loyalty Points can be set only for one operating currency at any time. If Admin wants to change currency for the App, he/she needs to reset Loyalty Points Settings by considering that currency.
-* **Cancelling order **:If Admin wants to “Cancel” order, He/She needs to “Credit” Loyalty Points manually into the User’s account by following below mentioned steps:
+* **Cancelling order**:If Admin wants to “Cancel” order, He/She needs to “Credit” Loyalty Points manually into the User’s account by following below mentioned steps:
 
   - Go to Users tab
   - Select the User

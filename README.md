@@ -60,21 +60,22 @@ How it works
   - **Set Loyalty Point to Amount conversion rate** - This conversion rate converts the loyalty points into amount. This amount is displayed on the checkout screen with Loyalty Points balance.
 
   - **Set Time to award Loyalty Points after payment** - Loyalty Points will be credited to the Customer’s account on the basis of  this set time period. This time period will be considered only after Customer makes the payment and Admin marks this payment “Capture”.
+ 
     **This field is provided to curb the misuse of the Loyalty Points by the customers. So, we suggest  to set this time on the basis of the merchant’s “Return Policy”.**
 
-    ![lp settings](http://vinsol.com/gems_screenshots/spree-loyalty-points/lp%20settings.png)
+   ![lp settings](http://vinsol.com/gems_screenshots/spree-loyalty-points/lp%20settings.png)
 
 * Admin can view list of the loyalty point transactions by following below mentioned steps:
 
   -  Go to Users Tab.
   - Select the user account.
   - Click on the Loyalty points Balance value.
-![lp transactions](http://vinsol.com/gems_screenshots/spree-loyalty-points/lp%20transactions.png)
+   ![lp transactions](http://vinsol.com/gems_screenshots/spree-loyalty-points/lp%20transactions.png)
 
 * Admin can also credit/debit loyalty points to the customers manually, by following below mentioned steps:
     
-  - Go to Users tab.
-  - Select the User .
+  - Go to Users tab
+  - Select the User
   - Click on Loyalty Points Balance value
   - Click on “Update loyalty Points” to Credit/Debit Loyalty points.
    ![Credit LP](http://vinsol.com/gems_screenshots/spree-loyalty-points/credit%20lp.png)
@@ -82,23 +83,28 @@ How it works
 * After setting mentioned configurations, Customer will be able to see this payment method on Checkout Page and can view details later on order detail page. 
 
   - Loyalty Points and their respective money value at the time of checkout
-    ![LP Checkout](http://vinsol.com/gems_screenshots/spree-loyalty-points/checkout.png)
+  
+   ![LP Checkout](http://vinsol.com/gems_screenshots/spree-loyalty-points/checkout.png)
   
   - His loyalty points transactions and order details.
 
-    ![My Orders1](http://vinsol.com/gems_screenshots/spree-loyalty-points/lp%20myorders1.png)
+   ![My Orders1](http://vinsol.com/gems_screenshots/spree-loyalty-points/lp%20myorders1.png)
 
-    ![My Orders2](http://vinsol.com/gems_screenshots/spree-loyalty-points/lp%20myorders2.png)
+   ![My Orders2](http://vinsol.com/gems_screenshots/spree-loyalty-points/lp%20myorders2.png)
+    
 * **View my points**:If a user wants to view his Loyalty Points balance he can go to “My Account” page.
 * **Changing system currency**:Loyalty Points can be set only for one operating currency at any time. If Admin wants to change currency for the App, he/she needs to reset Loyalty Points Settings by considering that currency.
-* **Cancelling Order **:If Admin wants to “Cancel” order, He/She needs to “Credit” Loyalty Points manually into the User’s account by following below mentioned steps:
-      - Go to Users tab.
-      - Select the User .
-      - Click on Loyalty Points Balance value
-      - Select “Transaction Type” “Credit” from drop down.
-      - Select respective “Order number” from “Order” drop down.
-      - Click on “Update Loyalty Points”.
+* **Cancelling Order **:If Admin wants to “Cancel” order, He/She needs to “Credit” Loyalty Points manually into the User’s account by following below mentioned steps
+
+  - Go to Users tab
+  - Select the User
+  - Click on Loyalty Points Balance value
+  - Select “Transaction Type” “Credit” from drop down
+  - Select respective “Order number” from “Order” drop down
+  - Click on “Update Loyalty Points”
+      
    ![Credit LP](http://vinsol.com/gems_screenshots/spree-loyalty-points/credit%20lp.png)
+   
 * **Return Authorization**: In case a user returns the shipped order by contacting Customer Care then to return the LP associated with the order admin needs to create a “New Return Authorization” and mention LP to be credited into User’s account. 
 
     Order’s Page -> Order Details Page -> Return Authorization -> New Return Authorization

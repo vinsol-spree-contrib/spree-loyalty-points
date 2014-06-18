@@ -59,12 +59,9 @@ How it works
 
   - **Set Loyalty Point to Amount conversion rate** - This conversion rate converts the loyalty points into amount. This amount is displayed on the checkout screen with Loyalty Points balance.
 
-  - **Set Time to award Loyalty Points after payment** - Loyalty Points will be credited to the    
-        customer’s account on the basis of  this set time period. This time period will be     
-        considered only after Customer makes the payment and Admin marks this payment 
-       “Capture”.
-    **This field is provided to curb the misuse of the Loyalty Points by the customers. So, we 
-       suggest  to set this time on the basis of the merchant’s “Return Policy”.**
+  - **Set Time to award Loyalty Points after payment** - Loyalty Points will be credited to the Customer’s account on the basis of  this set time period. This time period will be considered only after Customer makes the payment and Admin marks this payment “Capture”.
+  - 
+    **This field is provided to curb the misuse of the Loyalty Points by the customers. So, we suggest  to set this time on the basis of the merchant’s “Return Policy”.**
 
     ![lp settings](http://vinsol.com/gems_screenshots/spree-loyalty-points/lp%20settings.png)
 

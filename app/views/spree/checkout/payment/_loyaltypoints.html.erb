@@ -1,8 +1,9 @@
 <%- lp_balance = spree_current_user.loyalty_points_balance %>
 <%- equivalent_currency_balance = spree_current_user.loyalty_points_equivalent_currency %>
-Loyalty Points Balance: <%= lp_balance %><%= "($" + equivalent_currency_balance.to_s + ")" %>
+Loyalty Points Balance: <%= lp_balance %><%= "(Equivalent to $" + equivalent_currency_balance.to_s + ")" %>
 <%- lp_needed = @order.loyalty_points_for(@order.total, 'redeem') %>
-<br/>Loyalty Points Needed: <%= lp_needed %>
+<%- lp_needed_equivalent_currency = lp_needed  * Spree::Config.loyalty_points_conversion_rate %>
+<br/>Loyalty Points Needed: <%= lp_needed %><%= "(Equivalent to $" + lp_needed_equivalent_currency.to_s + ")" %>
 <% if lp_needed > lp_balance %>
   <br/><b>Insufficient Balance!</b>
 <% end %>

@@ -15,4 +15,4 @@ en:
     loyalty_points_award_period: Time(in hours) after payment to award loyalty points
     back_to_user_profile: Back to User Profile
     update_loyalty_points: Update Loyalty Points
-    loyalty_points_earnable: "%{quantity} Loyalty Points Will Be Awarded for this Order"
+    loyalty_points_earnable: "You can earn %{quantity} Loyalty Points for this Order"

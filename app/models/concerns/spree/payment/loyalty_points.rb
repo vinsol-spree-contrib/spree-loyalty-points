@@ -16,6 +16,10 @@ module Spree
           end
         end
 
+        def by_loyalty_points?
+          payment_method.type == "Spree::PaymentMethod::LoyaltyPoints"
+        end
+
       private
 
         def redeem_loyalty_points
@@ -26,10 +30,6 @@ module Spree
         def return_loyalty_points
           loyalty_points_redeemed = loyalty_points_for(amount, 'redeem')
           order.create_credit_transaction(loyalty_points_redeemed)
-        end
-
-        def by_loyalty_points?
-          payment_method.type == "Spree::PaymentMethod::LoyaltyPoints"
         end
 
         def redeemable_loyalty_points_balance?

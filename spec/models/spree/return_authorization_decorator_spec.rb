@@ -82,7 +82,7 @@ describe Spree::ReturnAuthorization do
       context "when loyalty_points_for is lowest" do
 
         before :each do
-          @credit_points = @return_authorization.order.loyalty_points_for(@return_authorization.order.item_total)
+          @credit_points = @return_authorization.order.loyalty_points_for(@return_authorization.order.item_total, 'redeem')
           @return_authorization.stub(:loyalty_points).and_return(@credit_points + 10)
         end
 
@@ -97,7 +97,7 @@ describe Spree::ReturnAuthorization do
 
         before :each do
           @credit_points = @return_authorization.loyalty_points
-          @return_authorization.order.stub(:loyalty_points_for).with(@return_authorization.order.item_total).and_return(@credit_points + 10)
+          @return_authorization.order.stub(:loyalty_points_for).with(@return_authorization.order.item_total, 'redeem').and_return(@credit_points + 10)
         end
 
         it "should receive create_credit_transaction with return_authorization's loyalty_points" do

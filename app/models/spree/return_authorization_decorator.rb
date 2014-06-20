@@ -7,7 +7,7 @@ Spree::ReturnAuthorization.class_eval do
       loyalty_points_debit_quantity = [order.user.loyalty_points_balance, order.loyalty_points_for(order.item_total), loyalty_points].min
       order.create_debit_transaction(loyalty_points_debit_quantity)
     else
-      loyalty_points_credit_quantity = [order.loyalty_points_for(order.total), loyalty_points].min
+      loyalty_points_credit_quantity = [order.loyalty_points_for(order.total, 'redeem'), loyalty_points].min
       order.create_credit_transaction(loyalty_points_credit_quantity)
     end
   end

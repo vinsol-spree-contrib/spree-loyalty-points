@@ -11,3 +11,8 @@
 #loyalty-points-info dd {
     margin-left: 0;
 }
+
+.small.loyalty_points_details {
+  margin-top:-30px;
+  margin-left:20px;
+}

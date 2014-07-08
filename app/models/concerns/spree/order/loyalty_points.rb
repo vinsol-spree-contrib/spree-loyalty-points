@@ -48,6 +48,7 @@ module Spree
 
         def complete_loyalty_points_payments
           payments.by_loyalty_points.with_state('checkout').each { |payment| payment.complete! }
+          update!
         end
 
     end

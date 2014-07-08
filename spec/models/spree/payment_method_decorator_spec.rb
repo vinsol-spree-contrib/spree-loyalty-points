@@ -34,4 +34,10 @@ describe Spree::PaymentMethod do
 
   end
 
+  describe "#guest_checkout?" do
+    it "is true" do 
+      Spree::PaymentMethod.new.guest_checkout?.should be_true 
+    end
+  end
+
 end

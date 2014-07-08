@@ -111,4 +111,10 @@ describe Spree::PaymentMethod::LoyaltyPoints do
       loyalty_points_payment_method.should_not be_source_required
     end
   end
+
+  describe '#guest_checkout?' do
+    it 'should not allow this payment method in guest checkout' do
+      loyalty_points_payment_method.guest_checkout?.should be_false
+    end
+  end
 end

@@ -1,8 +1,8 @@
 <%= paginate @loyalty_points_transactions %>
 
 <% if @loyalty_points_transactions.present? %>
-  <table class="loyalty-points-summary">
-    <thead>
+  <table class="loyalty-points-summary table table-striped table-hover">
+    <thead class="thead-inverse">
     <tr>
       <th class="loyalty-points-date"><%= Spree.t(:date) %></th>
       <th class="loyalty-points-source"><%= Spree.t(:source) %></th>

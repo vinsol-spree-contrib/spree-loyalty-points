@@ -1,18 +1,22 @@
 source 'https://rubygems.org'
 
 gem 'sqlite3'
+gem 'better_errors'
+gem 'quiet_assets'
+gem 'binding_of_caller'
 
 group :assets do
   gem 'coffee-rails'
   gem 'sass-rails'
 end
 
-# Provides basic authentication functionality for testing parts of your engine
-gem 'spree_auth_devise', github: 'spree/spree_auth_devise', :branch => "2-2-stable"
 
 # Provides basic frontend and backend functionalities for testing purposes
-gem 'spree_backend', '~> 2.2'
-gem 'spree_frontend', '~> 2.2'
+gem 'spree_backend',  github: 'spree/spree', :branch => "3-0-stable"
+gem 'spree_frontend', github: 'spree/spree', :branch => "3-0-stable"
+
+# Provides basic authentication functionality for testing parts of your engine
+gem 'spree_auth_devise', github: 'spree/spree_auth_devise', :branch => "3-0-stable"
 
 group :test do
   gem 'shoulda-matchers'

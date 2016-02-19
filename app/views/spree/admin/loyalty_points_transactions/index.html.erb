@@ -3,12 +3,8 @@
 <% end %>
 
 <% content_for :page_actions do %>
-  <li>
-    <%= button_link_to Spree.t(:back_to_user_profile), :back, :icon => 'icon-arrow-left', :id => 'admin_user_link' %>
-  </li>
-  <li>
-    <%= button_link_to Spree.t(:update_loyalty_points), new_admin_user_loyalty_point_path(@user), :icon => 'icon-plus', :id => 'admin_user_new_loyalty_point_link' %>
-  </li>
+    <%= button_link_to Spree.t(:back_to_user_profile), :back, :icon => 'chevron-left', class: 'btn-primary', :id => 'admin_user_link' %>
+    <%= button_link_to Spree.t(:update_loyalty_points), new_admin_user_loyalty_point_path(@user), :icon => 'plus', class: 'btn-primary', :id => 'admin_user_new_loyalty_point_link' %>
 <% end %>
 
 <p>Current Balance: <%= @user.loyalty_points_balance %></p>

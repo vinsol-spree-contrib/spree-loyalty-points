@@ -14,3 +14,4 @@ pkg
 *.swp
 spec/dummy
 vendor
+.byebug_history

@@ -1,11 +1,5 @@
 source 'https://rubygems.org'
 
-gem 'sqlite3'
-gem 'better_errors'
-gem 'quiet_assets'
-gem 'binding_of_caller'
-gem 'byebug'
-
 group :assets do
   gem 'coffee-rails'
   gem 'sass-rails'

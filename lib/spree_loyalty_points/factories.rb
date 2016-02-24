@@ -46,7 +46,7 @@ FactoryGirl.define do
       create_list(:loyalty_points_transaction, evaluator.transactions_count, source: order)
     end
 
-    factory :shipped_order_with_loyalty_points do
+  factory :shipped_order_with_loyalty_points, parent: :shipped_order do
       ignore do
         shipments_count 5
       end
@@ -71,5 +71,4 @@ FactoryGirl.define do
     association :order, factory: :shipped_order_with_loyalty_points
 
   end
-
 end

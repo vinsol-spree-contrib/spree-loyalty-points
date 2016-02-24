@@ -2,9 +2,9 @@ require "spec_helper"
 
 describe Spree::PaymentMethod do
 
-  let(:loyalty_points_payment_method) { Spree::PaymentMethod::LoyaltyPoints.create!(:environment => Rails.env, :active => true, :name => 'Loyalty_Points') }
-  let(:payment_method2) { Spree::PaymentMethod::Check.create!(:environment => Rails.env, :active => true, :name => 'Check1') }
-  let(:payment_method3) { Spree::PaymentMethod::Check.create!(:environment => Rails.env, :active => true, :name => 'Check1') }
+  let(:loyalty_points_payment_method) { Spree::PaymentMethod::LoyaltyPoints.create!(:active => true, :name => 'Loyalty_Points') }
+  let(:payment_method2) { Spree::PaymentMethod::Check.create!(:active => true, :name => 'Check1') }
+  let(:payment_method3) { Spree::PaymentMethod::Check.create!(:active => true, :name => 'Check1') }
 
   describe 'loyalty_points_type' do
 

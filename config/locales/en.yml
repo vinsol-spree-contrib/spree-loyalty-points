@@ -16,3 +16,4 @@ en:
     back_to_user_profile: Back to User Profile
     update_loyalty_points: Update Loyalty Points
     loyalty_points_earnable: "%{quantity} Loyalty Points Will Be Awarded for this Order"
+    insufficient_loyalty_points: 'You have insufficient Loyalty Points'

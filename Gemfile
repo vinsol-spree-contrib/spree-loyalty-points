@@ -4,6 +4,7 @@ gem 'sqlite3'
 gem 'better_errors'
 gem 'quiet_assets'
 gem 'binding_of_caller'
+gem 'byebug'
 
 group :assets do
   gem 'coffee-rails'
@@ -19,7 +20,7 @@ gem 'spree_frontend', github: 'spree/spree', :branch => "3-0-stable"
 gem 'spree_auth_devise', github: 'spree/spree_auth_devise', :branch => "3-0-stable"
 
 group :test do
-  gem 'shoulda-matchers'
+  gem 'shoulda-matchers', require: false
   gem 'capybara', '~> 2.1'
   gem 'database_cleaner'
   gem 'factory_girl', '~> 4.2'

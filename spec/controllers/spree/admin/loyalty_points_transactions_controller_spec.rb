@@ -25,20 +25,12 @@ describe Spree::Admin::LoyaltyPointsTransactionsController do
       Spree::Admin::LoyaltyPointsTransactionsController._process_action_callbacks.select{ |callback| callback.kind == :before }.map(&:filter).include?(:set_user).should be_true
     end
 
-    it "should have only option set to [:order_transactions]" do
-      ([:order_transactions] - Spree::Admin::LoyaltyPointsTransactionsController._process_action_callbacks.select{ |callback| callback.filter == :set_user }.first.options[:only]).should be_empty
-    end
-
   end
 
   describe "set_ordered_transactions callback" do
 
     it "should be included in before action callbacks" do
       Spree::Admin::LoyaltyPointsTransactionsController._process_action_callbacks.select{ |callback| callback.kind == :before }.map(&:filter).include?(:set_ordered_transactions).should be_true
-    end
-
-    it "should have only option set to [:index]" do
-      ([:index] - Spree::Admin::LoyaltyPointsTransactionsController._process_action_callbacks.select{ |callback| callback.filter == :set_ordered_transactions }.first.options[:only]).should be_empty
     end
 
   end
@@ -52,7 +44,7 @@ describe Spree::Admin::LoyaltyPointsTransactionsController do
 
     describe "GET 'index'" do
       def send_request(params = {})
-        get :index, params.merge!(:use_route => :spree)
+        get :index, params.merge!(user_id: "1", :use_route => :spree)
       end
 
       it "assigns @loyalty_points_transactions" do
@@ -113,7 +105,7 @@ describe Spree::Admin::LoyaltyPointsTransactionsController do
         end
 
         it "renders new template" do
-          post :create, loyalty_points_transaction: attributes_for(:loyalty_points_credit_transaction), user_id: "1", :use_route => :spree
+          send_request(loyalty_points_transaction: attributes_for(:loyalty_points_credit_transaction), user_id: "1", :use_route => :spree)
           expect(response).to render_template(:new)
         end
 
@@ -238,13 +230,18 @@ describe Spree::Admin::LoyaltyPointsTransactionsController do
 
     before :each do
       Spree::Order.stub(:find_by).and_return(order)
+      @user = double(Spree::User)
+      Spree::User.stub(:find_by).and_return(@user)
+      @loyalty_points_transactions = double(Spree::LoyaltyPointsCreditTransaction)
+      Spree::User.stub(:find_by).and_return(@user)
+      @user.stub_chain(:loyalty_points_transactions, :for_order, :includes, :order).and_return([@loyalty_points_transactions])
+
     end
 
     context "when user is found" do
       
       before(:each) do
         controller.stub(:parent).and_return(user)
-        Spree::User.stub(:find_by).and_return(user)
         send_request
       end
 

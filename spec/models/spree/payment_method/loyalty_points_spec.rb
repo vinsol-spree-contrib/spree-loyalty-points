@@ -2,8 +2,8 @@ require 'spec_helper'
 
 describe Spree::PaymentMethod::LoyaltyPoints do
 
-  let(:loyalty_points_payment_method) { Spree::PaymentMethod::LoyaltyPoints.create!(:active => true, :name => 'Loyalty_Points') }
-  let(:payment) { Spree::Payment.new(:amount => 50.0) }
+  let(:loyalty_points_payment_method) { Spree::PaymentMethod::LoyaltyPoints.create!(active: true, name: 'Loyalty_Points') }
+  let(:payment) { Spree::Payment.new(amount: 50.0) }
 
   before(:each) do
     user = create(:user_with_loyalty_points)
@@ -14,13 +14,13 @@ describe Spree::PaymentMethod::LoyaltyPoints do
     payment.save!
     Spree::Order.stub(:find_by_number).and_return(@order)
   end
-  
+
   describe 'actions' do
     it 'should return actions' do
       loyalty_points_payment_method.actions.should eq(['capture', 'void'])
     end
   end
-  
+
   describe 'can_void?' do
     context 'when payment state is not void' do
       before(:each) do
@@ -105,7 +105,7 @@ describe Spree::PaymentMethod::LoyaltyPoints do
     end
 
   end
-  
+
   describe 'source_required?' do
     it 'should return false' do
       loyalty_points_payment_method.should_not be_source_required

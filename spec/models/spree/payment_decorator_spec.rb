@@ -9,7 +9,7 @@ describe Spree::Payment do
   describe "notify_paid_order callback" do
 
     it "should be included in state_machine after callbacks" do
-      Spree::Payment.state_machine.callbacks[:after].map { |callback| callback.instance_variable_get(:@methods) }.include?([:notify_paid_order]).should be_true
+      Spree::Payment.state_machine.callbacks[:after].map { |callback| callback.instance_variable_get(:@methods) }.include?([:notify_paid_order]).should be_truthy
     end
 
     it "should not include completed in 'from' states" do
@@ -25,7 +25,7 @@ describe Spree::Payment do
   describe "redeem_loyalty_points callback" do
 
     it "should be included in state_machine after callbacks" do
-      Spree::Payment.state_machine.callbacks[:after].map { |callback| callback.instance_variable_get(:@methods) }.include?([:redeem_loyalty_points]).should be_true
+      Spree::Payment.state_machine.callbacks[:after].map { |callback| callback.instance_variable_get(:@methods) }.include?([:redeem_loyalty_points]).should be_truthy
     end
 
     it "should not include completed in 'from' states" do
@@ -45,7 +45,7 @@ describe Spree::Payment do
   describe "return_loyalty_points callback" do
 
     it "should be included in state_machine after callbacks" do
-      Spree::Payment.state_machine.callbacks[:after].map { |callback| callback.instance_variable_get(:@methods) }.include?([:return_loyalty_points]).should be_true
+      Spree::Payment.state_machine.callbacks[:after].map { |callback| callback.instance_variable_get(:@methods) }.include?([:return_loyalty_points]).should be_truthy
     end
 
     it "should include only completed in 'from' states" do

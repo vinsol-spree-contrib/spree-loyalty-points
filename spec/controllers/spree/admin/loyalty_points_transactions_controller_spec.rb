@@ -1,28 +1,29 @@
 require 'spec_helper'
 
-describe Spree::Admin::LoyaltyPointsTransactionsController do
+describe Spree::Admin::LoyaltyPointsTransactionsController, type: :controller do
 
-  let(:user) { mock_model(Spree::User).as_null_object }
+  let(:user) { mock_model(Spree.user_class).as_null_object }
   let(:loyalty_points_transaction) { mock_model(Spree::LoyaltyPointsCreditTransaction).as_null_object }
   let(:order) { mock_model(Spree::Order).as_null_object }
 
   before(:each) do
+    @routes = Spree::Core::Engine.routes
     controller.stub(:spree_current_user).and_return(user)
     user.stub(:generate_spree_api_key!).and_return(true)
     controller.stub(:authorize!).and_return(true)
     controller.stub(:authorize_admin).and_return(true)
     user.loyalty_points_transactions.stub(:create).and_return(loyalty_points_transaction)
-    controller.stub(:parent_data).and_return({ :model_name => 'spree/order', :model_class => Spree::Order, :find_by => 'id' })
+    controller.stub(:parent_data).and_return({ model_name: 'spree/order', model_class: Spree::Order, find_by: 'id' })
   end
 
   def default_host
-    { :host => "http://test.host" }
+    { host: "http://test.host" }
   end
 
   describe "set_user callback" do
 
     it "should be included in before action callbacks" do
-      Spree::Admin::LoyaltyPointsTransactionsController._process_action_callbacks.select{ |callback| callback.kind == :before }.map(&:filter).include?(:set_user).should be_true
+      Spree::Admin::LoyaltyPointsTransactionsController._process_action_callbacks.select{ |callback| callback.kind == :before }.map(&:filter).include?(:set_user).should be_truthy
     end
 
   end
@@ -30,7 +31,7 @@ describe Spree::Admin::LoyaltyPointsTransactionsController do
   describe "set_ordered_transactions callback" do
 
     it "should be included in before action callbacks" do
-      Spree::Admin::LoyaltyPointsTransactionsController._process_action_callbacks.select{ |callback| callback.kind == :before }.map(&:filter).include?(:set_ordered_transactions).should be_true
+      Spree::Admin::LoyaltyPointsTransactionsController._process_action_callbacks.select{ |callback| callback.kind == :before }.map(&:filter).include?(:set_ordered_transactions).should be_truthy
     end
 
   end
@@ -39,12 +40,12 @@ describe Spree::Admin::LoyaltyPointsTransactionsController do
 
     before(:each) do
       controller.stub(:parent).and_return(user)
-      Spree::User.stub(:find_by).and_return(user)
+      Spree.user_class.stub(:find_by).and_return(user)
     end
 
     describe "GET 'index'" do
       def send_request(params = {})
-        get :index, params.merge!(user_id: "1", :use_route => :spree)
+        get :index, params.merge!(user_id: "1")
       end
 
       it "assigns @loyalty_points_transactions" do
@@ -66,7 +67,7 @@ describe Spree::Admin::LoyaltyPointsTransactionsController do
 
     describe "POST 'create'" do
       def send_request(params = {})
-        post :create, params.merge!(loyalty_points_transaction: attributes_for(:loyalty_points_transaction), :use_route => :spree)
+        post :create, params.merge!(loyalty_points_transaction: attributes_for(:loyalty_points_transaction), order_id: order.id, user_id: "1")
       end
 
       before :each do
@@ -105,7 +106,7 @@ describe Spree::Admin::LoyaltyPointsTransactionsController do
         end
 
         it "renders new template" do
-          send_request(loyalty_points_transaction: attributes_for(:loyalty_points_credit_transaction), user_id: "1", :use_route => :spree)
+          send_request(loyalty_points_transaction: attributes_for(:loyalty_points_credit_transaction), user_id: "1")
           expect(response).to render_template(:new)
         end
 
@@ -118,27 +119,27 @@ describe Spree::Admin::LoyaltyPointsTransactionsController do
   context "when user not found" do
 
     before(:each) do
-      Spree::User.stub(:find_by).and_return(nil)
+      Spree.user_class.stub(:find_by).and_return(nil)
       controller.stub(:parent).and_raise(ActiveRecord::RecordNotFound)
     end
 
     it "should redirect to user's loyalty points page" do
-      get :index, :use_route => :spree
+      get :index, user_id: "1"
       expect(response).to redirect_to(admin_users_path)
     end
-    
+
   end
 
   describe "collection_url" do
-    
+
     context "when parent_data is present" do
-      
+
       before(:each) do
-        controller.stub(:parent_data).and_return({ :model_name => 'spree/order', :model_class => Spree::Order, :find_by => 'id' })
+        controller.stub(:parent_data).and_return({ model_name: 'spree/order', model_class: Spree::Order, find_by: 'id' })
       end
 
       context "when parent is nil" do
-        
+
         before(:each) do
           controller.instance_variable_set(:@parent, nil)
         end
@@ -150,7 +151,7 @@ describe Spree::Admin::LoyaltyPointsTransactionsController do
       end
 
       context "when parent is not nil" do
-        
+
         before(:each) do
           controller.instance_variable_set(:@parent, user)
         end
@@ -161,10 +162,10 @@ describe Spree::Admin::LoyaltyPointsTransactionsController do
 
       end
 
-    end 
+    end
 
     context "when parent_data is absent" do
-      
+
       before(:each) do
         controller.stub(:parent_data).and_return({})
       end
@@ -178,7 +179,7 @@ describe Spree::Admin::LoyaltyPointsTransactionsController do
   end
 
   describe "association_name" do
-    
+
     before :each do
       @class_name = "Spree::LoyaltyPointsDebitTransaction"
     end
@@ -192,9 +193,9 @@ describe Spree::Admin::LoyaltyPointsTransactionsController do
   describe "build_resource" do
 
     context "when params[:loyalty_points_transaction][:type] is present" do
-      
+
       before :each do
-        controller.stub(:params).and_return({ :loyalty_points_transaction => { :type => 'Spree::LoyaltyPointsCreditTransaction' } })
+        controller.stub(:params).and_return({ loyalty_points_transaction: { type: 'Spree::LoyaltyPointsCreditTransaction' } })
         controller.stub(:parent).and_return(user)
         controller.stub(:association_name).and_return("loyalty_points_credit_transactions")
       end
@@ -207,7 +208,7 @@ describe Spree::Admin::LoyaltyPointsTransactionsController do
     end
 
     context "when params[:loyalty_points_transaction][:type] is absent" do
-      
+
       before :each do
         controller.stub(:params).and_return({})
         controller.stub(:parent).and_return(user)
@@ -225,21 +226,21 @@ describe Spree::Admin::LoyaltyPointsTransactionsController do
 
   describe "GET 'order_transactions'" do
     def send_request(params = {})
-      get :order_transactions, params.merge!(loyalty_points_transaction: attributes_for(:loyalty_points_transaction), :use_route => :spree, format: :json)
+      get :order_transactions, params.merge!(loyalty_points_transaction: attributes_for(:loyalty_points_transaction), order_id: order.id, user_id: "1", format: :json)
     end
 
     before :each do
       Spree::Order.stub(:find_by).and_return(order)
-      @user = double(Spree::User)
-      Spree::User.stub(:find_by).and_return(@user)
+      @user = double(Spree.user_class)
+      Spree.user_class.stub(:find_by).and_return(@user)
       @loyalty_points_transactions = double(Spree::LoyaltyPointsCreditTransaction)
-      Spree::User.stub(:find_by).and_return(@user)
+      Spree.user_class.stub(:find_by).and_return(@user)
       @user.stub_chain(:loyalty_points_transactions, :for_order, :includes, :order).and_return([@loyalty_points_transactions])
 
     end
 
     context "when user is found" do
-      
+
       before(:each) do
         controller.stub(:parent).and_return(user)
         send_request
@@ -260,9 +261,9 @@ describe Spree::Admin::LoyaltyPointsTransactionsController do
     end
 
     context "when user is not found" do
-      
+
       before :each do
-        Spree::User.stub(:find_by).and_return(nil)
+        Spree.user_class.stub(:find_by).and_return(nil)
         send_request
       end
 

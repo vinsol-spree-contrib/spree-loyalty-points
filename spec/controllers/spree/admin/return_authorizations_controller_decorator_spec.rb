@@ -1,7 +1,8 @@
 require 'spec_helper'
 
-describe Spree::Admin::ReturnAuthorizationsController do
+describe Spree::Admin::ReturnAuthorizationsController, type: :controller do
 
+  let(:order) { mock_model(Spree::Order).as_null_object }
   let(:return_authorization) { mock_model(Spree::ReturnAuthorization).as_null_object }
 
   before :each do
@@ -15,7 +16,7 @@ describe Spree::Admin::ReturnAuthorizationsController do
   describe "set_loyalty_points_transactions callback" do
 
     it "should be included in before action callbacks" do
-      Spree::Admin::ReturnAuthorizationsController._process_action_callbacks.select{ |callback| callback.kind == :before }.map(&:filter).include?(:set_loyalty_points_transactions).should be_true
+      Spree::Admin::ReturnAuthorizationsController._process_action_callbacks.select{ |callback| callback.kind == :before }.map(&:filter).include?(:set_loyalty_points_transactions).should be_truthy
     end
 
   end
@@ -30,7 +31,7 @@ describe Spree::Admin::ReturnAuthorizationsController do
     end
 
     def send_request(params = {})
-      get :new, params.merge!(:use_route => :spree)
+      get :new, params.merge!(order_id: order.id)
     end
 
     it "assigns loyalty_points_transactions" do

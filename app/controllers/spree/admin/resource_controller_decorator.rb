@@ -1,5 +1,5 @@
 Spree::Admin::ResourceController.class_eval do
-  
+
   protected
 
     def parent

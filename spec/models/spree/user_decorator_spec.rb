@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe Spree::User do
+describe Spree.user_class, type: :model do
 
   before(:each) do
     @user = FactoryGirl.build(:user_with_loyalty_points)

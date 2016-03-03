@@ -1,12 +1,12 @@
 require 'spec_helper'
 
-describe Spree::Admin::ResourceController do
+describe Spree::Admin::ResourceController, type: :controller do
 
   describe "parent" do
     context "when parent_data is present" do
 
       before :each do
-        controller.stub(:parent_data).and_return({ :model_name => 'spree/order', :model_class => Spree::Order, :find_by => 'id' })
+        controller.stub(:parent_data).and_return({ model_name: 'spree/order', model_class: Spree::Order, find_by: 'id' })
       end
 
       context "when @parent is present" do

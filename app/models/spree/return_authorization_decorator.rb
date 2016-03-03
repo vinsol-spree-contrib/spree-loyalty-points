@@ -20,4 +20,4 @@ Spree::ReturnAuthorization.class_eval do
 
 end
 
-Spree::ReturnAuthorization.state_machine.after_transition :to => :received, :do => :update_loyalty_points
+Spree::ReturnAuthorization.state_machine.after_transition to: :received, do: :update_loyalty_points

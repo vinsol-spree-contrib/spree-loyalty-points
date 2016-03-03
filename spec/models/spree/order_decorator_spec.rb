@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe Spree::Order do
+describe Spree::Order, type: :model do
 
   before(:each) do
     @order = create(:order_with_loyalty_points)
@@ -13,7 +13,7 @@ describe Spree::Order do
   describe "complete_loyalty_points_payments callback" do
 
     it "should be included in state_machine before callbacks" do
-      Spree::Order.state_machine.callbacks[:before].map { |callback| callback.instance_variable_get(:@methods) }.include?([:complete_loyalty_points_payments]).should be_true
+      Spree::Order.state_machine.callbacks[:before].map { |callback| callback.instance_variable_get(:@methods) }.include?([:complete_loyalty_points_payments]).should be_truthy
     end
 
     it "should not include complete in 'from' states" do

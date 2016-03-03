@@ -53,7 +53,7 @@ shared_examples_for "TransactionsTotalValidation" do
 
         it "should return total" do
           resource_instance.send(:validate_transactions_total_range, @trans_type, relation)
-          resource_instance.errors[:base].include?("Loyalty Points Net Debit Total should be in the range [0, #{ @first_transaction.loyalty_points }]").should be_true
+          resource_instance.errors[:base].include?("Loyalty Points Net Debit Total should be in the range [0, #{ @first_transaction.loyalty_points }]").should be_truthy
         end
 
       end
@@ -67,7 +67,7 @@ shared_examples_for "TransactionsTotalValidation" do
 
         it "should return total" do
           resource_instance.send(:validate_transactions_total_range, @trans_type, relation)
-          resource_instance.errors[:base].include?("Loyalty Points Net Debit Total should be in the range [0, #{ @first_transaction.loyalty_points }]").should be_false
+          resource_instance.errors[:base].include?("Loyalty Points Net Debit Total should be in the range [0, #{ @first_transaction.loyalty_points }]").should be_falsey
         end
 
       end
@@ -81,7 +81,7 @@ shared_examples_for "TransactionsTotalValidation" do
 
         it "should return total" do
           resource_instance.send(:validate_transactions_total_range, @trans_type, relation)
-          resource_instance.errors[:base].include?("Loyalty Points Net Debit Total should be in the range [0, #{ @first_transaction.loyalty_points }]").should be_true
+          resource_instance.errors[:base].include?("Loyalty Points Net Debit Total should be in the range [0, #{ @first_transaction.loyalty_points }]").should be_truthy
         end
 
       end
@@ -104,7 +104,7 @@ shared_examples_for "TransactionsTotalValidation" do
 
         it "should return total" do
           resource_instance.send(:validate_transactions_total_range, @trans_type, relation)
-          resource_instance.errors[:base].include?("Loyalty Points Net Credit Total should be in the range [0, #{ @first_transaction.loyalty_points }]").should be_true
+          resource_instance.errors[:base].include?("Loyalty Points Net Credit Total should be in the range [0, #{ @first_transaction.loyalty_points }]").should be_truthy
         end
 
       end
@@ -118,7 +118,7 @@ shared_examples_for "TransactionsTotalValidation" do
 
         it "should return total" do
           resource_instance.send(:validate_transactions_total_range, @trans_type, relation)
-          resource_instance.errors[:base].include?("Loyalty Points Net Credit Total should be in the range [0, #{ @first_transaction.loyalty_points }]").should be_false
+          resource_instance.errors[:base].include?("Loyalty Points Net Credit Total should be in the range [0, #{ @first_transaction.loyalty_points }]").should be_falsey
         end
 
       end
@@ -132,7 +132,7 @@ shared_examples_for "TransactionsTotalValidation" do
 
         it "should return total" do
           resource_instance.send(:validate_transactions_total_range, @trans_type, relation)
-          resource_instance.errors[:base].include?("Loyalty Points Net Credit Total should be in the range [0, #{ @first_transaction.loyalty_points }]").should be_true
+          resource_instance.errors[:base].include?("Loyalty Points Net Credit Total should be in the range [0, #{ @first_transaction.loyalty_points }]").should be_truthy
         end
 
       end

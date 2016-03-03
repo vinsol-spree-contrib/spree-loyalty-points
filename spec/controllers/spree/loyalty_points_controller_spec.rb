@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-describe Spree::LoyaltyPointsController do
+describe Spree::LoyaltyPointsController, type: :controller do
 
-  let(:user) { mock_model(Spree::User).as_null_object }
+  let(:user) { mock_model(Spree.user_class).as_null_object }
 
   before(:each) do
     controller.stub(:spree_current_user).and_return(user)
@@ -12,7 +12,7 @@ describe Spree::LoyaltyPointsController do
 
   describe "GET 'index'" do
     def send_request(params = {})
-      get :index, params.merge!(:use_route => :spree)
+      get :index, params
     end
 
     before :each do

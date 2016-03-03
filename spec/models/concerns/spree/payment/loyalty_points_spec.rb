@@ -2,8 +2,8 @@ shared_examples_for "Payment::LoyaltyPoints" do
 
   describe 'by_loyalty_points' do
 
-    let(:loyalty_points_payment_method) { Spree::PaymentMethod::LoyaltyPoints.create!(:active => true, :name => 'LoyaltyPoints') }
-    let(:check_payment_method) { Spree::PaymentMethod::Check.create!(:active => true, :name => 'Check') }
+    let(:loyalty_points_payment_method) { Spree::PaymentMethod::LoyaltyPoints.create!(active: true, name: 'LoyaltyPoints') }
+    let(:check_payment_method) { Spree::PaymentMethod::Check.create!(active: true, name: 'Check') }
     let (:payment1) { create(:payment_with_loyalty_points, payment_method: loyalty_points_payment_method) }
     let (:payment2) { create(:payment_with_loyalty_points, payment_method: check_payment_method) }
 
@@ -85,8 +85,8 @@ shared_examples_for "Payment::LoyaltyPoints" do
 
   describe 'by_loyalty_points?' do
     
-    let(:loyalty_points_payment_method) { Spree::PaymentMethod::LoyaltyPoints.create!(:active => true, :name => 'LoyaltyPoints') }
-    let(:check_payment_method) { Spree::PaymentMethod::Check.create!(:active => true, :name => 'Check') }
+    let(:loyalty_points_payment_method) { Spree::PaymentMethod::LoyaltyPoints.create!(active: true, name: 'LoyaltyPoints') }
+    let(:check_payment_method) { Spree::PaymentMethod::Check.create!(active: true, name: 'Check') }
 
     context "when payment_method type is LoyaltyPoints" do
 
@@ -95,7 +95,7 @@ shared_examples_for "Payment::LoyaltyPoints" do
       end
 
       it "should return true" do
-        resource_instance.send(:by_loyalty_points?).should be_true
+        resource_instance.send(:by_loyalty_points?).should be_truthy
       end
 
     end
@@ -107,7 +107,7 @@ shared_examples_for "Payment::LoyaltyPoints" do
       end
 
       it "should return false" do
-        resource_instance.send(:by_loyalty_points?).should be_false
+        resource_instance.send(:by_loyalty_points?).should be_falsey
       end
 
     end
@@ -127,7 +127,7 @@ shared_examples_for "Payment::LoyaltyPoints" do
       end
 
       it "should return true" do
-        resource_instance.send(:redeemable_loyalty_points_balance?).should be_true
+        resource_instance.send(:redeemable_loyalty_points_balance?).should be_truthy
       end
 
     end
@@ -139,7 +139,7 @@ shared_examples_for "Payment::LoyaltyPoints" do
       end
 
       it "should return false" do
-        resource_instance.send(:redeemable_loyalty_points_balance?).should be_false
+        resource_instance.send(:redeemable_loyalty_points_balance?).should be_falsey
       end
 
     end
@@ -151,7 +151,7 @@ shared_examples_for "Payment::LoyaltyPoints" do
       end
 
       it "should return false" do
-        resource_instance.send(:redeemable_loyalty_points_balance?).should be_true
+        resource_instance.send(:redeemable_loyalty_points_balance?).should be_truthy
       end
 
     end

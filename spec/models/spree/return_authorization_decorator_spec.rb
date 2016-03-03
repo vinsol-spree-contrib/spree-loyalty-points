@@ -10,7 +10,7 @@ describe Spree::ReturnAuthorization do
   describe "update_loyalty_points callback" do
 
     it "should be included in state_machine after callbacks" do
-      Spree::ReturnAuthorization.state_machine.callbacks[:after].map { |callback| callback.instance_variable_get(:@methods) }.include?([:update_loyalty_points]).should be_true
+      Spree::ReturnAuthorization.state_machine.callbacks[:after].map { |callback| callback.instance_variable_get(:@methods) }.include?([:update_loyalty_points]).should be_truthy
     end
 
     it "should include only received in 'to' states" do

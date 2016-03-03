@@ -20,6 +20,7 @@ require 'rspec/rails'
 require 'database_cleaner'
 require 'ffaker'
 require 'shoulda/matchers'
+require 'rspec/active_model/mocks'
 
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.
@@ -71,7 +72,7 @@ RSpec.configure do |config|
   end
 
   # Before each spec check if it is a Javascript test and switch between using database transactions or not where necessary.
-  config.before :each do
+  config.before :each do |example|
     DatabaseCleaner.strategy = example.metadata[:js] ? :truncation : :transaction
     DatabaseCleaner.start
   end
@@ -82,6 +83,8 @@ RSpec.configure do |config|
   end
 
   config.fail_fast = ENV['FAIL_FAST'] || false
+  config.include Spree::TestingSupport::UrlHelpers, type: :controller
+  config.include Spree::TestingSupport::ControllerRequests, type: :controller
 end
 
 Shoulda::Matchers.configure do |config|

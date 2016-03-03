@@ -1,6 +1,6 @@
 class Spree::Admin::LoyaltyPointsTransactionsController < Spree::Admin::ResourceController
   before_action :set_user, only: [:order_transactions]
-  belongs_to 'spree/user'
+  belongs_to Spree.user_class.to_s.underscore
   before_action :set_ordered_transactions, only: [:index]
 
   def order_transactions
@@ -9,13 +9,13 @@ class Spree::Admin::LoyaltyPointsTransactionsController < Spree::Admin::Resource
     respond_to do |format|
       format.json do
         render json: @loyalty_points_transactions.to_json(
-          :include => {
-            :source => {
-              :only => [:id, :number]
+          include: {
+            source: {
+              only: [:id, :number]
             }
           },
-          :only => [:source_type, :comment, :updated_at, :loyalty_points, :balance],
-          :methods => [:transaction_type]
+          only: [:source_type, :comment, :updated_at, :loyalty_points, :balance],
+          methods: [:transaction_type]
         )
       end
     end
@@ -29,7 +29,7 @@ class Spree::Admin::LoyaltyPointsTransactionsController < Spree::Admin::Resource
       flash[:success] = flash_message_for(@object, :successfully_created)
       respond_with(@object) do |format|
         format.html { redirect_to location_after_save }
-        format.js   { render :layout => false }
+        format.js   { render layout: false }
       end
     else
       invoke_callbacks(:create, :fails)
@@ -42,7 +42,7 @@ class Spree::Admin::LoyaltyPointsTransactionsController < Spree::Admin::Resource
   protected
 
     def set_user
-      unless @user = Spree::User.find_by(id: params[:user_id])
+      unless @user = Spree.user_class.find_by(id: params[:user_id])
         redirect_to admin_users_path, notice: 'User not found'
       end
     end

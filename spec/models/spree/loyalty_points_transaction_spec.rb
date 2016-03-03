@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe Spree::LoyaltyPointsTransaction do
+describe Spree::LoyaltyPointsTransaction, type: :model do
 
   before do
     @loyalty_points_transaction = FactoryGirl.build(:loyalty_points_debit_transaction)
@@ -54,7 +54,7 @@ end
     end
 
     it "should add error 'Source or Comment should be present'" do
-      @loyalty_points_transaction.errors[:base].include?('Source or Comment should be present').should be_true
+      @loyalty_points_transaction.errors[:base].include?('Source or Comment should be present').should be_truthy
     end
 
   end
@@ -74,7 +74,7 @@ end
     end
 
     it "should not add error 'Source or Comment should be present'" do
-      @loyalty_points_transaction.errors[:base].include?('Source or Comment should be present').should be_false
+      @loyalty_points_transaction.errors[:base].include?('Source or Comment should be present').should be_falsey
     end
 
   end
@@ -92,13 +92,13 @@ end
     end
 
     it "should not add error 'Source or Comment should be present'" do
-      @loyalty_points_transaction.errors[:base].include?('Source or Comment should be present').should be_false
+      @loyalty_points_transaction.errors[:base].include?('Source or Comment should be present').should be_falsey
     end
 
   end
 
   it "should include generate_transaction_id in before create callbacks" do
-    Spree::LoyaltyPointsTransaction._create_callbacks.select { |callback| callback.kind == :before }.map(&:filter).include?(:generate_transaction_id).should be_true
+    Spree::LoyaltyPointsTransaction._create_callbacks.select { |callback| callback.kind == :before }.map(&:filter).include?(:generate_transaction_id).should be_truthy
   end
 
   describe "generate_transaction_id" do

@@ -59,7 +59,7 @@ shared_examples_for "LoyaltyPoints" do
     context "when amount greater than min amount" do
 
       it "should return true" do
-        resource_instance.send(:eligible_for_loyalty_points?, 40).should be_true
+        resource_instance.send(:eligible_for_loyalty_points?, 40).should be_truthy
       end
 
     end
@@ -67,7 +67,7 @@ shared_examples_for "LoyaltyPoints" do
     context "when amount less than redeeming balance" do
 
       it "should return false" do
-        resource_instance.send(:eligible_for_loyalty_points?, 20).should be_false
+        resource_instance.send(:eligible_for_loyalty_points?, 20).should be_falsey
       end
 
     end
@@ -75,7 +75,7 @@ shared_examples_for "LoyaltyPoints" do
     context "when amount equal to redeeming balance" do
 
       it "should return false" do
-        resource_instance.send(:eligible_for_loyalty_points?, 30).should be_true
+        resource_instance.send(:eligible_for_loyalty_points?, 30).should be_truthy
       end
 
     end

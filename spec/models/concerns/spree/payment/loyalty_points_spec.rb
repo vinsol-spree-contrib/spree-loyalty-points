@@ -8,7 +8,7 @@ shared_examples_for "Payment::LoyaltyPoints" do
     let (:payment2) { create(:payment_with_loyalty_points, payment_method: check_payment_method) }
 
     it "should return payments with loyalty_points payment method" do
-      Spree::Payment.by_loyalty_points.should eq([payment1])
+      expect(Spree::Payment.by_loyalty_points).to eq([payment1])
     end
 
   end
@@ -20,11 +20,11 @@ shared_examples_for "Payment::LoyaltyPoints" do
     context "when payment made using loyalty points" do
 
       before :each do
-        Spree::Payment.stub(:by_loyalty_points).and_return(payments)
+        allow(Spree::Payment).to receive(:by_loyalty_points).and_return(payments)
       end
 
       it "should return true" do
-        Spree::Payment.any_with_loyalty_points?.should eq(true)
+        expect(Spree::Payment.any_with_loyalty_points?).to eq(true)
       end
 
     end
@@ -32,11 +32,11 @@ shared_examples_for "Payment::LoyaltyPoints" do
     context "when payment not made using loyalty points" do
 
       before :each do
-        Spree::Payment.stub(:by_loyalty_points).and_return([])
+        allow(Spree::Payment).to receive(:by_loyalty_points).and_return([])
       end
 
       it "should return false" do
-        Spree::Payment.any_with_loyalty_points?.should eq(false)
+        expect(Spree::Payment.any_with_loyalty_points?).to eq(false)
       end
 
     end
@@ -46,18 +46,18 @@ shared_examples_for "Payment::LoyaltyPoints" do
   describe 'redeem_loyalty_points' do
 
     before :each do
-      resource_instance.stub(:by_loyalty_points?).and_return(true)
-      resource_instance.stub(:loyalty_points_for).and_return(55)
+      allow(resource_instance).to receive(:by_loyalty_points?).and_return(true)
+      allow(resource_instance).to receive(:loyalty_points_for).and_return(55)
     end
 
     it "should receive create_debit_transaction on order" do
-      resource_instance.order.should_receive(:create_debit_transaction)
+      expect(resource_instance.order).to receive(:create_debit_transaction)
       resource_instance.send(:redeem_loyalty_points)
     end
 
     it "should create loyalty_points_debit_transaction on order" do
       resource_instance.send(:redeem_loyalty_points)
-      Spree::LoyaltyPointsDebitTransaction.last.loyalty_points.should eq(55)
+      expect(Spree::LoyaltyPointsDebitTransaction.last.loyalty_points).to eq(55)
     end
 
   end
@@ -65,20 +65,20 @@ shared_examples_for "Payment::LoyaltyPoints" do
   describe 'return_loyalty_points' do
 
     before :each do
-      resource_instance.stub(:loyalty_points_for).and_return(30)
+      allow(resource_instance).to receive(:loyalty_points_for).and_return(30)
       order = create(:order_with_loyalty_points)
       resource_instance.order = order
       @loyalty_points_redeemed = resource_instance.loyalty_points_for(resource_instance.amount, 'redeem')
     end
 
     it "should receive create_credit_transaction on order" do
-      resource_instance.order.should_receive(:create_credit_transaction).with(@loyalty_points_redeemed)
+      expect(resource_instance.order).to receive(:create_credit_transaction).with(@loyalty_points_redeemed)
       resource_instance.send(:return_loyalty_points)
     end
 
     it "should create loyalty_points_credit_transaction on order" do
       resource_instance.send(:return_loyalty_points)
-      Spree::LoyaltyPointsCreditTransaction.last.loyalty_points.should eq(30)
+      expect(Spree::LoyaltyPointsCreditTransaction.last.loyalty_points).to eq(30)
     end
 
   end
@@ -95,7 +95,7 @@ shared_examples_for "Payment::LoyaltyPoints" do
       end
 
       it "should return true" do
-        resource_instance.send(:by_loyalty_points?).should be_truthy
+        expect(resource_instance.send(:by_loyalty_points?)).to be_truthy
       end
 
     end
@@ -107,7 +107,7 @@ shared_examples_for "Payment::LoyaltyPoints" do
       end
 
       it "should return false" do
-        resource_instance.send(:by_loyalty_points?).should be_falsey
+        expect(resource_instance.send(:by_loyalty_points?)).to be_falsey
       end
 
     end
@@ -117,7 +117,7 @@ shared_examples_for "Payment::LoyaltyPoints" do
   describe 'redeemable_loyalty_points_balance?' do
 
     before :each do
-      Spree::Config.stub(:loyalty_points_redeeming_balance).and_return(30)
+      allow(Spree::Config).to receive(:loyalty_points_redeeming_balance).and_return(30)
     end
 
     context "when amount greater than redeeming balance" do
@@ -127,7 +127,7 @@ shared_examples_for "Payment::LoyaltyPoints" do
       end
 
       it "should return true" do
-        resource_instance.send(:redeemable_loyalty_points_balance?).should be_truthy
+        expect(resource_instance.send(:redeemable_loyalty_points_balance?)).to be_truthy
       end
 
     end
@@ -139,7 +139,7 @@ shared_examples_for "Payment::LoyaltyPoints" do
       end
 
       it "should return false" do
-        resource_instance.send(:redeemable_loyalty_points_balance?).should be_falsey
+        expect(resource_instance.send(:redeemable_loyalty_points_balance?)).to be_falsey
       end
 
     end
@@ -151,7 +151,7 @@ shared_examples_for "Payment::LoyaltyPoints" do
       end
 
       it "should return false" do
-        resource_instance.send(:redeemable_loyalty_points_balance?).should be_truthy
+        expect(resource_instance.send(:redeemable_loyalty_points_balance?)).to be_truthy
       end
 
     end
@@ -163,12 +163,12 @@ shared_examples_for "Payment::LoyaltyPoints" do
     context "when Loyalty Points are redeemable" do
 
       before :each do
-        resource_instance.stub(:redeemable_loyalty_points_balance?).and_return(true)
+        allow(resource_instance).to receive(:redeemable_loyalty_points_balance?).and_return(true)
       end
 
       it "should not add errors to loyalty_points_balance" do
         resource_instance.send(:redeemable_user_balance)
-        resource_instance.errors[:loyalty_points_balance].should be_empty
+        expect(resource_instance.errors[:loyalty_points_balance]).to be_empty
       end
 
     end
@@ -176,15 +176,15 @@ shared_examples_for "Payment::LoyaltyPoints" do
     context "when Loyalty Points are not redeemable" do
 
       before :each do
-        resource_instance.stub(:redeemable_loyalty_points_balance?).and_return(false)
-        Spree::Config.stub(:loyalty_points_redeeming_balance).and_return(30)
-        resource_instance.order.user.stub(:loyalty_points_balance).and_return(20)
+        allow(resource_instance).to receive(:redeemable_loyalty_points_balance?).and_return(false)
+        allow(Spree::Config).to receive(:loyalty_points_redeeming_balance).and_return(30)
+        allow(resource_instance.order.user).to receive(:loyalty_points_balance).and_return(20)
       end
 
       it "should add error to loyalty_points_balance" do
         min_balance = Spree::Config.loyalty_points_redeeming_balance
         resource_instance.send(:redeemable_user_balance)
-        resource_instance.errors[:loyalty_points_balance].should eq(["should be atleast #{ min_balance.to_s + " " + "point".pluralize(min_balance) } for redeeming Loyalty Points"])
+        expect(resource_instance.errors[:loyalty_points_balance]).to eq(["should be atleast #{ min_balance.to_s + " " + "point".pluralize(min_balance) } for redeeming Loyalty Points"])
       end
 
     end

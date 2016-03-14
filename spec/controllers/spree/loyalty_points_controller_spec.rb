@@ -5,9 +5,9 @@ describe Spree::LoyaltyPointsController, type: :controller do
   let(:user) { mock_model(Spree.user_class).as_null_object }
 
   before(:each) do
-    controller.stub(:spree_current_user).and_return(user)
-    user.stub(:generate_spree_api_key!).and_return(true)
-    controller.stub(:authorize!).and_return(true)
+    allow(controller).to receive(:spree_current_user).and_return(user)
+    allow(user).to receive(:generate_spree_api_key!).and_return(true)
+    allow(controller).to receive(:authorize!).and_return(true)
   end
 
   describe "GET 'index'" do
@@ -17,10 +17,10 @@ describe Spree::LoyaltyPointsController, type: :controller do
 
     before :each do
       @loyalty_points_transactions = user.loyalty_points_transactions
-      @loyalty_points_transactions.stub(:includes).and_return(@loyalty_points_transactions)
-      @loyalty_points_transactions.stub(:order).and_return(@loyalty_points_transactions)
-      @loyalty_points_transactions.stub(:page).and_return(@loyalty_points_transactions)
-      @loyalty_points_transactions.stub(:per).and_return(@loyalty_points_transactions)
+      allow(@loyalty_points_transactions).to receive(:includes).and_return(@loyalty_points_transactions)
+      allow(@loyalty_points_transactions).to receive(:order).and_return(@loyalty_points_transactions)
+      allow(@loyalty_points_transactions).to receive(:page).and_return(@loyalty_points_transactions)
+      allow(@loyalty_points_transactions).to receive(:per).and_return(@loyalty_points_transactions)
     end
 
     it "should receive loyalty_points_transactions on spree_current_user" do

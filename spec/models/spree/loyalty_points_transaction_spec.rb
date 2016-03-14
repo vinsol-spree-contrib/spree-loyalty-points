@@ -14,17 +14,17 @@ describe Spree::LoyaltyPointsTransaction, type: :model do
     end
 
     it "is valid with valid attributes" do
-      @loyalty_points_transaction.should be_valid
+      expect(@loyalty_points_transaction).to be_valid
     end
 
 
     it "is invalid without numeric loyalty_points" do
-      should validate_numericality_of(:loyalty_points).only_integer.with_message(Spree.t('validation.must_be_int'))
-      should validate_numericality_of(:loyalty_points).is_greater_than(0).with_message(Spree.t('validation.must_be_int'))
+      is_expected.to validate_numericality_of(:loyalty_points).only_integer.with_message(Spree.t('validation.must_be_int'))
+      is_expected.to validate_numericality_of(:loyalty_points).is_greater_than(0).with_message(Spree.t('validation.must_be_int'))
     end
 
     it "is invalid without balance" do
-      should validate_presence_of :balance
+      is_expected.to validate_presence_of :balance
     end
 
     # it "is invalid if type is not in [Spree::LoyaltyPointsCreditTransaction, Spree::LoyaltyPointsDebitTransaction]" do
@@ -32,11 +32,11 @@ describe Spree::LoyaltyPointsTransaction, type: :model do
     # end
 
     it "belongs_to user" do
-      should belong_to(:user)
+      is_expected.to belong_to(:user)
     end
 
     it "belongs_to source" do
-      should belong_to(:source)
+      is_expected.to belong_to(:source)
     end
 
 end
@@ -50,11 +50,11 @@ end
     end
 
     it "is invalid" do
-      @loyalty_points_transaction.should_not be_valid
+      expect(@loyalty_points_transaction).not_to be_valid
     end
 
     it "should add error 'Source or Comment should be present'" do
-      @loyalty_points_transaction.errors[:base].include?('Source or Comment should be present').should be_truthy
+      expect(@loyalty_points_transaction.errors[:base].include?('Source or Comment should be present')).to be_truthy
     end
 
   end
@@ -70,11 +70,11 @@ end
     end
 
     it "is valid" do
-      @loyalty_points_transaction.should be_valid
+      expect(@loyalty_points_transaction).to be_valid
     end
 
     it "should not add error 'Source or Comment should be present'" do
-      @loyalty_points_transaction.errors[:base].include?('Source or Comment should be present').should be_falsey
+      expect(@loyalty_points_transaction.errors[:base].include?('Source or Comment should be present')).to be_falsey
     end
 
   end
@@ -88,17 +88,17 @@ end
     end
 
     it "is valid" do
-      @loyalty_points_transaction.should be_valid
+      expect(@loyalty_points_transaction).to be_valid
     end
 
     it "should not add error 'Source or Comment should be present'" do
-      @loyalty_points_transaction.errors[:base].include?('Source or Comment should be present').should be_falsey
+      expect(@loyalty_points_transaction.errors[:base].include?('Source or Comment should be present')).to be_falsey
     end
 
   end
 
   it "should include generate_transaction_id in before create callbacks" do
-    Spree::LoyaltyPointsTransaction._create_callbacks.select { |callback| callback.kind == :before }.map(&:filter).include?(:generate_transaction_id).should be_truthy
+    expect(Spree::LoyaltyPointsTransaction._create_callbacks.select { |callback| callback.kind == :before }.map(&:filter).include?(:generate_transaction_id)).to be_truthy
   end
 
   describe "generate_transaction_id" do
@@ -106,7 +106,7 @@ end
     before :each do
       @time = Time.current
       @random1 = 23432
-      Time.stub(:current).and_return(@time)
+      allow(Time).to receive(:current).and_return(@time)
       @transaction_id = (@time.strftime("%s") + @random1.to_s).to(15)
     end
 
@@ -114,12 +114,12 @@ end
 
       before :each do
         Spree::LoyaltyPointsTransaction.delete_all(transaction_id: @transaction_id)
-        @loyalty_points_transaction.stub(:rand).with(999999).and_return(@random1)
+        allow(@loyalty_points_transaction).to receive(:rand).with(999999).and_return(@random1)
         @loyalty_points_transaction.save
       end
 
       it "adds a transaction_id" do
-        @loyalty_points_transaction.transaction_id.should eq(@transaction_id)
+        expect(@loyalty_points_transaction.transaction_id).to eq(@transaction_id)
       end
       
     end
@@ -128,7 +128,7 @@ end
 
       before :each do
         @random2 = 439795
-        @loyalty_points_transaction.stub(:rand).with(999999).and_return(@random1, @random2)
+        allow(@loyalty_points_transaction).to receive(:rand).with(999999).and_return(@random1, @random2)
         @transaction_id2 = (@time.strftime("%s") + @random2.to_s).to(15)
         Spree::LoyaltyPointsTransaction.delete_all(transaction_id: @transaction_id)
         loyalty_points_transaction2 = create(:loyalty_points_credit_transaction)
@@ -137,7 +137,7 @@ end
       end
 
       it "adds a transaction_id not equal to the existing one" do
-        @loyalty_points_transaction.transaction_id.should eq(@transaction_id2)
+        expect(@loyalty_points_transaction.transaction_id).to eq(@transaction_id2)
       end
 
     end
@@ -155,7 +155,7 @@ end
     end
 
     it "should return payments where source is the given order" do
-      Spree::LoyaltyPointsTransaction.for_order(order).should eq([transaction1])
+      expect(Spree::LoyaltyPointsTransaction.for_order(order)).to eq([transaction1])
     end
 
   end
@@ -169,7 +169,7 @@ end
       end
 
       it "should be Credit" do
-        @loyalty_points_credit_transaction.transaction_type.should eq('Credit')
+        expect(@loyalty_points_credit_transaction.transaction_type).to eq('Credit')
       end
 
     end
@@ -181,7 +181,7 @@ end
       end
 
       it "should be Debit" do
-        @loyalty_points_debit_transaction.transaction_type.should eq('Debit')
+        expect(@loyalty_points_debit_transaction.transaction_type).to eq('Debit')
       end
 
     end
@@ -220,21 +220,21 @@ end
     context "when source is present" do
 
       before :each do
-        @loyalty_points_transaction.source.stub(:present?).and_return(true)
+        allow(@loyalty_points_transaction.source).to receive(:present?).and_return(true)
       end
 
       context "when loyalty_points_transactions are present" do
 
         before :each do
-          @loyalty_points_transaction.source.loyalty_points_transactions.stub(:present?).and_return(true)
+          allow(@loyalty_points_transaction.source.loyalty_points_transactions).to receive(:present?).and_return(true)
         end
 
         it "should receive transactions_total_range" do
-          @loyalty_points_transaction.should_receive(:transactions_total_range)
+          expect(@loyalty_points_transaction).to receive(:transactions_total_range)
         end
 
         it "should receive validate_transactions_total_range" do
-          @loyalty_points_transaction.should_receive(:validate_transactions_total_range)
+          expect(@loyalty_points_transaction).to receive(:validate_transactions_total_range)
         end
 
       end
@@ -242,11 +242,11 @@ end
       context "when loyalty_points_transactions are absent" do
 
         before :each do
-          @loyalty_points_transaction.source.loyalty_points_transactions.stub(:present?).and_return(false)
+          allow(@loyalty_points_transaction.source.loyalty_points_transactions).to receive(:present?).and_return(false)
         end
 
         it "should not receive transactions_total_range" do
-          @loyalty_points_transaction.should_not_receive(:transactions_total_range)
+          expect(@loyalty_points_transaction).not_to receive(:transactions_total_range)
         end
 
       end
@@ -256,11 +256,11 @@ end
     context "when source is absent" do
 
       before :each do
-        @loyalty_points_transaction.source.stub(:present?).and_return(false)
+        allow(@loyalty_points_transaction.source).to receive(:present?).and_return(false)
       end
 
       it "should not receive transactions_total_range" do
-        @loyalty_points_transaction.should_not_receive(:transactions_total_range)
+        expect(@loyalty_points_transaction).not_to receive(:transactions_total_range)
       end
 
     end

@@ -7,10 +7,10 @@ describe Spree::Admin::ReturnAuthorizationsController, type: :controller do
 
   before :each do
     @user = return_authorization.order.user
-    controller.stub(:load_resource_instance).and_return(return_authorization)
-    controller.stub(:spree_current_user).and_return(@user)
-    controller.stub(:authorize!).and_return(true)
-    controller.stub(:authorize_admin).and_return(true)
+    allow(controller).to receive(:load_resource_instance).and_return(return_authorization)
+    allow(controller).to receive(:spree_current_user).and_return(@user)
+    allow(controller).to receive(:authorize!).and_return(true)
+    allow(controller).to receive(:authorize_admin).and_return(true)
   end
 
   describe "set_loyalty_points_transactions callback" do
@@ -25,9 +25,9 @@ describe Spree::Admin::ReturnAuthorizationsController, type: :controller do
 
     before :each do
       @loyalty_points_transactions = return_authorization.order.loyalty_points_transactions
-      return_authorization.order.stub(:loyalty_points_transactions).and_return(@loyalty_points_transactions)
-      @loyalty_points_transactions.stub(:page).and_return(@loyalty_points_transactions)
-      @loyalty_points_transactions.stub(:per).and_return(@loyalty_points_transactions)
+      allow(return_authorization.order).to receive(:loyalty_points_transactions).and_return(@loyalty_points_transactions)
+      allow(@loyalty_points_transactions).to receive(:page).and_return(@loyalty_points_transactions)
+      allow(@loyalty_points_transactions).to receive(:per).and_return(@loyalty_points_transactions)
     end
 
     def send_request(params = {})

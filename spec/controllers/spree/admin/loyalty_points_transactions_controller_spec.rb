@@ -8,12 +8,12 @@ describe Spree::Admin::LoyaltyPointsTransactionsController, type: :controller do
 
   before(:each) do
     @routes = Spree::Core::Engine.routes
-    controller.stub(:spree_current_user).and_return(user)
-    user.stub(:generate_spree_api_key!).and_return(true)
-    controller.stub(:authorize!).and_return(true)
-    controller.stub(:authorize_admin).and_return(true)
-    user.loyalty_points_transactions.stub(:create).and_return(loyalty_points_transaction)
-    controller.stub(:parent_data).and_return({ model_name: 'spree/order', model_class: Spree::Order, find_by: 'id' })
+    allow(controller).to receive(:spree_current_user).and_return(user)
+    allow(user).to receive(:generate_spree_api_key!).and_return(true)
+    allow(controller).to receive(:authorize!).and_return(true)
+    allow(controller).to receive(:authorize_admin).and_return(true)
+    allow(user.loyalty_points_transactions).to receive(:create).and_return(loyalty_points_transaction)
+    allow(controller).to receive(:parent_data).and_return({ model_name: 'spree/order', model_class: Spree::Order, find_by: 'id' })
   end
 
   def default_host
@@ -39,8 +39,8 @@ describe Spree::Admin::LoyaltyPointsTransactionsController, type: :controller do
   context "when user found" do
 
     before(:each) do
-      controller.stub(:parent).and_return(user)
-      Spree.user_class.stub(:find_by).and_return(user)
+      allow(controller).to receive(:parent).and_return(user)
+      allow(Spree.user_class).to receive(:find_by).and_return(user)
     end
 
     describe "GET 'index'" do
@@ -71,7 +71,7 @@ describe Spree::Admin::LoyaltyPointsTransactionsController, type: :controller do
       end
 
       before :each do
-        controller.stub(:load_resource_instance).and_return(loyalty_points_transaction)
+        allow(controller).to receive(:load_resource_instance).and_return(loyalty_points_transaction)
       end
 
       it "assigns @loyalty_points_transaction" do
@@ -87,7 +87,7 @@ describe Spree::Admin::LoyaltyPointsTransactionsController, type: :controller do
       context "when transaction created " do
 
         before(:each) do
-          controller.stub(:parent).and_return(user)
+          allow(controller).to receive(:parent).and_return(user)
           controller.instance_variable_set(:@parent, user)
           send_request
         end
@@ -101,8 +101,8 @@ describe Spree::Admin::LoyaltyPointsTransactionsController, type: :controller do
       context "when transaction failed " do
 
         before :each do
-          controller.stub(:load_resource_instance).and_return(loyalty_points_transaction)
-          loyalty_points_transaction.stub(:save).and_return(false)
+          allow(controller).to receive(:load_resource_instance).and_return(loyalty_points_transaction)
+          allow(loyalty_points_transaction).to receive(:save).and_return(false)
         end
 
         it "renders new template" do
@@ -119,8 +119,8 @@ describe Spree::Admin::LoyaltyPointsTransactionsController, type: :controller do
   context "when user not found" do
 
     before(:each) do
-      Spree.user_class.stub(:find_by).and_return(nil)
-      controller.stub(:parent).and_raise(ActiveRecord::RecordNotFound)
+      allow(Spree.user_class).to receive(:find_by).and_return(nil)
+      allow(controller).to receive(:parent).and_raise(ActiveRecord::RecordNotFound)
     end
 
     it "should redirect to user's loyalty points page" do
@@ -135,7 +135,7 @@ describe Spree::Admin::LoyaltyPointsTransactionsController, type: :controller do
     context "when parent_data is present" do
 
       before(:each) do
-        controller.stub(:parent_data).and_return({ model_name: 'spree/order', model_class: Spree::Order, find_by: 'id' })
+        allow(controller).to receive(:parent_data).and_return({ model_name: 'spree/order', model_class: Spree::Order, find_by: 'id' })
       end
 
       context "when parent is nil" do
@@ -167,7 +167,7 @@ describe Spree::Admin::LoyaltyPointsTransactionsController, type: :controller do
     context "when parent_data is absent" do
 
       before(:each) do
-        controller.stub(:parent_data).and_return({})
+        allow(controller).to receive(:parent_data).and_return({})
       end
 
       it "should return admin_users_url" do
@@ -195,9 +195,9 @@ describe Spree::Admin::LoyaltyPointsTransactionsController, type: :controller do
     context "when params[:loyalty_points_transaction][:type] is present" do
 
       before :each do
-        controller.stub(:params).and_return({ loyalty_points_transaction: { type: 'Spree::LoyaltyPointsCreditTransaction' } })
-        controller.stub(:parent).and_return(user)
-        controller.stub(:association_name).and_return("loyalty_points_credit_transactions")
+        allow(controller).to receive(:params).and_return({ loyalty_points_transaction: { type: 'Spree::LoyaltyPointsCreditTransaction' } })
+        allow(controller).to receive(:parent).and_return(user)
+        allow(controller).to receive(:association_name).and_return("loyalty_points_credit_transactions")
       end
 
       it "should receive send on parent" do
@@ -210,9 +210,9 @@ describe Spree::Admin::LoyaltyPointsTransactionsController, type: :controller do
     context "when params[:loyalty_points_transaction][:type] is absent" do
 
       before :each do
-        controller.stub(:params).and_return({})
-        controller.stub(:parent).and_return(user)
-        controller.stub(:controller_name).and_return("loyalty_points_transactions")
+        allow(controller).to receive(:params).and_return({})
+        allow(controller).to receive(:parent).and_return(user)
+        allow(controller).to receive(:controller_name).and_return("loyalty_points_transactions")
       end
 
       it "should receive send on parent" do
@@ -230,19 +230,19 @@ describe Spree::Admin::LoyaltyPointsTransactionsController, type: :controller do
     end
 
     before :each do
-      Spree::Order.stub(:find_by).and_return(order)
+      allow(Spree::Order).to receive(:find_by).and_return(order)
       @user = double(Spree.user_class)
-      Spree.user_class.stub(:find_by).and_return(@user)
+      allow(Spree.user_class).to receive(:find_by).and_return(@user)
       @loyalty_points_transactions = double(Spree::LoyaltyPointsCreditTransaction)
-      Spree.user_class.stub(:find_by).and_return(@user)
-      @user.stub_chain(:loyalty_points_transactions, :for_order, :includes, :order).and_return([@loyalty_points_transactions])
+      allow(Spree.user_class).to receive(:find_by).and_return(@user)
+      allow(@user).to receive_message_chain(:loyalty_points_transactions, :for_order, :includes, :order).and_return([@loyalty_points_transactions])
 
     end
 
     context "when user is found" do
 
       before(:each) do
-        controller.stub(:parent).and_return(user)
+        allow(controller).to receive(:parent).and_return(user)
         send_request
       end
 
@@ -263,7 +263,7 @@ describe Spree::Admin::LoyaltyPointsTransactionsController, type: :controller do
     context "when user is not found" do
 
       before :each do
-        Spree.user_class.stub(:find_by).and_return(nil)
+        allow(Spree.user_class).to receive(:find_by).and_return(nil)
         send_request
       end
 

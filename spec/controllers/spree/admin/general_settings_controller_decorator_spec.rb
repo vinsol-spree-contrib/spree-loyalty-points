@@ -5,10 +5,10 @@ describe Spree::Admin::GeneralSettingsController, type: :controller do
   let(:user) { mock_model(Spree.user_class).as_null_object }
 
   before(:each) do
-    controller.stub(:spree_current_user).and_return(user)
-    user.stub(:generate_spree_api_key!).and_return(true)
-    controller.stub(:authorize!).and_return(true)
-    controller.stub(:authorize_admin).and_return(true)
+    allow(controller).to receive(:spree_current_user).and_return(user)
+    allow(user).to receive(:generate_spree_api_key!).and_return(true)
+    allow(controller).to receive(:authorize!).and_return(true)
+    allow(controller).to receive(:authorize_admin).and_return(true)
   end
 
   describe "set_loyalty_points_settings callback" do

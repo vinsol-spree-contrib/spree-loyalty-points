@@ -8,7 +8,7 @@ shared_examples_for "LoyaltyPoints" do
 
         before :each do
           @amount = 50
-          resource_instance.stub(:eligible_for_loyalty_points?).with(@amount).and_return(true)
+          allow(resource_instance).to receive(:eligible_for_loyalty_points?).with(@amount).and_return(true)
         end
 
         it "should return award amount" do
@@ -21,7 +21,7 @@ shared_examples_for "LoyaltyPoints" do
 
         before :each do
           @amount = 0
-          resource_instance.stub(:eligible_for_loyalty_points?).with(@amount).and_return(false)
+          allow(resource_instance).to receive(:eligible_for_loyalty_points?).with(@amount).and_return(false)
         end
 
         it "should return 0" do
@@ -53,7 +53,7 @@ shared_examples_for "LoyaltyPoints" do
   describe 'eligible_for_loyalty_points?' do
 
     before :each do
-      Spree::Config.stub(:min_amount_required_to_get_loyalty_points).and_return(30)
+      allow(Spree::Config).to receive(:min_amount_required_to_get_loyalty_points).and_return(30)
     end
 
     context "when amount greater than min amount" do

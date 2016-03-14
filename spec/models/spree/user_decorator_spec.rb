@@ -7,21 +7,21 @@ describe Spree.user_class, type: :model do
   end
 
   it "is valid with valid attributes" do
-    @user.should be_valid
+    expect(@user).to be_valid
   end
 
-  it { should have_many :loyalty_points_transactions }
-  it { should have_many :loyalty_points_credit_transactions }
-  it { should have_many :loyalty_points_debit_transactions }
+  it { is_expected.to have_many :loyalty_points_transactions }
+  it { is_expected.to have_many :loyalty_points_credit_transactions }
+  it { is_expected.to have_many :loyalty_points_debit_transactions }
 
   it "is invalid without numeric loyalty_points_balance" do
-    should validate_numericality_of(:loyalty_points_balance).only_integer
-    should validate_numericality_of(:loyalty_points_balance).is_greater_than_or_equal_to(0)
+    is_expected.to validate_numericality_of(:loyalty_points_balance).only_integer
+    is_expected.to validate_numericality_of(:loyalty_points_balance).is_greater_than_or_equal_to(0)
   end
 
   describe 'loyalty_points_balance_sufficient?' do
     before :each do
-      Spree::Config.stub(:loyalty_points_redeeming_balance).and_return(30)
+      allow(Spree::Config).to receive(:loyalty_points_redeeming_balance).and_return(30)
     end
 
     context "when loyalty_points_balance greater than redeeming balance" do
@@ -31,7 +31,7 @@ describe Spree.user_class, type: :model do
       end
 
       it "should return true" do
-        @user.loyalty_points_balance_sufficient?.should eq(true)
+        expect(@user.loyalty_points_balance_sufficient?).to eq(true)
       end
 
     end
@@ -43,7 +43,7 @@ describe Spree.user_class, type: :model do
       end
 
       it "should return true" do
-        @user.loyalty_points_balance_sufficient?.should eq(true)
+        expect(@user.loyalty_points_balance_sufficient?).to eq(true)
       end
 
     end
@@ -55,7 +55,7 @@ describe Spree.user_class, type: :model do
       end
 
       it "should return false" do
-        @user.loyalty_points_balance_sufficient?.should eq(false)
+        expect(@user.loyalty_points_balance_sufficient?).to eq(false)
       end
 
     end
@@ -71,11 +71,11 @@ describe Spree.user_class, type: :model do
     context "when loyalty_points_equivalent_currency greater than order total" do
 
       before :each do
-        @user.stub(:loyalty_points_equivalent_currency).and_return(40)
+        allow(@user).to receive(:loyalty_points_equivalent_currency).and_return(40)
       end
 
       it "should return true" do
-        @user.has_sufficient_loyalty_points?(@order).should eq(true)
+        expect(@user.has_sufficient_loyalty_points?(@order)).to eq(true)
       end
 
     end
@@ -83,11 +83,11 @@ describe Spree.user_class, type: :model do
     context "when loyalty_points_equivalent_currency equal to order total" do
 
       before :each do
-        @user.stub(:loyalty_points_equivalent_currency).and_return(30)
+        allow(@user).to receive(:loyalty_points_equivalent_currency).and_return(30)
       end
 
       it "should return true" do
-        @user.has_sufficient_loyalty_points?(@order).should eq(true)
+        expect(@user.has_sufficient_loyalty_points?(@order)).to eq(true)
       end
 
     end
@@ -95,11 +95,11 @@ describe Spree.user_class, type: :model do
     context "when loyalty_points_equivalent_currency less than order total" do
 
       before :each do
-        @user.stub(:loyalty_points_equivalent_currency).and_return(20)
+        allow(@user).to receive(:loyalty_points_equivalent_currency).and_return(20)
       end
 
       it "should return false" do
-        @user.has_sufficient_loyalty_points?(@order).should eq(false)
+        expect(@user.has_sufficient_loyalty_points?(@order)).to eq(false)
       end
 
     end
@@ -111,11 +111,11 @@ describe Spree.user_class, type: :model do
     let (:conversion_rate) { 5.0 }
 
     before :each do
-      Spree::Config.stub(:loyalty_points_conversion_rate).and_return(conversion_rate)
+      allow(Spree::Config).to receive(:loyalty_points_conversion_rate).and_return(conversion_rate)
     end
 
     it "should return balance * conversion_rate" do
-      @user.loyalty_points_equivalent_currency.should eq(@user.loyalty_points_balance * conversion_rate)
+      expect(@user.loyalty_points_equivalent_currency).to eq(@user.loyalty_points_balance * conversion_rate)
     end
 
   end

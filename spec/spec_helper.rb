@@ -85,6 +85,7 @@ RSpec.configure do |config|
   config.fail_fast = ENV['FAIL_FAST'] || false
   config.include Spree::TestingSupport::UrlHelpers, type: :controller
   config.include Spree::TestingSupport::ControllerRequests, type: :controller
+  config.infer_spec_type_from_file_location!
 end
 
 Shoulda::Matchers.configure do |config|

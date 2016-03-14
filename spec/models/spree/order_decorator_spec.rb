@@ -7,28 +7,28 @@ describe Spree::Order, type: :model do
   end
 
   it "is valid with valid attributes" do
-    @order.should be_valid
+    expect(@order).to be_valid
   end
 
   describe "complete_loyalty_points_payments callback" do
 
     it "should be included in state_machine before callbacks" do
-      Spree::Order.state_machine.callbacks[:after].map { |callback| callback.instance_variable_get(:@methods) }.include?([:complete_loyalty_points_payments]).should be_truthy
+      expect(Spree::Order.state_machine.callbacks[:after].map { |callback| callback.instance_variable_get(:@methods) }.include?([:complete_loyalty_points_payments])).to be_truthy
     end
 
     it "should not include complete in 'from' states" do
-      Spree::Order.state_machine.callbacks[:after].select { |callback| callback.instance_variable_get(:@methods) == [:complete_loyalty_points_payments] }.first.branch.state_requirements.first[:from].values.should eq(Spree::Order.state_machines[:state].states.map(&:name) - [:complete])
+      expect(Spree::Order.state_machine.callbacks[:after].select { |callback| callback.instance_variable_get(:@methods) == [:complete_loyalty_points_payments] }.first.branch.state_requirements.first[:from].values).to eq(Spree::Order.state_machines[:state].states.map(&:name) - [:complete])
     end
 
     it "should include only complete in 'to' states" do
-      Spree::Order.state_machine.callbacks[:after].select { |callback| callback.instance_variable_get(:@methods) == [:complete_loyalty_points_payments] }.first.branch.state_requirements.first[:to].values.should eq([:complete])
+      expect(Spree::Order.state_machine.callbacks[:after].select { |callback| callback.instance_variable_get(:@methods) == [:complete_loyalty_points_payments] }.first.branch.state_requirements.first[:to].values).to eq([:complete])
     end
 
   end
 
-  it { should have_many :loyalty_points_transactions }
-  it { should have_many :loyalty_points_credit_transactions }
-  it { should have_many :loyalty_points_debit_transactions }
+  it { is_expected.to have_many :loyalty_points_transactions }
+  it { is_expected.to have_many :loyalty_points_credit_transactions }
+  it { is_expected.to have_many :loyalty_points_debit_transactions }
 
   it_should_behave_like "LoyaltyPoints" do
     let(:resource_instance) { @order }
@@ -48,7 +48,7 @@ describe Spree::Order, type: :model do
     end
 
     it "should return orders where loyalty points haven't been awarded" do
-      Spree::Order.loyalty_points_not_awarded.should eq([@order])
+      expect(Spree::Order.loyalty_points_not_awarded).to eq([@order])
     end
 
   end
@@ -65,7 +65,7 @@ describe Spree::Order, type: :model do
     end
 
     it "should return orders where paid_at is before given time" do
-      Spree::Order.with_hours_since_payment(2).should eq([@order])
+      expect(Spree::Order.with_hours_since_payment(2)).to eq([@order])
     end
 
   end
@@ -88,7 +88,7 @@ describe Spree::Order, type: :model do
     end
 
     it "should return orders where loyalty_points haven't been credited" do
-      Spree::Order.with_uncredited_loyalty_points(2).should eq([@order])
+      expect(Spree::Order.with_uncredited_loyalty_points(2)).to eq([@order])
     end
 
   end

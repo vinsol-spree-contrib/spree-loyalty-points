@@ -23,7 +23,7 @@ describe Spree::Admin::LoyaltyPointsTransactionsController, type: :controller do
   describe "set_user callback" do
 
     it "should be included in before action callbacks" do
-      Spree::Admin::LoyaltyPointsTransactionsController._process_action_callbacks.select{ |callback| callback.kind == :before }.map(&:filter).include?(:set_user).should be_truthy
+      expect(Spree::Admin::LoyaltyPointsTransactionsController._process_action_callbacks.select{ |callback| callback.kind == :before }.map(&:filter).include?(:set_user)).to be_truthy
     end
 
   end
@@ -31,7 +31,7 @@ describe Spree::Admin::LoyaltyPointsTransactionsController, type: :controller do
   describe "set_ordered_transactions callback" do
 
     it "should be included in before action callbacks" do
-      Spree::Admin::LoyaltyPointsTransactionsController._process_action_callbacks.select{ |callback| callback.kind == :before }.map(&:filter).include?(:set_ordered_transactions).should be_truthy
+      expect(Spree::Admin::LoyaltyPointsTransactionsController._process_action_callbacks.select{ |callback| callback.kind == :before }.map(&:filter).include?(:set_ordered_transactions)).to be_truthy
     end
 
   end
@@ -50,11 +50,11 @@ describe Spree::Admin::LoyaltyPointsTransactionsController, type: :controller do
 
       it "assigns @loyalty_points_transactions" do
         send_request
-        assigns[:loyalty_points_transactions].should_not be_nil
+        expect(assigns[:loyalty_points_transactions]).to_not be_nil
       end
 
       it "@user should receive loyalty_points_transactions" do
-        user.should_receive(:loyalty_points_transactions)
+        expect(user).to receive(:loyalty_points_transactions)
         send_request
       end
 
@@ -76,11 +76,11 @@ describe Spree::Admin::LoyaltyPointsTransactionsController, type: :controller do
 
       it "assigns @loyalty_points_transaction" do
         send_request
-        assigns[:loyalty_points_transaction].should_not be_nil
+        expect(assigns[:loyalty_points_transaction]).to_not be_nil
       end
 
       it "@loyalty_points_transaction should receive save" do
-        loyalty_points_transaction.should_receive(:save)
+        expect(loyalty_points_transaction).to receive(:save)
         send_request
       end
 
@@ -145,7 +145,7 @@ describe Spree::Admin::LoyaltyPointsTransactionsController, type: :controller do
         end
 
         it "should return admin_users_url" do
-          controller.send(:collection_url).should eq(admin_users_url(default_host))
+          expect(controller.send(:collection_url)).to eq(admin_users_url(default_host))
         end
 
       end
@@ -157,7 +157,7 @@ describe Spree::Admin::LoyaltyPointsTransactionsController, type: :controller do
         end
 
         it "should return admin_users_url" do
-          controller.send(:collection_url).should eq(admin_user_loyalty_points_url(user, default_host))
+          expect(controller.send(:collection_url)).to eq(admin_user_loyalty_points_url(user, default_host))
         end
 
       end
@@ -171,7 +171,7 @@ describe Spree::Admin::LoyaltyPointsTransactionsController, type: :controller do
       end
 
       it "should return admin_users_url" do
-        controller.send(:collection_url).should eq(admin_users_url(default_host))
+        expect(controller.send(:collection_url)).to eq(admin_users_url(default_host))
       end
 
     end
@@ -185,7 +185,7 @@ describe Spree::Admin::LoyaltyPointsTransactionsController, type: :controller do
     end
 
     it "should receive gsub on klass" do
-      @class_name.should_receive(:gsub).with('Spree::', '').and_return('LoyaltyPointsDebitTransaction')
+      expect(@class_name).to receive(:gsub).with('Spree::', '').and_return('LoyaltyPointsDebitTransaction')
       controller.send(:association_name, @class_name)
     end
   end
@@ -201,7 +201,7 @@ describe Spree::Admin::LoyaltyPointsTransactionsController, type: :controller do
       end
 
       it "should receive send on parent" do
-        user.should_receive(:send).with("loyalty_points_credit_transactions")
+        expect(user).to receive(:send).with("loyalty_points_credit_transactions")
         controller.send(:build_resource)
       end
 
@@ -216,7 +216,7 @@ describe Spree::Admin::LoyaltyPointsTransactionsController, type: :controller do
       end
 
       it "should receive send on parent" do
-        user.should_receive(:send).with("loyalty_points_transactions")
+        expect(user).to receive(:send).with("loyalty_points_transactions")
         controller.send(:build_resource)
       end
 
@@ -251,11 +251,11 @@ describe Spree::Admin::LoyaltyPointsTransactionsController, type: :controller do
       end
 
       it "assigns @loyalty_points_transactions" do
-        assigns[:loyalty_points_transactions].should_not be_nil
+        expect(assigns[:loyalty_points_transactions]).to_not be_nil
       end
 
       it "should be http success" do
-        response.should be_success
+        expect(response).to be_success
       end
 
     end

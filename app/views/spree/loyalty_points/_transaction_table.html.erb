@@ -21,7 +21,7 @@
           <% transaction_source = loyalty_point_transaction.source_type.gsub('Spree::','') -%>
           <td class="loyalty-points-source"><%= transaction_source %></td>
           <% if transaction_source == "Order" %>
-            <td class="loyalty-points-source-id"><%= link_to loyalty_point_transaction.source.number, order_path(loyalty_point_transaction.source) %></td>
+            <td class="loyalty-points-source-id"><%= link_to loyalty_point_transaction.source.number, spree.order_path(loyalty_point_transaction.source) %></td>
           <% else %>
             <td class="loyalty-points-source-id"><%= loyalty_point_transaction.source_id %></td>
           <% end %>

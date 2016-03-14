@@ -3,7 +3,7 @@
 <% end %>
 
 <% content_for :page_actions do %>
-  <%= button_link_to Spree.t(:back_to_users_list), admin_users_path, class: 'btn btn-primary', icon: 'chevron-left' %>
+  <%= button_link_to Spree.t(:back_to_users_list), spree.admin_users_path, class: 'btn btn-primary', icon: 'chevron-left' %>
 <% end %>
 
 <%= render partial: 'spree/shared/error_messages', locals: { target: @loyalty_points_transaction.user } %>
@@ -11,7 +11,7 @@
 
 <div id='loyalty-points-order-transactions'></div>
 
-<%= form_for @loyalty_points_transaction, as: :loyalty_points_transaction, url: admin_user_loyalty_points_path(@user), class: 'form' do |f| %>
+<%= form_for @loyalty_points_transaction, as: :loyalty_points_transaction, url: spree.admin_user_loyalty_points_path(@user), class: 'form' do |f| %>
   <fieldset data-hook="update_loyalty_points">
 
     <legend align="center"><%= Spree.t(:update_loyalty_points) %></legend>
@@ -34,7 +34,7 @@
 
         <div class="field col-md-4">
           <%= label_tag nil, Spree.t(:order) %>
-          <%= f.select :source_id, @user.orders.collect {|o| [o.number, o.id]}, {include_blank: true}, class: 'select2 fullwidth', :"data-transactions-link" => admin_user_loyalty_points_path(@user) %>
+          <%= f.select :source_id, @user.orders.collect {|o| [o.number, o.id]}, {include_blank: true}, class: 'select2 fullwidth', :"data-transactions-link" => spree.admin_user_loyalty_points_path(@user) %>
           <%= f.hidden_field :source_type, { value: 'Spree::Order' } %>
         </div>
 
@@ -55,7 +55,7 @@
     <div class="form-buttons filter-actions actions" data-hook="buttons">
       <%= button Spree.t('actions.update'), 'ok' %>
       <span class="or"><%= Spree.t(:or) %></span>
-      <%= link_to_with_icon 'remove', Spree.t('actions.cancel'), admin_users_path, class: 'btn btn-primary' %>
+      <%= link_to_with_icon 'remove', Spree.t('actions.cancel'), spree.admin_users_path, class: 'btn btn-primary' %>
     </div>
 
   </fieldset>

@@ -13,15 +13,15 @@ describe Spree::Order, type: :model do
   describe "complete_loyalty_points_payments callback" do
 
     it "should be included in state_machine before callbacks" do
-      Spree::Order.state_machine.callbacks[:before].map { |callback| callback.instance_variable_get(:@methods) }.include?([:complete_loyalty_points_payments]).should be_truthy
+      Spree::Order.state_machine.callbacks[:after].map { |callback| callback.instance_variable_get(:@methods) }.include?([:complete_loyalty_points_payments]).should be_truthy
     end
 
     it "should not include complete in 'from' states" do
-      Spree::Order.state_machine.callbacks[:before].select { |callback| callback.instance_variable_get(:@methods) == [:complete_loyalty_points_payments] }.first.branch.state_requirements.first[:from].values.should eq(Spree::Order.state_machines[:state].states.map(&:name) - [:complete])
+      Spree::Order.state_machine.callbacks[:after].select { |callback| callback.instance_variable_get(:@methods) == [:complete_loyalty_points_payments] }.first.branch.state_requirements.first[:from].values.should eq(Spree::Order.state_machines[:state].states.map(&:name) - [:complete])
     end
 
     it "should include only complete in 'to' states" do
-      Spree::Order.state_machine.callbacks[:before].select { |callback| callback.instance_variable_get(:@methods) == [:complete_loyalty_points_payments] }.first.branch.state_requirements.first[:to].values.should eq([:complete])
+      Spree::Order.state_machine.callbacks[:after].select { |callback| callback.instance_variable_get(:@methods) == [:complete_loyalty_points_payments] }.first.branch.state_requirements.first[:to].values.should eq([:complete])
     end
 
   end

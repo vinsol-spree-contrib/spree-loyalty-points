@@ -10,7 +10,7 @@ module Spree
         end
         if Spree::PaymentMethod.loyalty_points_id_included?(payment_method_ids) && !@order.user.has_sufficient_loyalty_points?(@order)
           flash[:error] = Spree.t(:insufficient_loyalty_points)
-          redirect_to checkout_state_path(@order.state)
+          redirect_to spree.checkout_state_path(@order.state)
         end
       end
   end

@@ -25,7 +25,7 @@ module Spree
       end
 
       module ClassMethods
-        
+
         def credit_loyalty_points_to_user
           points_award_period = Spree::Config.loyalty_points_award_period
           uncredited_orders = Spree::Order.with_uncredited_loyalty_points(points_award_period)
@@ -35,7 +35,7 @@ module Spree
         end
 
       end
-      
+
       def create_credit_transaction(points)
         user.loyalty_points_credit_transactions.create(source: self, loyalty_points: points)
       end

@@ -16,7 +16,7 @@ describe Spree::Admin::ReturnAuthorizationsController, type: :controller do
   describe "set_loyalty_points_transactions callback" do
 
     it "should be included in before action callbacks" do
-      Spree::Admin::ReturnAuthorizationsController._process_action_callbacks.select{ |callback| callback.kind == :before }.map(&:filter).include?(:set_loyalty_points_transactions).should be_truthy
+      expect(Spree::Admin::ReturnAuthorizationsController._process_action_callbacks.select{ |callback| callback.kind == :before }.map(&:filter).include?(:set_loyalty_points_transactions)).to be_truthy
     end
 
   end
@@ -36,23 +36,23 @@ describe Spree::Admin::ReturnAuthorizationsController, type: :controller do
 
     it "assigns loyalty_points_transactions" do
       send_request
-      assigns[:loyalty_points_transactions].should eq(@loyalty_points_transactions)
+      expect(assigns[:loyalty_points_transactions]).to eq(@loyalty_points_transactions)
     end
 
     it "should receive loyalty_points_transactions on order" do
-      return_authorization.order.should_receive(:loyalty_points_transactions)
+      expect(return_authorization.order).to receive(:loyalty_points_transactions)
       send_request
     end
 
     it "should receive page on loyalty_points_transactions" do
-      @loyalty_points_transactions.should_receive(:page).with('2')
+      expect(@loyalty_points_transactions).to receive(:page).with('2')
       send_request(page: 2)
     end
 
     context "when per_page is passed as a parameter" do
 
       it "should receive per with per_page on loyalty_points_transactions" do
-        @loyalty_points_transactions.should_receive(:per).with('20')
+        expect(@loyalty_points_transactions).to receive(:per).with('20')
         send_request(per_page: 20)
       end
 
@@ -61,7 +61,7 @@ describe Spree::Admin::ReturnAuthorizationsController, type: :controller do
     context "when per_page is not passed as a parameter" do
 
       it "should receive per with Spree::Config[:orders_per_page] on loyalty_points_transactions" do
-        @loyalty_points_transactions.should_receive(:per).with(Spree::Config[:orders_per_page])
+        expect(@loyalty_points_transactions).to receive(:per).with(Spree::Config[:orders_per_page])
         send_request
       end
 

@@ -19,7 +19,7 @@ describe Spree::Admin::ResourceController, type: :controller do
 
         it "assigns parent" do
           controller.send(:parent)
-          assigns[:parent].should_not be_nil
+          expect(assigns[:parent]).to_not be_nil
         end
 
       end
@@ -39,7 +39,7 @@ describe Spree::Admin::ResourceController, type: :controller do
       end
 
     end
-    
+
     context "when parent_data is absent" do
 
       before :each do
@@ -47,7 +47,7 @@ describe Spree::Admin::ResourceController, type: :controller do
       end
 
       it "should return nil" do
-        controller.send(:parent).should be_nil
+        expect(controller.send(:parent)).to be_nil
       end
 
     end

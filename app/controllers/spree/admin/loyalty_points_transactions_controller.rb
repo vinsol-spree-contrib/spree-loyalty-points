@@ -43,7 +43,7 @@ class Spree::Admin::LoyaltyPointsTransactionsController < Spree::Admin::Resource
 
     def set_user
       unless @user = Spree.user_class.find_by(id: params[:user_id])
-        redirect_to admin_users_path, notice: 'User not found'
+        redirect_to spree.admin_users_path, notice: 'User not found'
       end
     end
 
@@ -65,9 +65,9 @@ class Spree::Admin::LoyaltyPointsTransactionsController < Spree::Admin::Resource
 
     def collection_url
       if (parent_data.present? && @parent.nil?) || parent_data.blank?
-        admin_users_url
+        spree.admin_users_url
       else
-        admin_user_loyalty_points_url(parent)
+        spree.admin_user_loyalty_points_url(parent)
       end
     end
 

@@ -25,7 +25,7 @@ FactoryGirl.define do
   factory :user_with_loyalty_points, parent: :user do
     loyalty_points_balance { (100..999).to_a.sample }
 
-    ignore do
+    transient do
       transactions_count 5
     end
 
@@ -38,7 +38,7 @@ FactoryGirl.define do
 
     association :user, factory: :user_with_loyalty_points
 
-    ignore do
+    transient do
       transactions_count 5
     end
 
@@ -47,7 +47,7 @@ FactoryGirl.define do
     end
 
   factory :shipped_order_with_loyalty_points, parent: :shipped_order do
-      ignore do
+      transient do
         shipments_count 5
       end
 

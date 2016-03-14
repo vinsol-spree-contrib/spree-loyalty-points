@@ -14,7 +14,7 @@ describe Spree::Admin::GeneralSettingsController, type: :controller do
   describe "set_loyalty_points_settings callback" do
 
     it "should be included in before action callbacks" do
-      Spree::Admin::GeneralSettingsController._process_action_callbacks.select{ |callback| callback.kind == :before }.map(&:filter).include?(:set_loyalty_points_settings).should be_truthy
+      expect(Spree::Admin::GeneralSettingsController._process_action_callbacks.select{ |callback| callback.kind == :before }.map(&:filter).include?(:set_loyalty_points_settings)).to be_truthy
     end
 
   end
@@ -23,7 +23,7 @@ describe Spree::Admin::GeneralSettingsController, type: :controller do
 
     it "assigns @preferences_loyalty_points" do
       get :edit
-      assigns[:preferences_loyalty_points].should eq({ min_amount_required_to_get_loyalty_points: [""],
+      expect(assigns[:preferences_loyalty_points]).to eq({ min_amount_required_to_get_loyalty_points: [""],
         loyalty_points_awarding_unit: ["For example: Set this as 10 if we wish to award 10 points for $1 spent on the site."],
         loyalty_points_redeeming_balance: [""],
         loyalty_points_conversion_rate: ["For example: Set this value to 5 if we wish 1 loyalty point is equivalent to $5"],

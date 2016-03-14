@@ -12,7 +12,7 @@ shared_examples_for "LoyaltyPoints" do
         end
 
         it "should return award amount" do
-          resource_instance.loyalty_points_for(@amount, 'award').should eq((@amount * Spree::Config.loyalty_points_awarding_unit).floor)
+          expect(resource_instance.loyalty_points_for(@amount, 'award')).to eq((@amount * Spree::Config.loyalty_points_awarding_unit).floor)
         end
 
       end
@@ -25,27 +25,27 @@ shared_examples_for "LoyaltyPoints" do
         end
 
         it "should return 0" do
-          resource_instance.loyalty_points_for(@amount, 'award').should eq(0)
+          expect(resource_instance.loyalty_points_for(@amount, 'award')).to eq(0)
         end
-        
+
       end
-      
+
     end
 
     context "when purpose is to redeem" do
 
       it "should return redeem amount" do
-        resource_instance.loyalty_points_for(50, 'redeem').should eq((50 / Spree::Config.loyalty_points_conversion_rate).ceil)
+        expect(resource_instance.loyalty_points_for(50, 'redeem')).to eq((50 / Spree::Config.loyalty_points_conversion_rate).ceil)
       end
-      
+
     end
 
     context "when purpose is neither to redeem nor award" do
 
       it "should return 0" do
-        resource_instance.loyalty_points_for(50, 'other').should eq(0)
+        expect(resource_instance.loyalty_points_for(50, 'other')).to eq(0)
       end
-      
+
     end
 
   end
@@ -59,7 +59,7 @@ shared_examples_for "LoyaltyPoints" do
     context "when amount greater than min amount" do
 
       it "should return true" do
-        resource_instance.send(:eligible_for_loyalty_points?, 40).should be_truthy
+        expect(resource_instance.send(:eligible_for_loyalty_points?, 40)).to be_truthy
       end
 
     end
@@ -67,7 +67,7 @@ shared_examples_for "LoyaltyPoints" do
     context "when amount less than redeeming balance" do
 
       it "should return false" do
-        resource_instance.send(:eligible_for_loyalty_points?, 20).should be_falsey
+        expect(resource_instance.send(:eligible_for_loyalty_points?, 20)).to be_falsey
       end
 
     end
@@ -75,7 +75,7 @@ shared_examples_for "LoyaltyPoints" do
     context "when amount equal to redeeming balance" do
 
       it "should return false" do
-        resource_instance.send(:eligible_for_loyalty_points?, 30).should be_truthy
+        expect(resource_instance.send(:eligible_for_loyalty_points?, 30)).to be_truthy
       end
 
     end

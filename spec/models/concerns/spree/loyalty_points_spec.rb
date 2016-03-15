@@ -6,26 +6,28 @@ shared_examples_for "LoyaltyPoints" do
 
       context "when eligible for being awarded" do
 
+        let(:amount) { 50 }
+
         before :each do
-          @amount = 50
-          allow(resource_instance).to receive(:eligible_for_loyalty_points?).with(@amount).and_return(true)
+          allow(resource_instance).to receive(:eligible_for_loyalty_points?).with(amount).and_return(true)
         end
 
         it "should return award amount" do
-          expect(resource_instance.loyalty_points_for(@amount, 'award')).to eq((@amount * Spree::Config.loyalty_points_awarding_unit).floor)
+          expect(resource_instance.loyalty_points_for(amount, 'award')).to eq((amount * Spree::Config.loyalty_points_awarding_unit).floor)
         end
 
       end
 
       context "when ineligible for being awarded" do
 
+        let(:amount) { 0 }
+
         before :each do
-          @amount = 0
-          allow(resource_instance).to receive(:eligible_for_loyalty_points?).with(@amount).and_return(false)
+          allow(resource_instance).to receive(:eligible_for_loyalty_points?).with(amount).and_return(false)
         end
 
         it "should return 0" do
-          expect(resource_instance.loyalty_points_for(@amount, 'award')).to eq(0)
+          expect(resource_instance.loyalty_points_for(amount, 'award')).to eq(0)
         end
 
       end

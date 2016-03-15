@@ -4,7 +4,7 @@ FactoryGirl.define do
   # Example adding this to your spec_helper will load these Factories for use:
   # require 'spree_loyalty_points/factories'
 
-  factory :loyalty_points_transaction, :class => Spree::LoyaltyPointsTransaction do
+  factory :loyalty_points_transaction, class: Spree::LoyaltyPointsTransaction do
     loyalty_points { (10..99).to_a.sample }
     balance { (100..999).to_a.sample }
     comment { Faker::Lorem.words(3).join(' ') }
@@ -12,11 +12,11 @@ FactoryGirl.define do
 
     association :user, factory: :user_with_loyalty_points
 
-    factory :loyalty_points_credit_transaction, :class => Spree::LoyaltyPointsCreditTransaction do
+    factory :loyalty_points_credit_transaction, class: Spree::LoyaltyPointsCreditTransaction do
       type "Spree::LoyaltyPointsCreditTransaction"
     end
 
-    factory :loyalty_points_debit_transaction, :class => Spree::LoyaltyPointsDebitTransaction do
+    factory :loyalty_points_debit_transaction, class: Spree::LoyaltyPointsDebitTransaction do
       type "Spree::LoyaltyPointsDebitTransaction"
     end
 
@@ -25,7 +25,7 @@ FactoryGirl.define do
   factory :user_with_loyalty_points, parent: :user do
     loyalty_points_balance { (100..999).to_a.sample }
 
-    ignore do
+    transient do
       transactions_count 5
     end
 
@@ -38,7 +38,7 @@ FactoryGirl.define do
 
     association :user, factory: :user_with_loyalty_points
 
-    ignore do
+    transient do
       transactions_count 5
     end
 
@@ -46,8 +46,8 @@ FactoryGirl.define do
       create_list(:loyalty_points_transaction, evaluator.transactions_count, source: order)
     end
 
-    factory :shipped_order_with_loyalty_points do
-      ignore do
+  factory :shipped_order_with_loyalty_points, parent: :shipped_order do
+      transient do
         shipments_count 5
       end
 
@@ -71,5 +71,4 @@ FactoryGirl.define do
     association :order, factory: :shipped_order_with_loyalty_points
 
   end
-
 end

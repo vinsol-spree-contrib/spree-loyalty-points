@@ -3,10 +3,10 @@ module Spree
     include Spree::TransactionsTotalValidation
     TRANSACTION_TYPES = ['Spree::LoyaltyPointsCreditTransaction', 'Spree::LoyaltyPointsDebitTransaction']
     CLASS_TO_TRANSACTION_TYPE = { 'Spree::LoyaltyPointsCreditTransaction' => 'Credit', 'Spree::LoyaltyPointsDebitTransaction' => 'Debit'}
-    belongs_to :user
+    belongs_to :user, class_name: Spree.user_class
     belongs_to :source, polymorphic: true
 
-    validates :loyalty_points, :numericality => { :only_integer => true, :message => Spree.t('validation.must_be_int'), :greater_than => 0 }
+    validates :loyalty_points, numericality: { only_integer: true, message: Spree.t('validation.must_be_int'), greater_than: 0 }
     validates :type, inclusion: { in: TRANSACTION_TYPES }
     validates :balance, presence: true
     validate :source_or_comment_present
@@ -31,7 +31,7 @@ module Spree
       def generate_transaction_id
         begin
           self.transaction_id = (Time.current.strftime("%s") + rand(999999).to_s).to(15)
-        end while Spree::LoyaltyPointsTransaction.where(:transaction_id => transaction_id).present? 
+        end while Spree::LoyaltyPointsTransaction.where(transaction_id: transaction_id).present?
       end
 
       def transactions_total_range

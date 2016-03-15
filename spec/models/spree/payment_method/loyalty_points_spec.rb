@@ -2,8 +2,8 @@ require 'spec_helper'
 
 describe Spree::PaymentMethod::LoyaltyPoints do
 
-  let(:loyalty_points_payment_method) { Spree::PaymentMethod::LoyaltyPoints.create!(:environment => Rails.env, :active => true, :name => 'Loyalty_Points') }
-  let(:payment) { Spree::Payment.new(:amount => 50.0) }
+  let(:loyalty_points_payment_method) { Spree::PaymentMethod::LoyaltyPoints.create!(active: true, name: 'Loyalty_Points') }
+  let(:payment) { Spree::Payment.new(amount: 50.0) }
 
   before(:each) do
     user = create(:user_with_loyalty_points)
@@ -12,15 +12,15 @@ describe Spree::PaymentMethod::LoyaltyPoints do
     @order.user = user
     payment.payment_method = loyalty_points_payment_method
     payment.save!
-    Spree::Order.stub(:find_by_number).and_return(@order)
+    allow(Spree::Order).to receive(:find_by_number).and_return(@order)
   end
-  
+
   describe 'actions' do
     it 'should return actions' do
-      loyalty_points_payment_method.actions.should eq(['capture', 'void'])
+      expect(loyalty_points_payment_method.actions).to eq(['capture', 'void'])
     end
   end
-  
+
   describe 'can_void?' do
     context 'when payment state is not void' do
       before(:each) do
@@ -29,7 +29,7 @@ describe Spree::PaymentMethod::LoyaltyPoints do
       end
 
       it 'should return true if payment can be void' do
-        loyalty_points_payment_method.can_void?(payment).should eq(true)
+        expect(loyalty_points_payment_method.can_void?(payment)).to eq(true)
       end
     end
 
@@ -40,7 +40,7 @@ describe Spree::PaymentMethod::LoyaltyPoints do
       end
 
       it 'should return false if payment cannot be void' do
-        loyalty_points_payment_method.can_void?(payment).should eq(false)
+        expect(loyalty_points_payment_method.can_void?(payment)).to eq(false)
       end
     end
   end
@@ -51,16 +51,16 @@ describe Spree::PaymentMethod::LoyaltyPoints do
     let(:gateway) { { order_id: @order.id.to_s + "-123456"  } }
 
     before :each do
-      Spree::Order.stub(:find_by_number).and_return(@order)
-      @order.stub(:loyalty_points_for).and_return(30)
+      allow(Spree::Order).to receive(:find_by_number).and_return(@order)
+      allow(@order).to receive(:loyalty_points_for).and_return(30)
     end
 
     it 'should be a new ActiveMerchant::Billing::Response' do
-      loyalty_points_payment_method.void(source, gateway).should be_a(ActiveMerchant::Billing::Response)
+      expect(loyalty_points_payment_method.void(source, gateway)).to be_a(ActiveMerchant::Billing::Response)
     end
 
     it 'should receive new on ActiveMerchant::Billing::Response with true, "", {}, {}' do
-      ActiveMerchant::Billing::Response.should_receive(:new).with(true, "", {}, {}).and_call_original
+      expect(ActiveMerchant::Billing::Response).to receive(:new).with(true, "", {}, {}).and_call_original
       loyalty_points_payment_method.void(source, gateway)
     end
 
@@ -74,7 +74,7 @@ describe Spree::PaymentMethod::LoyaltyPoints do
       end
 
       it 'should return true if payment can be captured' do
-        loyalty_points_payment_method.can_capture?(payment).should eq(true)
+        expect(loyalty_points_payment_method.can_capture?(payment)).to eq(true)
       end
     end
 
@@ -85,7 +85,7 @@ describe Spree::PaymentMethod::LoyaltyPoints do
       end
 
       it 'should return false if payment cannot be captured' do
-        loyalty_points_payment_method.can_capture?(payment).should eq(false)
+        expect(loyalty_points_payment_method.can_capture?(payment)).to eq(false)
       end
     end
   end
@@ -96,19 +96,19 @@ describe Spree::PaymentMethod::LoyaltyPoints do
     let(:gateway) { { order_id: @order.id.to_s + "-123456"  } }
 
     it 'should be a new ActiveMerchant::Billing::Response' do
-      loyalty_points_payment_method.capture(payment, source, gateway).should be_a(ActiveMerchant::Billing::Response)
+      expect(loyalty_points_payment_method.capture(payment, source, gateway)).to be_a(ActiveMerchant::Billing::Response)
     end
 
     it 'should receive new on ActiveMerchant::Billing::Response with true, "", {}, {}' do
-      ActiveMerchant::Billing::Response.should_receive(:new).with(true, "", {}, {}).and_call_original
+      expect(ActiveMerchant::Billing::Response).to receive(:new).with(true, "", {}, {}).and_call_original
       loyalty_points_payment_method.capture(payment, source, gateway)
     end
 
   end
-  
+
   describe 'source_required?' do
     it 'should return false' do
-      loyalty_points_payment_method.should_not be_source_required
+      expect(loyalty_points_payment_method).not_to be_source_required
     end
   end
 end

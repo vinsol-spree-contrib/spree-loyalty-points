@@ -38,7 +38,7 @@ $(document).ready(function() {
         }.bind(this));
     }
     orderSelection.appendTable = function(container) {
-        return $('<table></table>').appendTo(container);
+        return $('<table></table>').addClass("table").appendTo(container);
     }
     orderSelection.appendHeaderRow = function(container) {
         $tableHead = this.appendTableHeader(container);

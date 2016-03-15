@@ -8,19 +8,7 @@ module Spree
       def order_transactions
         order = Spree::Order.find_by(id: params[:order_id])
         @loyalty_points_transactions = @user.loyalty_points_transactions.for_order(order).includes(:source).order(updated_at: :desc)
-        respond_to do |format|
-          format.json do
-            render json: @loyalty_points_transactions.to_json(
-              include: {
-                source: {
-                  only: [:id, :number]
-                }
-              },
-              only: [:source_type, :comment, :updated_at, :loyalty_points, :balance],
-              methods: [:transaction_type]
-            )
-          end
-        end
+        respond_with @loyalty_points_transactions
       end
 
       def create
@@ -28,9 +16,8 @@ module Spree
         @object.attributes = loyalty_points_transaction_params
         if @object.save
           invoke_callbacks(:create, :after)
-          flash[:success] = flash_message_for(@object, :successfully_created)
           respond_with(@object) do |format|
-            format.html { redirect_to location_after_save }
+            format.html { redirect_to location_after_save, success: flash_message_for(@object, :successfully_created) }
             format.js   { render layout: false }
           end
         else

@@ -2,19 +2,21 @@ require "spec_helper"
 
 describe Spree::LoyaltyPointsTransaction, type: :model do
 
+  let(:loyalty_points_transaction) { build(:loyalty_points_debit_transaction) }
+
   before do
-    @loyalty_points_transaction = FactoryGirl.build(:loyalty_points_debit_transaction)
   end
 
   describe 'validations' do
 
+    let(:loyalty_points_transaction) { build(:loyalty_points_debit_transaction) }
+
     before do
-      @loyalty_points_transaction = FactoryGirl.build(:loyalty_points_debit_transaction)
       subject { LoyaltyPointsDebitTransaction.build }
     end
 
     it "is valid with valid attributes" do
-      expect(@loyalty_points_transaction).to be_valid
+      expect(loyalty_points_transaction).to be_valid
     end
 
 
@@ -44,17 +46,17 @@ end
   context "when neither source or comment is present" do
 
     before :each do
-      @loyalty_points_transaction.source = nil
-      @loyalty_points_transaction.comment = nil
-      @loyalty_points_transaction.save
+      loyalty_points_transaction.source = nil
+      loyalty_points_transaction.comment = nil
+      loyalty_points_transaction.save
     end
 
     it "is invalid" do
-      expect(@loyalty_points_transaction).not_to be_valid
+      expect(loyalty_points_transaction).not_to be_valid
     end
 
     it "should add error 'Source or Comment should be present'" do
-      expect(@loyalty_points_transaction.errors[:base].include?('Source or Comment should be present')).to be_truthy
+      expect(loyalty_points_transaction.errors[:base].include?('Source or Comment should be present')).to be_truthy
     end
 
   end
@@ -64,17 +66,17 @@ end
     let(:order) { create(:order) }
 
     before :each do
-      @loyalty_points_transaction.source = order
-      @loyalty_points_transaction.comment = nil
-      @loyalty_points_transaction.save
+      loyalty_points_transaction.source = order
+      loyalty_points_transaction.comment = nil
+      loyalty_points_transaction.save
     end
 
     it "is valid" do
-      expect(@loyalty_points_transaction).to be_valid
+      expect(loyalty_points_transaction).to be_valid
     end
 
     it "should not add error 'Source or Comment should be present'" do
-      expect(@loyalty_points_transaction.errors[:base].include?('Source or Comment should be present')).to be_falsey
+      expect(loyalty_points_transaction.errors[:base].include?('Source or Comment should be present')).to be_falsey
     end
 
   end
@@ -82,17 +84,17 @@ end
   context "when comment is present" do
 
     before :each do
-      @loyalty_points_transaction.source = nil
-      @loyalty_points_transaction.comment = 'Random Comment'
-      @loyalty_points_transaction.save
+      loyalty_points_transaction.source = nil
+      loyalty_points_transaction.comment = 'Random Comment'
+      loyalty_points_transaction.save
     end
 
     it "is valid" do
-      expect(@loyalty_points_transaction).to be_valid
+      expect(loyalty_points_transaction).to be_valid
     end
 
     it "should not add error 'Source or Comment should be present'" do
-      expect(@loyalty_points_transaction.errors[:base].include?('Source or Comment should be present')).to be_falsey
+      expect(loyalty_points_transaction.errors[:base].include?('Source or Comment should be present')).to be_falsey
     end
 
   end
@@ -103,23 +105,23 @@ end
 
   describe "generate_transaction_id" do
 
+    let(:time) { Time.current }
+    let(:random1) { 23432 }
     before :each do
-      @time = Time.current
-      @random1 = 23432
-      allow(Time).to receive(:current).and_return(@time)
-      @transaction_id = (@time.strftime("%s") + @random1.to_s).to(15)
+      allow(Time).to receive(:current).and_return(time)
+      @transaction_id = (time.strftime("%s") + random1.to_s).to(15)
     end
 
     context "when transaction_id does not exist earlier" do
 
       before :each do
         Spree::LoyaltyPointsTransaction.delete_all(transaction_id: @transaction_id)
-        allow(@loyalty_points_transaction).to receive(:rand).with(999999).and_return(@random1)
-        @loyalty_points_transaction.save
+        allow(loyalty_points_transaction).to receive(:rand).with(999999).and_return(random1)
+        loyalty_points_transaction.save
       end
 
       it "adds a transaction_id" do
-        expect(@loyalty_points_transaction.transaction_id).to eq(@transaction_id)
+        expect(loyalty_points_transaction.transaction_id).to eq(@transaction_id)
       end
       
     end
@@ -128,16 +130,16 @@ end
 
       before :each do
         @random2 = 439795
-        allow(@loyalty_points_transaction).to receive(:rand).with(999999).and_return(@random1, @random2)
-        @transaction_id2 = (@time.strftime("%s") + @random2.to_s).to(15)
+        allow(loyalty_points_transaction).to receive(:rand).with(999999).and_return(random1, @random2)
+        @transaction_id2 = (time.strftime("%s") + @random2.to_s).to(15)
         Spree::LoyaltyPointsTransaction.delete_all(transaction_id: @transaction_id)
         loyalty_points_transaction2 = create(:loyalty_points_credit_transaction)
         loyalty_points_transaction2.update(transaction_id: @transaction_id)
-        @loyalty_points_transaction.save
+        loyalty_points_transaction.save
       end
 
       it "adds a transaction_id not equal to the existing one" do
-        expect(@loyalty_points_transaction.transaction_id).to eq(@transaction_id2)
+        expect(loyalty_points_transaction.transaction_id).to eq(@transaction_id2)
       end
 
     end
@@ -188,29 +190,13 @@ end
 
   end
 
-  # describe "TransactionsTotalValidation" do
-    
-  #   before :each do
-  #     @order = create(:order_with_loyalty_points)
-  #     @loyalty_points_transaction = create(:loyalty_points_debit_transaction, source: @order)
-  #   end
-
-  #   it_should_behave_like "TransactionsTotalValidation" do
-  #     let(:resource_instance) { @loyalty_points_transaction }
-  #     let(:relation) { @loyalty_points_transaction.source }
-  #   end
-
-  # end
-
   describe 'validate transactions_total_range' do
 
-    before :each do
-      @order = create(:order_with_loyalty_points)
-      @loyalty_points_transaction = create(:loyalty_points_debit_transaction, source: @order)
-    end
+    let!(:order) { create(:order_with_loyalty_points) }
+    let!(:loyalty_points_transaction) { create(:loyalty_points_debit_transaction, source: order) }
 
     def save_record
-      @loyalty_points_transaction.save
+      loyalty_points_transaction.save
     end
 
     after :each do
@@ -220,21 +206,21 @@ end
     context "when source is present" do
 
       before :each do
-        allow(@loyalty_points_transaction.source).to receive(:present?).and_return(true)
+        allow(loyalty_points_transaction.source).to receive(:present?).and_return(true)
       end
 
       context "when loyalty_points_transactions are present" do
 
         before :each do
-          allow(@loyalty_points_transaction.source.loyalty_points_transactions).to receive(:present?).and_return(true)
+          allow(loyalty_points_transaction.source.loyalty_points_transactions).to receive(:present?).and_return(true)
         end
 
         it "should receive transactions_total_range" do
-          expect(@loyalty_points_transaction).to receive(:transactions_total_range)
+          expect(loyalty_points_transaction).to receive(:transactions_total_range)
         end
 
         it "should receive validate_transactions_total_range" do
-          expect(@loyalty_points_transaction).to receive(:validate_transactions_total_range)
+          expect(loyalty_points_transaction).to receive(:validate_transactions_total_range)
         end
 
       end
@@ -242,11 +228,11 @@ end
       context "when loyalty_points_transactions are absent" do
 
         before :each do
-          allow(@loyalty_points_transaction.source.loyalty_points_transactions).to receive(:present?).and_return(false)
+          allow(loyalty_points_transaction.source.loyalty_points_transactions).to receive(:present?).and_return(false)
         end
 
         it "should not receive transactions_total_range" do
-          expect(@loyalty_points_transaction).not_to receive(:transactions_total_range)
+          expect(loyalty_points_transaction).not_to receive(:transactions_total_range)
         end
 
       end
@@ -256,11 +242,11 @@ end
     context "when source is absent" do
 
       before :each do
-        allow(@loyalty_points_transaction.source).to receive(:present?).and_return(false)
+        allow(loyalty_points_transaction.source).to receive(:present?).and_return(false)
       end
 
       it "should not receive transactions_total_range" do
-        expect(@loyalty_points_transaction).not_to receive(:transactions_total_range)
+        expect(loyalty_points_transaction).not_to receive(:transactions_total_range)
       end
 
     end

@@ -64,9 +64,10 @@ describe Spree.user_class, type: :model do
   end
 
   describe 'has_sufficient_loyalty_points?' do
+    let(:order) { create(:order_with_loyalty_points) }
+    
     before :each do
-      @order = create(:order_with_loyalty_points)
-      @order.total = BigDecimal.new(30.0, 2)
+      order.total = BigDecimal.new(30.0, 2)
     end
 
     context "when loyalty_points_equivalent_currency greater than order total" do
@@ -76,7 +77,7 @@ describe Spree.user_class, type: :model do
       end
 
       it "should return true" do
-        expect(user.has_sufficient_loyalty_points?(@order)).to eq(true)
+        expect(user.has_sufficient_loyalty_points?(order)).to eq(true)
       end
 
     end
@@ -88,7 +89,7 @@ describe Spree.user_class, type: :model do
       end
 
       it "should return true" do
-        expect(user.has_sufficient_loyalty_points?(@order)).to eq(true)
+        expect(user.has_sufficient_loyalty_points?(order)).to eq(true)
       end
 
     end
@@ -100,7 +101,7 @@ describe Spree.user_class, type: :model do
       end
 
       it "should return false" do
-        expect(user.has_sufficient_loyalty_points?(@order)).to eq(false)
+        expect(user.has_sufficient_loyalty_points?(order)).to eq(false)
       end
 
     end

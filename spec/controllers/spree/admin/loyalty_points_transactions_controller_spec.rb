@@ -180,13 +180,11 @@ describe Spree::Admin::LoyaltyPointsTransactionsController, type: :controller do
 
   describe "association_name" do
 
-    before :each do
-      @class_name = "Spree::LoyaltyPointsDebitTransaction"
-    end
+    let(:class_name) { Spree::LoyaltyPointsDebitTransaction }
 
     it "should receive gsub on klass" do
-      expect(@class_name).to receive(:gsub).with('Spree::', '').and_return('LoyaltyPointsDebitTransaction')
-      controller.send(:association_name, @class_name)
+      expect(class_name).to receive(:gsub).with('Spree::', '').and_return('LoyaltyPointsDebitTransaction')
+      controller.send(:association_name, class_name)
     end
   end
 

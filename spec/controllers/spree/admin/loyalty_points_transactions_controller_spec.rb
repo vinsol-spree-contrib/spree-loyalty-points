@@ -48,19 +48,24 @@ describe Spree::Admin::LoyaltyPointsTransactionsController, type: :controller do
         get :index, params.merge!(user_id: "1")
       end
 
-      it "assigns @loyalty_points_transactions" do
-        send_request
-        expect(assigns[:loyalty_points_transactions]).to_not be_nil
+      context 'with successful response' do
+        before { send_request }
+
+        it "assigns loyalty_points_transactions" do
+          expect(assigns[:loyalty_points_transactions]).to_not be_nil
+        end
+
+        it "renders index template" do
+          expect(response).to render_template(:index)
+        end
       end
 
-      it "@user should receive loyalty_points_transactions" do
-        expect(user).to receive(:loyalty_points_transactions)
-        send_request
-      end
+      context 'with correct method flow' do
+        it "user should receive loyalty_points_transactions" do
+          expect(user).to receive(:loyalty_points_transactions)
+        end
 
-      it "renders index template" do
-        send_request
-        expect(response).to render_template(:index)
+        after { send_request }
       end
 
     end
@@ -223,8 +228,9 @@ describe Spree::Admin::LoyaltyPointsTransactionsController, type: :controller do
   end
 
   describe "GET 'order_transactions'" do
+    render_views
     def send_request(params = {})
-      get :order_transactions, params.merge!(loyalty_points_transaction: attributes_for(:loyalty_points_transaction), order_id: order.id, user_id: "1", format: :json)
+      spree_get :order_transactions, params.merge!(loyalty_points_transaction: attributes_for(:loyalty_points_transaction), order_id: order.id, user_id: "1")
     end
 
     before :each do
@@ -245,7 +251,7 @@ describe Spree::Admin::LoyaltyPointsTransactionsController, type: :controller do
       end
 
       it "should redirect_to admin_users_path" do
-        expect(response).to_not redirect_to(admin_users_path)
+        expect(response).to_not redirect_to(admin_users_path)        
       end
 
       it "assigns @loyalty_points_transactions" do

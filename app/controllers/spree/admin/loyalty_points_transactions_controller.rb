@@ -62,8 +62,8 @@ module Spree
 
         def set_ordered_transactions
           @loyalty_points_transactions = @loyalty_points_transactions.order(updated_at: :desc).
-            page(params[:page]).
-            per(params[:per_page] || Spree::Config[:orders_per_page])
+                                           page(params[:page]).
+                                           per(params[:per_page] || Spree::Config[:orders_per_page])
         end
     end
   end

@@ -17,7 +17,7 @@ describe Spree::PaymentMethod do
   describe "loyalty_points_id_included?" do
 
     context "when loyalty points id included in method ids" do
-      
+
       it "should return true" do
         expect(Spree::PaymentMethod.loyalty_points_id_included?([loyalty_points_payment_method.id, payment_method2.id])).to be_truthy
       end
@@ -25,7 +25,7 @@ describe Spree::PaymentMethod do
     end
 
     context "when loyalty points id not included in method ids" do
-      
+
       it "should return false" do
         expect(Spree::PaymentMethod.loyalty_points_id_included?([payment_method2.id, payment_method3.id])).to be_falsey
       end

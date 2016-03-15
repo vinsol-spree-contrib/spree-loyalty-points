@@ -33,6 +33,26 @@ describe Spree::LoyaltyPointsController, type: :controller do
       expect(assigns[:loyalty_points_transactions]).to eq(loyalty_points_transactions)
     end
 
+    context 'with successful response' do
+      before { send_request }
+
+      it "assigns loyalty_points_transactions" do
+        expect(assigns[:loyalty_points_transactions]).to_not be_nil
+      end
+
+      it "renders index template" do
+        expect(response).to render_template(:index)
+      end
+    end
+
+    context 'with correct method flow' do
+      it "user should receive loyalty_points_transactions" do
+        expect(user).to receive(:loyalty_points_transactions)
+      end
+
+      after { send_request }
+    end
+
     it "renders index template" do
       send_request
       expect(response).to render_template(:index)

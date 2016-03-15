@@ -2,18 +2,16 @@ require "spec_helper"
 
 describe Spree::Order, type: :model do
 
-  before(:each) do
-    @order = create(:order_with_loyalty_points)
-  end
+  let!(:order) { create(:order_with_loyalty_points) }
 
   it "is valid with valid attributes" do
-    expect(@order).to be_valid
+    expect(order).to be_valid
   end
 
   describe "complete_loyalty_points_payments callback" do
 
     it "should be included in state_machine before callbacks" do
-      expect(Spree::Order.state_machine.callbacks[:after].map { |callback| callback.instance_variable_get(:@methods) }.include?([:complete_loyalty_points_payments])).to be_truthy
+      expect(Spree::Order.state_machine.callbacks[:after].map { |callback| callback.instance_variable_get(:@methods) }).to include([:complete_loyalty_points_payments])
     end
 
     it "should not include complete in 'from' states" do
@@ -31,11 +29,11 @@ describe Spree::Order, type: :model do
   it { is_expected.to have_many :loyalty_points_debit_transactions }
 
   it_should_behave_like "LoyaltyPoints" do
-    let(:resource_instance) { @order }
+    let(:resource_instance) { order }
   end
 
   it_should_behave_like "Order::LoyaltyPoints" do
-    let(:resource_instance) { @order }
+    let(:resource_instance) { order }
   end
 
   describe 'loyalty_points_not_awarded' do
@@ -43,12 +41,12 @@ describe Spree::Order, type: :model do
     let (:order2) { create(:order_with_loyalty_points) }
 
     before :each do
-      @order.loyalty_points_credit_transactions = []
+      order.loyalty_points_credit_transactions = []
       order2.loyalty_points_credit_transactions = create_list(:loyalty_points_credit_transaction, 1, source: order2)
     end
 
     it "should return orders where loyalty points haven't been awarded" do
-      expect(Spree::Order.loyalty_points_not_awarded).to eq([@order])
+      expect(Spree::Order.loyalty_points_not_awarded).to eq([order])
     end
 
   end
@@ -58,14 +56,14 @@ describe Spree::Order, type: :model do
     let (:order2) { create(:order_with_loyalty_points) }
 
     before :each do
-      @order.paid_at = 4.hours.ago
+      order.paid_at = 4.hours.ago
       order2.paid_at = 1.hour.ago
-      @order.save!
+      order.save!
       order2.save!
     end
 
     it "should return orders where paid_at is before given time" do
-      expect(Spree::Order.with_hours_since_payment(2)).to eq([@order])
+      expect(Spree::Order.with_hours_since_payment(2)).to eq([order])
     end
 
   end
@@ -76,19 +74,19 @@ describe Spree::Order, type: :model do
     let (:order3) { create(:order_with_loyalty_points) }
 
     before :each do
-      @order.paid_at = 4.hours.ago
-      @order.loyalty_points_credit_transactions = []
+      order.paid_at = 4.hours.ago
+      order.loyalty_points_credit_transactions = []
       order2.paid_at = 1.hour.ago
       order2.loyalty_points_credit_transactions = []
       order3.paid_at = 5.hours.ago
       order3.loyalty_points_credit_transactions = create_list(:loyalty_points_credit_transaction, 1, source: order2)
-      @order.save!
+      order.save!
       order2.save!
       order3.save!
     end
 
     it "should return orders where loyalty_points haven't been credited" do
-      expect(Spree::Order.with_uncredited_loyalty_points(2)).to eq([@order])
+      expect(Spree::Order.with_uncredited_loyalty_points(2)).to eq([order])
     end
 
   end

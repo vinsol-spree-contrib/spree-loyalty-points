@@ -10,7 +10,7 @@ describe Spree::ReturnAuthorization do
   describe "update_loyalty_points callback" do
 
     it "should be included in state_machine after callbacks" do
-      expect(Spree::ReturnAuthorization.state_machine.callbacks[:after].map { |callback| callback.instance_variable_get(:@methods) }.include?([:update_loyalty_points])).to be_truthy
+      expect(Spree::ReturnAuthorization.state_machine.callbacks[:after].map { |callback| callback.instance_variable_get(:@methods) }).to include([:update_loyalty_points])
     end
 
     it "should include only received in 'to' states" do
@@ -27,46 +27,47 @@ describe Spree::ReturnAuthorization do
       end
 
       context "when user's balance is lowest" do
+        let!(:debit_points) { return_authorization.order.user.loyalty_points_balance }
 
         before :each do
           allow(return_authorization.order).to receive(:loyalty_points_for).with(return_authorization.order.item_total).and_return(return_authorization.order.user.loyalty_points_balance + 10)
           allow(return_authorization).to receive(:loyalty_points).and_return(return_authorization.order.user.loyalty_points_balance + 20)
-          @debit_points = return_authorization.order.user.loyalty_points_balance
         end
 
-        it "should receive create_debit_transaction with user's balance" do
-          expect(return_authorization.order).to receive(:create_debit_transaction).with(@debit_points)
-          return_authorization.update_loyalty_points
+        context "should receive create_debit_transaction with user's balance" do
+          it { expect(return_authorization.order).to receive(:create_debit_transaction).with(debit_points) }
+
+          after { return_authorization.update_loyalty_points }
         end
 
       end
 
       context "when loyalty_points_for is lowest" do
+        let!(:debit_points) { return_authorization.order.loyalty_points_for(return_authorization.order.item_total) }
 
         before :each do
-          @debit_points = return_authorization.order.loyalty_points_for(return_authorization.order.item_total)
-          allow(return_authorization.order.user).to receive(:loyalty_points_balance).and_return(@debit_points + 10)
-          allow(return_authorization).to receive(:loyalty_points).and_return(@debit_points + 20)
+          allow(return_authorization.order.user).to receive(:loyalty_points_balance).and_return(debit_points + 10)
+          allow(return_authorization).to receive(:loyalty_points).and_return(debit_points + 20)
         end
 
-        it "should receive create_debit_transaction with order's loyalty_points_for" do
-          expect(return_authorization.order).to receive(:create_debit_transaction).with(@debit_points)
-          return_authorization.update_loyalty_points
+        context "should receive create_debit_transaction with order's loyalty_points_for" do
+          it { expect(return_authorization.order).to receive(:create_debit_transaction).with(debit_points) }
+          after { return_authorization.update_loyalty_points }
         end
 
       end
 
       context "when loyalty_points are lowest" do
+        let!(:debit_points) { return_authorization.loyalty_points }
 
         before :each do
-          @debit_points = return_authorization.loyalty_points
-          allow(return_authorization.order).to receive(:loyalty_points_for).with(return_authorization.order.item_total).and_return(@debit_points + 10)
-          allow(return_authorization.order.user).to receive(:loyalty_points_balance).and_return(@debit_points + 20)
+          allow(return_authorization.order).to receive(:loyalty_points_for).with(return_authorization.order.item_total).and_return(debit_points + 10)
+          allow(return_authorization.order.user).to receive(:loyalty_points_balance).and_return(debit_points + 20)
         end
 
-        it "should receive create_debit_transaction with return_authorization's loyalty_points" do
-          expect(return_authorization.order).to receive(:create_debit_transaction).with(@debit_points)
-          return_authorization.update_loyalty_points
+        context "should receive create_debit_transaction with return_authorization's loyalty_points" do
+          it { expect(return_authorization.order).to receive(:create_debit_transaction).with(debit_points) }
+          after { return_authorization.update_loyalty_points }
         end
 
       end
@@ -80,15 +81,15 @@ describe Spree::ReturnAuthorization do
       end
 
       context "when loyalty_points_for is lowest" do
+        let!(:credit_points) { return_authorization.order.loyalty_points_for(return_authorization.order.item_total) }
 
         before :each do
-          @credit_points = return_authorization.order.loyalty_points_for(return_authorization.order.item_total)
-          allow(return_authorization).to receive(:loyalty_points).and_return(@credit_points + 10)
+          allow(return_authorization).to receive(:loyalty_points).and_return(credit_points + 10)
         end
 
-        it "should receive create_credit_transaction with order's loyalty_points_for" do
-          expect(return_authorization.order).to receive(:create_credit_transaction).with(@credit_points)
-          return_authorization.update_loyalty_points
+        context "should receive create_credit_transaction with order's loyalty_points_for" do
+          it { expect(return_authorization.order).to receive(:create_credit_transaction).with(credit_points) }
+          after { return_authorization.update_loyalty_points }
         end
 
       end
@@ -98,7 +99,7 @@ describe Spree::ReturnAuthorization do
   end
 
   describe "TransactionsTotalValidation" do
-    
+
     it_should_behave_like "TransactionsTotalValidation" do
       let(:resource_instance) { return_authorization }
       let(:relation) { return_authorization.order }
@@ -108,18 +109,14 @@ describe Spree::ReturnAuthorization do
 
   describe 'validate transactions_total_range' do
 
-    before :each do
-      @order = create(:order_with_loyalty_points)
-      return_authorization = build(:return_authorization_with_loyalty_points, order: @order)
-    end
+    let!(:order) { create(:order_with_loyalty_points) }
+    let!(:return_authorization) { build(:return_authorization_with_loyalty_points, order: order) }
 
     def save_record
       return_authorization.save
     end
 
-    after :each do
-      save_record
-    end
+    after { save_record }
 
     context "when order is present" do
 

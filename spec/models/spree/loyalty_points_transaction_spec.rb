@@ -2,23 +2,15 @@ require "spec_helper"
 
 describe Spree::LoyaltyPointsTransaction, type: :model do
 
-  let(:loyalty_points_transaction) { build(:loyalty_points_debit_transaction) }
-
-  before do
-  end
+  let!(:loyalty_points_transaction) { build(:loyalty_points_debit_transaction) }
 
   describe 'validations' do
 
-    let(:loyalty_points_transaction) { build(:loyalty_points_debit_transaction) }
-
-    before do
-      subject { LoyaltyPointsDebitTransaction.build }
-    end
+    subject { Spree::LoyaltyPointsDebitTransaction.new }
 
     it "is valid with valid attributes" do
       expect(loyalty_points_transaction).to be_valid
     end
-
 
     it "is invalid without numeric loyalty_points" do
       is_expected.to validate_numericality_of(:loyalty_points).only_integer.with_message(Spree.t('validation.must_be_int'))
@@ -28,10 +20,6 @@ describe Spree::LoyaltyPointsTransaction, type: :model do
     it "is invalid without balance" do
       is_expected.to validate_presence_of :balance
     end
-
-    # it "is invalid if type is not in [Spree::LoyaltyPointsCreditTransaction, Spree::LoyaltyPointsDebitTransaction]" do
-    #   should ensure_inclusion_of(:type).in_array(['Spree::LoyaltyPointsCreditTransaction', 'Spree::LoyaltyPointsDebitTransaction'])
-    # end
 
     it "belongs_to user" do
       is_expected.to belong_to(:user)
@@ -94,44 +82,43 @@ end
     end
 
     it "should not add error 'Source or Comment should be present'" do
-      expect(loyalty_points_transaction.errors[:base].include?('Source or Comment should be present')).to be_falsey
+      expect(loyalty_points_transaction.errors[:base]).not_to include('Source or Comment should be present')
     end
 
   end
 
   it "should include generate_transaction_id in before create callbacks" do
-    expect(Spree::LoyaltyPointsTransaction._create_callbacks.select { |callback| callback.kind == :before }.map(&:filter).include?(:generate_transaction_id)).to be_truthy
+    expect(Spree::LoyaltyPointsTransaction._create_callbacks.select { |callback| callback.kind == :before }.map(&:filter)).to include(:generate_transaction_id)
   end
 
   describe "generate_transaction_id" do
 
-    let(:time) { Time.current }
-    let(:random1) { 23432 }
     before :each do
-      allow(Time).to receive(:current).and_return(time)
-      @transaction_id = (time.strftime("%s") + random1.to_s).to(15)
+      @time = Time.current
+      @random1 = 23432
+      allow(Time).to receive(:current).and_return(@time)
+      @transaction_id = (@time.strftime("%s") + @random1.to_s).to(15)
     end
 
     context "when transaction_id does not exist earlier" do
 
       before :each do
         Spree::LoyaltyPointsTransaction.delete_all(transaction_id: @transaction_id)
-        allow(loyalty_points_transaction).to receive(:rand).with(999999).and_return(random1)
+        allow(loyalty_points_transaction).to receive(:rand).with(999999).and_return(@random1)
         loyalty_points_transaction.save
       end
 
       it "adds a transaction_id" do
         expect(loyalty_points_transaction.transaction_id).to eq(@transaction_id)
       end
-      
     end
 
     context "when transaction_id exists earlier" do
 
       before :each do
         @random2 = 439795
-        allow(loyalty_points_transaction).to receive(:rand).with(999999).and_return(random1, @random2)
-        @transaction_id2 = (time.strftime("%s") + @random2.to_s).to(15)
+        allow(loyalty_points_transaction).to receive(:rand).with(999999).and_return(@random1, @random2)
+        @transaction_id2 = (@time.strftime("%s") + @random2.to_s).to(15)
         Spree::LoyaltyPointsTransaction.delete_all(transaction_id: @transaction_id)
         loyalty_points_transaction2 = create(:loyalty_points_credit_transaction)
         loyalty_points_transaction2.update(transaction_id: @transaction_id)
@@ -162,36 +149,31 @@ end
 
   end
 
+
   describe 'transaction_type' do
+    let(:loyalty_points_debit_transaction) { FactoryGirl.build(:loyalty_points_debit_transaction) }
+    let(:loyalty_points_credit_transaction) { FactoryGirl.build(:loyalty_points_credit_transaction) }
 
     context "when type is Spree::LoyaltyPointsCreditTransaction" do
 
-      before :each do
-        @loyalty_points_credit_transaction = FactoryGirl.build(:loyalty_points_credit_transaction)
-      end
-
       it "should be Credit" do
-        expect(@loyalty_points_credit_transaction.transaction_type).to eq('Credit')
+        expect(loyalty_points_credit_transaction.transaction_type).to eq('Credit')
       end
 
     end
 
     context "when type is Spree::LoyaltyPointsDebitTransaction" do
 
-      before :each do
-        @loyalty_points_debit_transaction = FactoryGirl.build(:loyalty_points_debit_transaction)
-      end
-
       it "should be Debit" do
-        expect(@loyalty_points_debit_transaction.transaction_type).to eq('Debit')
+        expect(loyalty_points_debit_transaction.transaction_type).to eq('Debit')
       end
 
     end
 
   end
 
-  describe 'validate transactions_total_range' do
 
+  describe 'validate transactions_total_range' do
     let!(:order) { create(:order_with_loyalty_points) }
     let!(:loyalty_points_transaction) { create(:loyalty_points_debit_transaction, source: order) }
 

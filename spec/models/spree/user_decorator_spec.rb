@@ -14,6 +14,9 @@ describe Spree.user_class, type: :model do
 
   it "is invalid without numeric loyalty_points_balance" do
     is_expected.to validate_numericality_of(:loyalty_points_balance).only_integer
+  end
+
+  it "is invalid for negative integer loyalty_points_balance" do
     is_expected.to validate_numericality_of(:loyalty_points_balance).is_greater_than_or_equal_to(0)
   end
 

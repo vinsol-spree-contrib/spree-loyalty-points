@@ -16,9 +16,10 @@ Spree::Payment.class_eval do
   private
 
     def invalidate_old_payments
+      return if store_credit? || by_loyalty_points?
       order.payments.with_state('checkout').where("id != ?", self.id).each do |payment|
-        payment.invalidate!
-      end unless by_loyalty_points?
+        payment.invalidate! unless payment.store_credit?
+      end
     end
 
     def notify_paid_order

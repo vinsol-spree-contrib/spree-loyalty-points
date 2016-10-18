@@ -65,7 +65,58 @@ describe Spree::PaymentMethod::LoyaltyPoints do
     end
 
   end
-  
+
+  describe 'cancel' do
+
+    before :each do
+      allow(Spree::Order).to receive(:find_by_number).and_return(@order)
+      allow(@order).to receive(:loyalty_points_for).and_return(30)
+    end
+
+    it 'should be a new ActiveMerchant::Billing::Response' do
+      expect(loyalty_points_payment_method.cancel).to be_a(ActiveMerchant::Billing::Response)
+    end
+
+    it 'should receive new on ActiveMerchant::Billing::Response with true, "", {}, {}' do
+      expect(ActiveMerchant::Billing::Response).to receive(:new).with(true, "", {}, {}).and_call_original
+      loyalty_points_payment_method.cancel
+    end
+
+  end
+
+  describe 'credit' do
+
+    let(:refund) { create(:refund, amount: 1) }
+
+    before :each do
+      allow(Spree::Order).to receive(:find_by_number).and_return(@order)
+      allow(@order).to receive(:loyalty_points_for).and_return(30)
+      allow(refund).to receive(:reimbursement).and_return(create(:reimbursement))
+    end
+
+    it 'should be a new ActiveMerchant::Billing::Response' do
+      expect(loyalty_points_payment_method.credit(1, 'transaction_id', { originator: refund })).to be_a(ActiveMerchant::Billing::Response)
+    end
+
+    it 'should receive new on ActiveMerchant::Billing::Response with true, "", {}, {}' do
+      expect(ActiveMerchant::Billing::Response).to receive(:new).with(true, "", {}, {}).and_call_original
+      loyalty_points_payment_method.credit(1, 'transaction_id', { originator: refund })
+    end
+
+    it 'should update total users loyalty points' do
+      prev_loyalty_points_balance = refund.payment.order.user.reload.loyalty_points_balance
+      loyalty_points_payment_method.credit(1, 'transaction_id', { originator: refund })
+      expect(refund.payment.order.user.reload.loyalty_points_balance).to eq prev_loyalty_points_balance + refund.reimbursement.return_items.last.return_authorization.loyalty_points
+    end
+
+    it 'should record the transaction in Spree::LoyaltyPointsTransaction' do
+      prev_count = refund.payment.order.loyalty_points_transactions.count
+      loyalty_points_payment_method.credit(1, 'transaction_id', { originator: refund })
+      expect(refund.payment.order.loyalty_points_transactions.count).to eq prev_count + 1
+    end
+
+  end
+
   describe 'can_capture?' do
     context 'when payment state is one of [checkout, pending]' do
       before(:each) do

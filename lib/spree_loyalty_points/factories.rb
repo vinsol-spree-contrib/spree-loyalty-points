@@ -71,4 +71,14 @@ FactoryGirl.define do
     association :order, factory: :shipped_order_with_loyalty_points
 
   end
+
+end
+
+FactoryGirl.modify do
+
+  factory :return_authorization, class: Spree::ReturnAuthorization do
+    loyalty_points { (50..99).to_a.sample }
+    loyalty_points_transaction_type "Debit"
+  end
+
 end

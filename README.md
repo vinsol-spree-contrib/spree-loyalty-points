@@ -15,7 +15,7 @@ Installation
 In your `Gemfile`, add:
 
 ```ruby
-gem 'spree_loyalty_points', github: 'vinsol-spree-contrib/spree-loyalty-points', branch: '3-1-stable'
+gem 'spree_loyalty_points', github: 'vinsol-spree-contrib/spree-loyalty-points'
 ```
 
 Bundle your dependencies and run the installation generator:
@@ -149,16 +149,9 @@ bundle exec rake test_app
 bundle exec rspec spec
 ```
 
-When testing your applications integration with this extension you may use it's factories.
-Simply add this require statement to your `spec_helper`:
-
-```ruby
-require 'spree_loyalty_points/factories'
-```
-
 Credits
 -------
 
 [![vinsol.com: Ruby on Rails, iOS and Android developers](http://vinsol.com/vin_logo.png "Ruby on Rails, iOS and Android developers")](http://vinsol.com)
 
-Copyright (c) 2014 [vinsol.com](http://vinsol.com "Ruby on Rails, iOS and Android developers"), released under the New MIT License
+Copyright (c) 2016 [vinsol.com](http://vinsol.com "Ruby on Rails, iOS and Android developers"), released under the New MIT License

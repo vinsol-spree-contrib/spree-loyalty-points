@@ -22,3 +22,5 @@ en:
     loyalty_points_earnable: "%{quantity} Loyalty Points Will Be Awarded for this Order"
     insufficient_loyalty_points: 'You have insufficient Loyalty Points'
     you_have_not_earned_any_loyalty_points_yet: You have not earned any loyalty points yet
+    loyalty_points_have_been_credited: Loyalty Points have been credited to your account.
+    layalty_points_will_be_credited: Loyalty Points will be credited to your account soon.

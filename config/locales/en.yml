@@ -5,6 +5,7 @@ en:
   spree:
     current_balance: Current Balance
     loyalty_points_balance: Loyalty Points Balance
+    loyalty_points_needed: Loyalty Points Needed
     loyalty_points_settings: Loyalty Points Settings
     loyalty_points: Loyalty Points
     loyalty_points_debit: Loyalty Points To Be Deducted Against this Return

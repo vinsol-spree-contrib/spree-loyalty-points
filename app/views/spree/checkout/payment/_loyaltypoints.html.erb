@@ -1,6 +1,6 @@
 <%- lp_balance = spree_current_user.loyalty_points_balance %>
 <%- equivalent_currency_balance = spree_current_user.loyalty_points_equivalent_currency %>
-<%= Spree.t(:loyalty_points_balance) %>: <%= lp_balance %><%= "($" + equivalent_currency_balance.to_s + ")" %>
+<%= Spree.t(:loyalty_points_balance) %>: <%= lp_balance %> (<%= Spree::Money.new(equivalent_currency_balance).to_html %>)
 <%- lp_needed = @order.loyalty_points_for(@order.total, 'redeem') %>
 <br/><%= Spree.t(:loyalty_points_needed) %>: <%= lp_needed %>
 <% if lp_needed > lp_balance %>

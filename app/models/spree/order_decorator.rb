@@ -6,7 +6,7 @@ Spree::Order.class_eval do
   has_many :loyalty_points_credit_transactions, as: :source
   has_many :loyalty_points_debit_transactions, as: :source
 
-  scope :with_user, -> { where('user_id is not null') }
+  scope :with_user, -> { where('spree_orders.user_id is not null') }
 
   scope :loyalty_points_not_awarded, -> { includes(:loyalty_points_credit_transactions).where(spree_loyalty_points_transactions: { source_id: nil } ) }
 

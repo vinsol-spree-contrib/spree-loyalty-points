@@ -31,7 +31,7 @@ describe Spree::Admin::ReturnAuthorizationsController, type: :controller do
     end
 
     def send_request(params = {})
-      get :new, params.merge!(order_id: order.id)
+      get :new, params: params.merge!(order_id: order.id)
     end
 
     context 'with successful response' do
@@ -80,8 +80,8 @@ describe Spree::Admin::ReturnAuthorizationsController, type: :controller do
 
     context "when per_page is not passed as a parameter" do
 
-      it "should receive per with Spree::Config[:orders_per_page] on loyalty_points_transactions" do
-        expect(loyalty_points_transactions).to receive(:per).with(Spree::Config[:orders_per_page])
+      it "should receive per with Spree::Config[:admin_orders_per_page] on loyalty_points_transactions" do
+        expect(loyalty_points_transactions).to receive(:per).with(Spree::Config[:admin_orders_per_page])
         send_request
       end
 

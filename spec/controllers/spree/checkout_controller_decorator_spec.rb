@@ -25,7 +25,7 @@ describe Spree::CheckoutController, type: :controller do
     context "when state is payment" do
 
       def send_request
-        put :update, state: "payment", order: { payments_attributes: [{payment_method_id: loyalty_points_payment_method.id}], id: order.id }
+        put :update, params: { state: "payment", order: { payments_attributes: [{payment_method_id: loyalty_points_payment_method.id}], id: order.id } }
       end
 
       context "when loyalty points used" do
@@ -91,7 +91,7 @@ describe Spree::CheckoutController, type: :controller do
         let(:check_payment_method) { Spree::PaymentMethod::Check.create!(active: true, name: 'Check') }
 
         def send_request
-          put :update, state: "payment", order: { payments_attributes: [{payment_method_id: check_payment_method.id}], id: order.id }
+          put :update, params: { state: "payment", order: { payments_attributes: [{payment_method_id: check_payment_method.id}], id: order.id } }
         end
 
         before :each do

@@ -45,7 +45,7 @@ describe Spree::Admin::LoyaltyPointsTransactionsController, type: :controller do
 
     describe "GET 'index'" do
       def send_request(params = {})
-        get :index, params.merge!(user_id: "1")
+        get :index, params: params.merge!(user_id: "1")
       end
 
       context 'with successful response' do
@@ -72,7 +72,7 @@ describe Spree::Admin::LoyaltyPointsTransactionsController, type: :controller do
 
     describe "POST 'create'" do
       def send_request(params = {})
-        post :create, params.merge!(loyalty_points_transaction: attributes_for(:loyalty_points_transaction), order_id: order.id, user_id: "1")
+        post :create, params: params.merge!(loyalty_points_transaction: attributes_for(:loyalty_points_transaction), order_id: order.id, user_id: "1")
       end
 
       before :each do

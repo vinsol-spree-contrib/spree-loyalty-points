@@ -12,7 +12,7 @@ describe Spree::LoyaltyPointsController, type: :controller do
 
   describe "GET 'index'" do
     def send_request(params = {})
-      get :index, params
+      get :index, params: params
     end
 
     let(:loyalty_points_transactions) { user.loyalty_points_transactions }
@@ -84,8 +84,8 @@ describe Spree::LoyaltyPointsController, type: :controller do
 
     context "when per_page is not passed as a parameter" do
 
-      it "should receive per with Spree::Config[:orders_per_page] on loyalty_points_transactions" do
-        expect(loyalty_points_transactions).to receive(:per).with(Spree::Config[:orders_per_page])
+      it "should receive per with Spree::Config[:admin_orders_per_page] on loyalty_points_transactions" do
+        expect(loyalty_points_transactions).to receive(:per).with(Spree::Config[:admin_orders_per_page])
         send_request
       end
 

@@ -103,7 +103,7 @@ end
     context "when transaction_id does not exist earlier" do
 
       before :each do
-        Spree::LoyaltyPointsTransaction.delete_all(transaction_id: @transaction_id)
+        Spree::LoyaltyPointsTransaction.where(transaction_id: @transaction_id).delete_all
         allow(loyalty_points_transaction).to receive(:rand).with(999999).and_return(@random1)
         loyalty_points_transaction.save
       end
@@ -119,7 +119,7 @@ end
         @random2 = 439795
         allow(loyalty_points_transaction).to receive(:rand).with(999999).and_return(@random1, @random2)
         @transaction_id2 = (@time.strftime("%s") + @random2.to_s).to(15)
-        Spree::LoyaltyPointsTransaction.delete_all(transaction_id: @transaction_id)
+        Spree::LoyaltyPointsTransaction.where(transaction_id: @transaction_id).delete_all
         loyalty_points_transaction2 = create(:loyalty_points_credit_transaction)
         loyalty_points_transaction2.update(transaction_id: @transaction_id)
         loyalty_points_transaction.save

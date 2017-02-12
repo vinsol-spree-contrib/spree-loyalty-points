@@ -3,17 +3,25 @@
 
 en:
   spree:
+    current_balance: Current Balance
     loyalty_points_balance: Loyalty Points Balance
+    loyalty_points_needed: Loyalty Points Needed
+    loyalty_points_settings: Loyalty Points Settings
     loyalty_points: Loyalty Points
     loyalty_points_debit: Loyalty Points To Be Deducted Against this Return
     loyalty_points_credit: Loyalty Points To Be Awarded Against this Return
     details: Details
     min_amount_required_to_get_loyalty_points: "Minimum amount to be spent per order(item total, excluding shipping and any other charges) to award loyalty points."
     loyalty_points_awarding_unit: "Number of Loyalty Points to be awarded per Unit Amount Spent"
+    loyalty_points_awarding_unit_hint: "For example: Set this as 10 if we wish to award 10 points for $1 spent on the site."
     loyalty_points_redeeming_balance: Minimum Loyalty Points Balance Required for Redeeming
     loyalty_points_conversion_rate: "Loyalty point to amount conversion rate"
+    loyalty_points_conversion_rate_hint: "For example: Set this value to 5 if we wish 1 loyalty point is equivalent to $5"
     loyalty_points_award_period: Time(in hours) after payment to award loyalty points
     back_to_user_profile: Back to User Profile
     update_loyalty_points: Update Loyalty Points
     loyalty_points_earnable: "%{quantity} Loyalty Points Will Be Awarded for this Order"
     insufficient_loyalty_points: 'You have insufficient Loyalty Points'
+    you_have_not_earned_any_loyalty_points_yet: You have not earned any loyalty points yet
+    loyalty_points_have_been_credited: Loyalty Points have been credited to your account.
+    layalty_points_will_be_credited: Loyalty Points will be credited to your account soon.

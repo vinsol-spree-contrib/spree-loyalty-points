@@ -1,0 +1,24 @@
+ru:
+  spree:
+    current_balance: Текущий Баланс
+    loyalty_points_balance: Баланс бонусных баллов
+    loyalty_points_needed: Необходимо бонусных баллов
+    loyalty_points_settings: Настройки бонусных баллов
+    loyalty_points: Бонусные баллы
+    loyalty_points_debit: Бонусные баллы для списания от этого возврата
+    loyalty_points_credit: Бонусные баллы для начисления oт этого возврата
+    details: Детали
+    min_amount_required_to_get_loyalty_points: "Минимальная сумма заказа (сумма по позициям, исключая оплату доставки и другие платежи) для получения бонусных баллов."
+    loyalty_points_awarding_unit: "Количество бонусных баллов для получения за единицу потраченной суммы"
+    loyalty_points_awarding_unit_hint: "Например: Установите 10, если желаете присудить 10 баллов за 1 потраченный рубль."
+    loyalty_points_redeeming_balance: Минимальный баланс бонусных баллов, необходимый для списания при покупке
+    loyalty_points_conversion_rate: "Курс конвертации бонусного балла в единицу оплаты"
+    loyalty_points_conversion_rate_hint: "Например: Установите значение 5, если желаете, чтобы 1 бонусный балл при оплате был эквивалентен 5 рублям"
+    loyalty_points_award_period: Время (в часах) после оплаты, через которое будут начисляться бонусные баллы
+    back_to_user_profile: Назад к профилю пользователя
+    update_loyalty_points: Обновить бонусные баллы
+    loyalty_points_earnable: "%{quantity} бонусных баллов будет начислено за этот заказ"
+    insufficient_loyalty_points: 'У вас недостаточно бонусных баллов'
+    you_have_not_earned_any_loyalty_points_yet: Пока не заработано ни одного балла
+    loyalty_points_have_been_credited: Бонусных баллов было зачислено на ваш бонусный счёт.
+    loyalty_points_will_be_credited: Бонусных баллов скоро будет зачислено на ваш бонусный счёт.

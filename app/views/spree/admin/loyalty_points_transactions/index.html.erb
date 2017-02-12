@@ -7,6 +7,6 @@
     <%= button_link_to Spree.t(:update_loyalty_points), spree.new_admin_user_loyalty_point_path(@user), icon: 'plus', class: 'btn-primary', id: 'admin_user_new_loyalty_point_link' %>
 <% end %>
 
-<p>Current Balance: <%= @user.loyalty_points_balance %></p>
+<p><%= Spree.t(:current_balance) %>: <%= @user.loyalty_points_balance %></p>
 <%= render partial: 'spree/loyalty_points/transaction_table' %>
 <br />
